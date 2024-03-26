@@ -1,7 +1,11 @@
-defmodule Movement do
+defmodule Mobile do
   import :math
 
-  def struct [:px, :py, :vx, :vy, :angle]
+  defstruct [:px, :py, :vx, :vy, :angle]
+
+  def new_mobile(px, py, vx, vy, angle) do
+    %__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}
+  end
 
   def move(%__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}) do
     %__MODULE__{px: px + vx, py: py + vy, vx: vx, vy: vy, angle: angle}
@@ -14,12 +18,22 @@ defmodule Movement do
   end
 
   def rotate(%__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :cw) do
-    new_angle = angle - rad
-    if new_angle < 0, do: new_angle + (2 * pi()), else: new_angle
+    new_angle = angle - rad |> normalize_angle()
+    %__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
   end
 
   def rotate(%__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :ccw) do
-    new_angle = angle - rad
-    if new_angle > 2 * pi(), do: new_angle - (2 * pi()), else: new_angle
+    new_angle = angle + rad |> normalize_angle()
+    %__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
   end
+
+  def normalize_angle(angle) do
+    upper = 2 * pi()
+    cond do
+      angle > upper -> angle - upper
+      angle < 0 -> angle + upper
+      true -> angle
+    end
+  end
+
 end
