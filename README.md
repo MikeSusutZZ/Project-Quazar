@@ -91,12 +91,3 @@ The Menus team is responsible for creating the following:
 - Add a title and description for your pull request.
 
 - Click the green `Create pull request` button again to submit.
-
-### Best Practices
----
-
-- Always pull the latest changes from main before starting a new feature branch.
-
-- Commit small chunks of work with descriptive messages.
-
-- Regularly push your feature branch to GitHub to back up your work.
