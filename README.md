@@ -90,14 +90,16 @@ The Menus team is responsible for creating the following:
 
 - Open GitHub in your browser and navigate to the repository.
 
-- Click on the `Pull requests` tab at the top of the page.
+- You should see, in a yellow banner, a prompt `Compare & pull request`. Click this.
 
-- Click the green `New pull request` button.
+- Add a title and brief description.
 
-- Select your branch from the `compare` dropdown and select `main` as the base branch.
+- On the right-hand side, click the gear icon to assign reviewers. Assign `rhysmah`
 
 - Click the green `Create pull request` button.
 
-- Add a title and description for your pull request.
+- Wait for feedback from the reviewer. Make any necessary changes and push them to your branch.
 
-- Click the green `Create pull request` button again to submit.
+- Click the green `Merge pull request` button to merge your changes into the main branch.
+
+- Click the `Delete branch` button to remove your feature branch.
