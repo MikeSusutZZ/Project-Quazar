@@ -65,7 +65,9 @@ The Menus team is responsible for creating the following:
 
 - Click on the branch name in the bottom left corner to bring up the branch menu.
 
-- Select `Create new branch...` and enter the name for your branch, such as `feature/add-scoreboard`.
+- Select `Create new branch...` and enter the name for your branch, such as `feature/add-scoreboard`, then hit `Enter`.
+
+- Check the bottom-left corner to ensure you're on your new branch.
 
 #### (2) Writing Code
 
