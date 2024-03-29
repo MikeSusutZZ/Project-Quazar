@@ -13,6 +13,8 @@ The Menus team is responsible for creating the following:
 
 - **All-Time High Scores** screen: displays the scores of all players who have ever played the game, from highest to lowest
 
+Once we're finished and the other teams are ready to combine their work, we'll integrate our menus into the main game.
+
 ## Team Members
 - Amarjot Sangha
 - Carson Olafson
