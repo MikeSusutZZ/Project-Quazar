@@ -1,7 +1,7 @@
 # Project-Quazar
 
 ## Menus Team
-This guide is specifically for the Menus Team. If you are **NOT** on the Menus Team, please do not alter the `menus` folder without permission.
+This guide is specifically for the Menus Team. If you are **NOT** on the Menus Team, please do not alter the `menus` folder without permission. Once we're finished and the other teams are ready to combine their work, we'll integrate our menus into the main game.
 
 The Menus team is responsible for creating the following:
 
@@ -13,7 +13,11 @@ The Menus team is responsible for creating the following:
 
 - **All-Time High Scores** screen: displays the scores of all players who have ever played the game, from highest to lowest
 
-Once we're finished and the other teams are ready to combine their work, we'll integrate our menus into the main game.
+<br>
+
+<img src="image.png" alt="alt text" width="600" >
+
+<br>
 
 ## Team Members
 - Amarjot Sangha
