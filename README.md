@@ -29,7 +29,7 @@ The Menus team is responsible for creating the following:
 
     Ensure you're working in the "menus" subfolder for all menu-related development.
 
-### Setting Up Environment
+### Setting Up Your Environment
 ---
 
 #### (1) Clone the Repository
@@ -90,15 +90,15 @@ The Menus team is responsible for creating the following:
 
 - Open GitHub in your browser and navigate to the repository.
 
-- You should see, in a yellow banner, a prompt `Compare & pull request`. Click this.
+- You should see, in a yellow banner, the prompt `Compare & pull request`. Click this.
 
 - Add a title and brief description.
 
-- On the right-hand side, click the gear icon to assign reviewers. Assign `rhysmah`
+- On the right-hand side, click the gear icon to assign reviewers. Assign `rhysmah`.
 
 - Click the green `Create pull request` button.
 
-- Wait for feedback from the reviewer. Make any necessary changes and push them to your branch.
+- Wait for feedback. Make any necessary changes and push them to your branch.
 
 - Click the green `Merge pull request` button to merge your changes into the main branch.
 
