@@ -45,6 +45,7 @@ The Menus team is responsible for creating the following:
 - Run the following command in the terminal: `mix deps.get`
 
 #### (3) Start the Phoenix Server
+
 - In the integrated terminal, start your server with: `mix phx.server`
 
 - Visit `localhost:4000` in your browser to see the application.
@@ -61,14 +62,18 @@ The Menus team is responsible for creating the following:
 - Select `Create new branch...` and enter the name for your branch, such as `feature/add-scoreboard`.
 
 #### (2) Writing Code
+
 - Write code associated with the feature.
+
 - Save files and regularly commit changes to your branch.
 
 ### Submitting for Review
 ---
 
 #### (1) Commit Latest Changes
+
 - Ensure your latest changes are committed to your branch.
+
 - Resolve any errors or conflicts before proceeding.
 
 #### (2) Create a Pull Request
