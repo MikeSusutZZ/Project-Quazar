@@ -14,7 +14,7 @@ The Menus team is responsible for creating the following:
 - **All-Time High Scores** screen: displays the scores of all players who have ever played the game, from highest to lowest
 
 ## Team Members
-- Abhishek Chouhan
+- Amarjot Sangha
 - Carson Olafson
 - Ediljohn Joson
 - Rhys Mahannah
@@ -85,7 +85,7 @@ The Menus team is responsible for creating the following:
 
 - Add a title and description for your pull request.
 
-- Click the green `Create pull request` button to submit.
+- Click the green `Create pull request` button again to submit.
 
 ### Best Practices
 ---
