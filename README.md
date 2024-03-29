@@ -67,6 +67,8 @@ The Menus team is responsible for creating the following:
 
 - Select `Create new branch...` and enter the name for your branch, such as `feature/add-scoreboard`, then hit `Enter`.
 
+- Click `Publish Branch`, in the left sidebar, to push your branch to GitHub.
+
 - Check the bottom-left corner to ensure you're on your new branch.
 
 #### (2) Writing Code
