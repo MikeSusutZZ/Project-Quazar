@@ -1,7 +1,7 @@
 defmodule Movable do
   import :math
 
-  defstruct [:px, :py, :vx, :vy, :angle]
+  defstruct [:px, :py, :vx, :vy, :angle] # x-coordinate, y-coordinate, x-velocity, y-velocity, orientation in radians
 
   def new_movable(px, py, vx, vy, angle) do
     %__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}
@@ -17,16 +17,19 @@ defmodule Movable do
     %__MODULE__{px: px, py: py, vx: vxf, vy: vyf, angle: angle}
   end
 
+  # Clockwise rotation
   def rotate(%__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :cw) do
     new_angle = angle - rad |> normalize_angle()
     %__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
   end
 
+  # Counter-clockwise rotation
   def rotate(%__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :ccw) do
     new_angle = angle + rad |> normalize_angle()
     %__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
   end
 
+  # Converts angles into an equivalent angle such that 0 <= x <= 2 * PI
   def normalize_angle(angle) do
     upper = 2 * pi()
     cond do

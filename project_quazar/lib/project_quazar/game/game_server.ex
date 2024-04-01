@@ -26,6 +26,7 @@ defmodule GameServer do
     {:ok, gamestate}
   end
 
+  # Main gameplay loop.
   @impl true
   def handle_info(:tick, %__MODULE__{ships: ships, projectiles: projectiles} = gamestate) do
     new_gamestate = %{gamestate | ships: move_all(ships), projectiles: move_all(projectiles)}
