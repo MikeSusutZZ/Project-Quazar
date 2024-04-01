@@ -22,7 +22,7 @@ defmodule MenusWeb.Router do
     live "/start", StartScreenLive, :show
     live "/create-ship", CreateShipLive, :show
     live "/in-game-scores", InGameScoresLive, :show
-    live "/all-time-high-scores", AllTimeHighScoresLive, :show
+    live "/high-scores", AllTimeHighScoresLive, :show
 
   end
 
