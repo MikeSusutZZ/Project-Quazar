@@ -2,4 +2,40 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* This file is for your main application CSS */
+/* ******************** */
+/* All-Time High Scores */
+/* ******************** */
+.high-scores-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 5px solid #ddd;
+    border-radius: 8px;
+  }
+
+  .high-scores-container h1 {
+    text-align: center;
+    font-weight: bolder;
+
+  }
+
+  .high-scores-container ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .high-scores-container li {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 4px;
+  }
+
+  .high-scores-container .player {
+    font-weight: bold;
+  }
+
+  .high-scores-container .score {
+    float: right;
+  }
