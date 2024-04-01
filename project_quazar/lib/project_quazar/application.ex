@@ -17,8 +17,11 @@ defmodule ProjectQuazar.Application do
       # Start a worker by calling: ProjectQuazar.Worker.start_link(arg)
       # {ProjectQuazar.Worker, arg},
       # Start to serve requests, typically the last entry
-      ProjectQuazarWeb.Endpoint
+      ProjectQuazarWeb.Endpoint,
+      GameServer
     ]
+
+    :ets.new(GameState, [:named_table, :public])
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

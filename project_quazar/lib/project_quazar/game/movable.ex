@@ -1,9 +1,9 @@
-defmodule Mobile do
+defmodule Movable do
   import :math
 
   defstruct [:px, :py, :vx, :vy, :angle]
 
-  def new_mobile(px, py, vx, vy, angle) do
+  def new_movable(px, py, vx, vy, angle) do
     %__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}
   end
 
