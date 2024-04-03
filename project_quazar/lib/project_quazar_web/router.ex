@@ -17,7 +17,7 @@ defmodule ProjectQuazarWeb.Router do
   scope "/", ProjectQuazarWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", Game
   end
 
   # Other scopes may use custom stacks.

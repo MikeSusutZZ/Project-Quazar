@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Input Form</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body, html {
+        height: 100%;
+    }
+    .outer-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+    .inner-container {
+        border: 2px solid #ccc;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    label {
+        font-size: 18px;
+    }
+    input[type="text"] {
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    input[type="submit"] {
+        padding: 8px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+    </style>
+</head>
+<body>
+    <div class="outer-container">
+    <div class="inner-container">
+        <form action="#" method="post" phx-submit="join">
+        <label for="username">Enter your username:</label><br>
+        <input type="text" id="username" name="username"><br><br>
+        <input type="submit" value="Submit">
+        </form>
+    </div>
+    </div>
+</body>
+</html>

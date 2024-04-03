@@ -9,7 +9,7 @@ defmodule ProjectQuazar.Application do
   def start(_type, _args) do
     children = [
       ProjectQuazarWeb.Telemetry,
-      ProjectQuazar.Repo,
+      # ProjectQuazar.Repo,
       {DNSCluster, query: Application.get_env(:project_quazar, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ProjectQuazar.PubSub},
       # Start the Finch HTTP client for sending emails
