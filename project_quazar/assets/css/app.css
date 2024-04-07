@@ -2,4 +2,81 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* This file is for your main application CSS */
+/* ******************** */
+/* All-Time High Scores */
+/* ******************** */
+.high-scores-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 5px solid #ddd;
+    border-radius: 8px;
+  }
+
+  .high-scores-container h1 {
+    text-align: center;
+    font-weight: bolder;
+
+  }
+
+  .high-scores-container ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .high-scores-container li {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 4px;
+  }
+
+  .high-scores-container .player {
+    font-weight: bold;
+  }
+
+  .high-scores-container .score {
+    float: right;
+  }
+
+
+  /* Base container styling */
+.base-container {
+  @apply bg-gray-900 p-6 rounded-lg shadow-lg max-w-md mx-auto;
+}
+
+/* Title styling */
+.title {
+  @apply text-white text-3xl font-bold text-center mb-6;
+}
+
+/* User list container */
+.user-list-container {
+  @apply flex flex-col space-y-4;
+}
+
+/* User item base styling */
+.user-item-base {
+  @apply flex justify-between items-center p-4 rounded-lg text-white font-semibold transition duration-300 ease-in-out transform hover:scale-105;
+}
+
+/* Current user item styling */
+.current-user-item {
+  @apply bg-green-600;
+}
+
+/* Other user item styling */
+.other-user-item {
+  @apply bg-gray-800;
+}
+
+/* Span styles for user id */
+.user-id {
+  @apply text-lg;
+}
+
+/* Span styles for user points */
+.user-points {
+  @apply text-xl text-yellow-400;
+}

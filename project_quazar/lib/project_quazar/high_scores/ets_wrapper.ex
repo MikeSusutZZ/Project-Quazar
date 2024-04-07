@@ -1,4 +1,5 @@
 defmodule ProjectQuazar.HighScores.ETSWrapper do
+  # alias ElixirSense.Plugins.Phoenix
   use GenServer
 
   @table_name :high_scores
@@ -38,6 +39,8 @@ defmodule ProjectQuazar.HighScores.ETSWrapper do
     case :ets.lookup(@table_name, username) do
       [] ->
         :ets.insert(@table_name, entry)
+        Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "high_scores:updates", :scores_updated)
+        IO.puts("Broadcasted scores_updated message")
         {:reply, {:ok, entry}, state}
       _ ->
         {:reply, {:error, :username_exists}, state}
@@ -49,7 +52,11 @@ defmodule ProjectQuazar.HighScores.ETSWrapper do
   # sorted in descending order
   def handle_call(:fetch_top_scores, _from, state) do
     top_scores = :ets.tab2list(@table_name)
-    |> Enum.sort_by(&elem(&1, 0), &>=/2)
+                |> Enum.sort_by(&elem(&1, 0), :desc)
+                |> Enum.map(fn {score, username, _datetime} ->
+                     %{player: username, score: score}
+                   end)
+
     {:reply, {:ok, top_scores}, state}
   end
 end

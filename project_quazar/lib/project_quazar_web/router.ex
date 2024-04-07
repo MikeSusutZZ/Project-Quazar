@@ -18,6 +18,7 @@ defmodule ProjectQuazarWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/high-scores", AllTimeHighScoresLive, :show
   end
 
   # Other scopes may use custom stacks.
