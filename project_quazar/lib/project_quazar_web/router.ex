@@ -19,6 +19,7 @@ defmodule ProjectQuazarWeb.Router do
 
     get "/", PageController, :home
     live "/high-scores", AllTimeHighScoresLive, :show
+    live "/user-details", UserDetails
   end
 
   # Other scopes may use custom stacks.
