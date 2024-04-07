@@ -1,48 +1,56 @@
 <%= if @joined do %>
-  <div>
-    <h2>Users online:</h2>
-    <%= for {user_id, metadata} <- @users do %>
-      <%= if user_id == @current_user do %>
-        <span class="text-xs bg-green-200 rounded px-2 py-1"><%= user_id %> - <%= metadata[:points] %> (me)</span>
-      <% else %>
-        <span class="text-xs bg-gray-200 rounded px-2 py-1"><%= user_id %> - <%= metadata[:points] %></span>
+  <div class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md mx-auto">
+    <h2 class="text-white text-3xl font-bold text-center mb-6">Live Scoreboard</h2>
+    <div class="flex flex-col space-y-4">
+      <%= for {user_id, metadata} <- @users do %>
+        <%= if user_id == @current_user do %>
+          <div class="flex justify-between items-center p-4 bg-green-600 rounded-lg text-white font-semibold transition duration-300 ease-in-out transform hover:scale-105">
+            <span class="text-lg"><%= user_id %></span>
+            <span class="text-xl text-yellow-400"><%= metadata[:points] %></span>
+          </div>
+        <% else %>
+          <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg text-white font-semibold transition duration-300 ease-in-out transform hover:scale-105">
+            <span class="text-lg"><%= user_id %></span>
+            <span class="text-xl text-yellow-400"><%= metadata[:points] %></span>
+          </div>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
   </div>
 <% else %>
   <!DOCTYPE html>
   <html>
-  <head>
+    <head>
       <title>User Input Form</title>
       <style>
-      * {
+        * {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
-      }
-      body, html {
+        }
+        body, html {
           height: 100%;
-      }
-      .outer-container {
+        }
+        .outer-container {
           display: flex;
           justify-content: center;
           align-items: center;
           height: 100%;
-      }
-      .inner-container {
+        }
+        .inner-container {
           border: 2px solid #ccc;
           padding: 20px;
           border-radius: 10px;
-      }
-      label {
+        }
+        label {
           font-size: 18px;
-      }
-      input[type="text"] {
+        }
+        input[type="text"] {
           padding: 8px;
           border-radius: 5px;
           border: 1px solid #ccc;
-      }
-      input[type="submit"] {
+        }
+        input[type="submit"] {
           padding: 8px 20px;
           border-radius: 5px;
           border: none;
@@ -50,13 +58,13 @@
           color: white;
           cursor: pointer;
           transition: background-color 0.3s;
-      }
-      input[type="submit"]:hover {
+        }
+        input[type="submit"]:hover {
           background-color: #45a049;
-      }
+        }
       </style>
-  </head>
-  <body>
+    </head>
+    <body>
       <div class="outer-container">
         <div class="inner-container">
           <form action="#" method="post" phx-submit="join">
@@ -67,6 +75,6 @@
           <p class="text-red-500"><%= @error_message %></p>
         </div>
       </div>
-  </body>
+    </body>
   </html>
 <% end %>
