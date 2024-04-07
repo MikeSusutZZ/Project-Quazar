@@ -1,21 +1,41 @@
 defmodule MenusWeb.AllTimeHighScoresLive do
   use Phoenix.LiveView
 
-  # `mount/3` prepares the socket for the live session.
-  # It's called when the live view is mounted.
   @impl true
   def mount(_session, _params, socket) do
-    {:ok, assign(socket, :sample_assign, "Hello, World!")}
+    high_scores = fetch_high_scores()
+    {:ok, assign(socket, :high_scores, high_scores)}
   end
 
-  # `render/1` is called to render the template.
-  # It should return valid HEEx or LEEx markup.
   @impl true
   def render(assigns) do
     ~L"""
-    <div>
-      <%= @sample_assign %>
+
+    <div class="high-scores-container">
+
+      <h1>All-Time High Scores</h1>
+
+      <div id="scores">
+        <ul>
+          <%= for score <- @high_scores do %>
+            <li>
+              <span class="player"><%= score.player %></span>
+              <span class="score"><%= score.score %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
     </div>
     """
+  end
+
+  # Simulates a call to the backend for high scores
+  defp fetch_high_scores do
+    [
+      %{player: "Alice", score: 12345},
+      %{player: "Bob", score: 11300},
+      %{player: "Charlie", score: 11000}
+    ]
   end
 end
