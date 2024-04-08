@@ -13,7 +13,7 @@ defmodule Mobile do
   end
 
 # Using the thrust (hitting W)
-# Increases the velocity if the ship in the direction it is facing
+# Increases the velocity of the ship in the direction it is facing
   def accelerate(%__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}, acl) do
     vxf = vx + (cos(angle) * acl)
     vyf = vy + (sin(angle) *  acl)
