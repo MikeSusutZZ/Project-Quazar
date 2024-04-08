@@ -12,6 +12,7 @@ defmodule ProjectQuazar.Application do
       # ProjectQuazar.Repo,
       {DNSCluster, query: Application.get_env(:project_quazar, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ProjectQuazar.PubSub},
+      ProjectQuazarWeb.Presence,
       # Start the Finch HTTP client for sending emails
       {Finch, name: ProjectQuazar.Finch},
       # Start a worker by calling: ProjectQuazar.Worker.start_link(arg)
