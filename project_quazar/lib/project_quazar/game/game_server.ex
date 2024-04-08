@@ -31,6 +31,7 @@ defmodule GameServer do
   def handle_info(:tick, %__MODULE__{ships: ships, projectiles: projectiles} = gamestate) do
     new_gamestate = %{gamestate | ships: move_all(ships), projectiles: move_all(projectiles)}
     Enum.each(ships, fn ship -> IO.inspect(ship) end)
+    IO.puts("bonk")
     :ets.insert(@table, {__MODULE__, new_gamestate})
     {:noreply, new_gamestate}
   end
