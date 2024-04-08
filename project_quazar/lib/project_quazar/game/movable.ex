@@ -6,11 +6,14 @@ defmodule Movable do
   def new_movable(px, py, vx, vy, angle) do
     %__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}
   end
-
+  # Each tick, this is called to move the ship based on it's velocity
+  # p = position, v = velocity, new position = position + vlocity
   def move(%__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}) do
     %__MODULE__{px: px + vx, py: py + vy, vx: vx, vy: vy, angle: angle}
   end
 
+# Using the thrust (hitting W)
+# Increases the velocity of the ship in the direction it is facing
   def accelerate(%__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}, acl) do
     vxf = vx + (cos(angle) * acl)
     vyf = vy + (sin(angle) *  acl)
