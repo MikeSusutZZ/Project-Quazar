@@ -19,8 +19,11 @@ defmodule ProjectQuazar.Application do
       # {ProjectQuazar.Worker, arg},
       # Start to serve requests, typically the last entry
       ProjectQuazarWeb.Endpoint,
+      GameServer,
       {ProjectQuazar.HighScores.ETSWrapper, []}
     ]
+
+    :ets.new(GameState, [:named_table, :public])
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
