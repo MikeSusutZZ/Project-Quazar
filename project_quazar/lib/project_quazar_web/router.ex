@@ -18,6 +18,10 @@ defmodule ProjectQuazarWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    live "/start", StartScreenLive, :show
+    live "/create-ship", CreateShipLive, :show
+    live "/in-game-scores", InGameScoresLive, :show
     live "/high-scores", AllTimeHighScoresLive, :show
   end
 
