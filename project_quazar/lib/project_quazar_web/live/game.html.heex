@@ -1,80 +1,31 @@
+<%# Master HTML Heex Page for all Front End %>
+<%# Main layout for the application %>
+<%# 
+  @joined: boolean - determines if the user has joined the game
+    - true: renders the main game screen
+    - false: renders the lobby screen
+%>
+
 <%= if @joined do %>
-  <div class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md mx-auto">
-    <h2 class="text-white text-3xl font-bold text-center mb-6">Live Scoreboard</h2>
-    <div class="flex flex-col space-y-4">
-      <%= for {user_id, metadata} <- @users do %>
-        <%= if user_id == @current_user do %>
-          <div class="flex justify-between items-center p-4 bg-green-600 rounded-lg text-white font-semibold transition duration-300 ease-in-out transform hover:scale-105">
-            <span class="text-lg"><%= user_id %></span>
-            <span class="text-xl text-yellow-400"><%= metadata[:points] %></span>
-          </div>
-        <% else %>
-          <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg text-white font-semibold transition duration-300 ease-in-out transform hover:scale-105">
-            <span class="text-lg"><%= user_id %></span>
-            <span class="text-xl text-yellow-400"><%= metadata[:points] %></span>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
+  <%# Main Game Screen %>
+  <%# TODO: Add the game board here %>
+
+  <%# Live scoreboard menu %>
+  <.live_component 
+    module={ProjectQuazarWeb.Scoreboard}
+    id="scoreboard"
+    current_user={@current_user}
+    users={@users}
+  />
 <% else %>
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title>User Input Form</title>
-      <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        body, html {
-          height: 100%;
-        }
-        .outer-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100%;
-        }
-        .inner-container {
-          border: 2px solid #ccc;
-          padding: 20px;
-          border-radius: 10px;
-        }
-        label {
-          font-size: 18px;
-        }
-        input[type="text"] {
-          padding: 8px;
-          border-radius: 5px;
-          border: 1px solid #ccc;
-        }
-        input[type="submit"] {
-          padding: 8px 20px;
-          border-radius: 5px;
-          border: none;
-          background-color: #4CAF50;
-          color: white;
-          cursor: pointer;
-          transition: background-color 0.3s;
-        }
-        input[type="submit"]:hover {
-          background-color: #45a049;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="outer-container">
-        <div class="inner-container">
-          <form action="#" method="post" phx-submit="join">
-            <label for="username">Enter your username:</label><br>
-            <input type="text" id="username" name="username"><br><br>
-            <input type="submit" value="Submit">
-          </form>
-          <p class="text-red-500"><%= @error_message %></p>
-        </div>
-      </div>
-    </body>
-  </html>
+  <%# Lobby Screen %>
+
+  <%# User entry form menu %>
+  <.live_component
+    module={ProjectQuazarWeb.UserForm}
+    id="user-form"
+    error_message={@error_message}
+  />
+
+  <%# TODO: Add the all time high score screen here %>
 <% end %>
