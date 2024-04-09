@@ -8,28 +8,28 @@ defmodule Ship do
     %Ship{name: name, position: Movable.new_movable(px, py, 0, 1, angle), health: health, bullet_dmg: bullet_dmg}
   end
 
-  defimpl Movable.MovableObj, for: Ship do
+  defimpl Movable.Motion, for: Ship do
     # Moves the ship according to its current pos, acceleration, & velocity
     def move(%Ship{name: name, position: position, health: health, bullet_dmg: bullet_dmg}) do
-      new_pos = Movable.MovableObj.move(position)
+      new_pos = Movable.Motion.move(position)
       %Ship{name: name, position: new_pos, health: health, bullet_dmg: bullet_dmg}
     end
 
     # Accelerates the ship in its current direction
     def accelerate(%Ship{name: name, position: position, health: health, bullet_dmg: bullet_dmg}, acl) do
-      new_pos = Movable.MovableObj.accelerate(position, acl)
+      new_pos = Movable.Motion.accelerate(position, acl)
       %Ship{name: name, position: new_pos, health: health, bullet_dmg: bullet_dmg}
     end
 
     # Rotates ship clockwise in degrees (Turns right)
     def rotate(%Ship{name: name, position: position, health: health, bullet_dmg: bullet_dmg}, rad, :cw) do
-      new_pos = Movable.MovableObj.rotate(position, rad, :cw)
+      new_pos = Movable.Motion.rotate(position, rad, :cw)
       %Ship{name: name, position: new_pos, health: health, bullet_dmg: bullet_dmg}
     end
 
     # Rotates ship counter-clockwise in degrees (Turns left)
     def rotate(%Ship{name: name, position: position, health: health, bullet_dmg: bullet_dmg}, rad, :ccw) do
-      new_pos = Movable.MovableObj.rotate(position, rad, :ccw)
+      new_pos = Movable.Motion.rotate(position, rad, :ccw)
       %Ship{name: name, position: new_pos, health: health, bullet_dmg: bullet_dmg}
     end
   end

@@ -49,6 +49,6 @@ defmodule GameServer do
     {:noreply, %{gamestate | ships: new_ships}}
   end
 
-  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.MovableObj.move(movable) end)
+  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
 
 end

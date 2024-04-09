@@ -1,7 +1,7 @@
 defmodule Movable do
   import :math
 
-  defprotocol MovableObj do
+  defprotocol Motion do
     @doc "Moves an object based on its current velocity/acceleration"
     def move(data)
     @doc "Accelerates an object in its current direction"
@@ -26,7 +26,7 @@ defmodule Movable do
     end
   end
 
-  defimpl Movable.MovableObj, for: Movable do
+  defimpl Movable.Motion, for: Movable do
     # Each tick, this is called to move the ship based on it's velocity
     # p = position, v = velocity, new position = position + vlocity
     def move(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}) do
