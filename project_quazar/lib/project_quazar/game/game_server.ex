@@ -41,11 +41,11 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  def spawn_ship(), do: GenServer.cast({:global, __MODULE__}, :spawn_ship)
+  def spawn_ship(name), do: GenServer.cast({:global, __MODULE__}, {:spawn_ship, name})
 
   @impl true
-  def handle_cast(:spawn_ship, %__MODULE__{ships: ships} = gamestate) do
-    new_ships = [Ship.new_ship("Spear of Justice", 0, 0, 0, 100, 10) | ships]
+  def handle_cast({:spawn_ship, name}, %__MODULE__{ships: ships} = gamestate) do
+    new_ships = [Ship.new_ship(name, 0, 0, 0, 100, 10) | ships]
     {:noreply, %{gamestate | ships: new_ships}}
   end
 
