@@ -1,4 +1,4 @@
-defmodule MenusWeb.InGameScoresLive do
+defmodule ProjectQuazarWeb.StartScreenLive do
   use Phoenix.LiveView
 
   # `mount/3` prepares the socket for the live session.
