@@ -45,10 +45,10 @@ defmodule GameServer do
 
   @impl true
   def handle_cast(:spawn_ship, %__MODULE__{ships: ships} = gamestate) do
-    new_ships = [Movable.new_movable(0, 0, 1, 1, 0) | ships]
+    new_ships = [Ship.new_ship("Spear of Justice", 0, 0, 0, 100, 10) | ships]
     {:noreply, %{gamestate | ships: new_ships}}
   end
 
-  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.move(movable) end)
+  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.MovableObj.move(movable) end)
 
 end
