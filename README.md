@@ -2,7 +2,8 @@
 
 ## Menus Team
 
-This guide is specifically for the Menus Team. If you are **NOT** on the Menus Team, please do not alter the `menus` folder without permission. Once we're finished and the other teams are ready to combine their work, we'll integrate our menus into the main game.
+### IMPORTANT
+Menus Team, the 'menus' folder is now deprecated. Please work on, and create branches for, the `project_quazar` folder.
 
 The Menus team is responsible for creating the following:
 
@@ -22,10 +23,6 @@ The Menus team is responsible for creating the following:
 - Ediljohn Joson
 - Rhys Mahannah
 
-## Instructions
-
-Work within the **"menus"** subfolder for all menu-related development.
-
 ### Setting Up Your Environment
 
 #### (1) Clone the Repository
@@ -38,7 +35,7 @@ Work within the **"menus"** subfolder for all menu-related development.
 
 #### (2) Install Dependencies
 
-- Right-click on `menus` in the Explorer sidebar and select `Open in Integrated Terminal`
+- Right-click on `project_quazar` in the Explorer sidebar and select `Open in Integrated Terminal`
 - Run the following command in the terminal: `mix deps.get`
 
 #### (3) Start the Phoenix Server

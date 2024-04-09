@@ -9,17 +9,21 @@ defmodule ProjectQuazar.Application do
   def start(_type, _args) do
     children = [
       ProjectQuazarWeb.Telemetry,
-      ProjectQuazar.Repo,
+      # ProjectQuazar.Repo,
       {DNSCluster, query: Application.get_env(:project_quazar, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ProjectQuazar.PubSub},
+      ProjectQuazarWeb.Presence,
       # Start the Finch HTTP client for sending emails
       {Finch, name: ProjectQuazar.Finch},
       # Start a worker by calling: ProjectQuazar.Worker.start_link(arg)
       # {ProjectQuazar.Worker, arg},
       # Start to serve requests, typically the last entry
       ProjectQuazarWeb.Endpoint,
+      GameServer,
       {ProjectQuazar.HighScores.ETSWrapper, []}
     ]
+
+    :ets.new(GameState, [:named_table, :public])
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

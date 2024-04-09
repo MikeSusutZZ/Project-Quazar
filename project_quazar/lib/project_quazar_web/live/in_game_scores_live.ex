@@ -1,4 +1,4 @@
-defmodule ProjectQuazarWebInGameScoresLive do
+defmodule ProjectQuazarWeb.InGameScoresLive do
   use Phoenix.LiveView
 
   # `mount/3` prepares the socket for the live session.

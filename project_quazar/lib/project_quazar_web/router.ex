@@ -17,6 +17,7 @@ defmodule ProjectQuazarWeb.Router do
   scope "/", ProjectQuazarWeb do
     pipe_through :browser
 
+    live "/", Game
     get "/", PageController, :home
 
     live "/start", StartScreenLive, :show
