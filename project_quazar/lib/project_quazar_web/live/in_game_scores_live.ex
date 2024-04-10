@@ -12,7 +12,7 @@ defmodule ProjectQuazarWeb.InGameScoresLive do
   # It should return valid HEEx or LEEx markup.
   @impl true
   def render(assigns) do
-    ~L"""
+    ~H"""
     <div>
       <%= @sample_assign %>
     </div>
