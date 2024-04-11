@@ -1,13 +1,10 @@
 defmodule Ship do
-  # Name, Kinematics (Movable component: x/y position, velocity & angle), Current health, & Bullet damage
-  # Not sure if this essentially is the player module, or if the player module contains
-  # more/different functionality that I'm not aware of at the moment.
-  defstruct [:name, :kinematics, :health, :bullet_dmg]
+  # Kinematics (Movable component: x/y position, velocity & angle), Current health, & Bullet damage
+  defstruct [:kinematics, :health, :bullet_dmg]
 
-  def new_ship(name, px, py, angle, health, bullet_dmg) do
+  def new_ship(px, py, angle, health, bullet_dmg) do
     %Ship{
-      name: name,
-      kinematics: Movable.new_movable(px, py, 0, 1, angle),
+      kinematics: Movable.new_movable(px, py, 0, 0, angle),
       health: health,
       bullet_dmg: bullet_dmg
     }
@@ -40,8 +37,8 @@ defmodule Ship do
   end
 
   # Applies a set amount of damage to the provided ships health
-  def take_damage(%Ship{health: old_health} = ship_data, damage) do
-    %Ship{ ship_data | health: (old_health - damage) }
+  def take_damage(%Ship{health: old_health} = ship_data, amount) do
+    %Ship{ ship_data | health: (old_health - amount) }
   end
 
   # Returns whether the passed ship is alive (>0 health)
