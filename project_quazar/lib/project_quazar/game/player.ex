@@ -4,8 +4,6 @@ defmodule Player do
   A player is composed of a name (string), a ship (from Ship module), and score (int)
   """
   
-  @modulename __MODULE__
-  
   # Player name, Ship, & current score.
   defstruct [:name, :ship, :score]
   
@@ -27,37 +25,42 @@ defmodule Player do
   
   # Returns whether this player is alive or not. (> 0 health, or ship destroyed)
   def alive?(%__MODULE__{ship: ship}) do
-    if ship = nil, do: false, else: Ship.alive?(ship)
+    if ship == nil do
+      false
+    else
+      Ship.alive?(ship)
+    end
   end
   
   # Applies an amount of damage to the ships health. If a ship runs out of health, it is destroyed.
   def take_damage(%__MODULE__{ship: ship} = player_data, amount) do
     damaged_ship = Ship.take_damage(ship, amount)
-    if Ship.alive?(damaged_ship)
+    if Ship.alive?(damaged_ship) do
       %__MODULE__{ player_data | ship: damaged_ship }
     else # Player has taken too much damage, ship has been destroyed
       %__MODULE__{ player_data | ship: nil }
+    end
   end
   
-  defimpl Movable.Motion, for: @modulename do
+  defimpl Movable.Motion, for: __MODULE__ do
     # Moves the players ship according to its kinematics
-    def move(%@modulename{ship: ship} = player_data) do
-      %@modulename{ player_data | ship: Ship.move(ship) }
+    def move(%@for{ship: ship} = player_data) do
+      %@for{ player_data | ship: Movable.Motion.move(ship) }
     end
 
     # Accelerates the player in their current direction
-    def accelerate(%@modulename{ship: ship} = player_data, amount) do
-      %@modulename{ player_data | ship: Ship.accelerate(ship, amount) }
+    def accelerate(%@for{ship: ship} = player_data, amount) do
+      %@for{ player_data | ship: Movable.Motion.accelerate(ship, amount) }
     end
 
     # Rotates ship clockwise in degrees (Turns right)
-    def rotate(%@modulename{ship: ship} = player_data, rad, :cw) do
-      %@modulename{ player_data | ship: Ship.rotate(ship, rad, :cw) }
+    def rotate(%@for{ship: ship} = player_data, rad, :cw) do
+      %@for{ player_data | ship: Movable.Motion.rotate(ship, rad, :cw) }
     end
 
     # Rotates ship counter-clockwise in degrees (Turns left)
-    def rotate(%@modulename{ship: ship} = player_data, rad, :ccw) do
-      %@modulename{ player_data | ship: Ship.rotate(ship, rad, :ccw) }
+    def rotate(%@for{ship: ship} = player_data, rad, :ccw) do
+      %@for{ player_data | ship: Movable.Motion.rotate(ship, rad, :ccw) }
     end
   end
 end
