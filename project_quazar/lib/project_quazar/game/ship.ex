@@ -1,10 +1,11 @@
 defmodule Ship do
-  # Kinematics (Movable component: x/y position, velocity & angle), Current health, & Bullet damage
-  defstruct [:kinematics, :health, :bullet_dmg]
+  # Kinematics (Movable component: x/y position, velocity & angle), Max/Current health, & Bullet damage
+  defstruct [:kinematics, :max_health, :health, :bullet_dmg]
 
   def new_ship(px, py, angle, health, bullet_dmg) do
     %__MODULE__{
       kinematics: Movable.new_movable(px, py, 0, 0, angle),
+      max_health: health,
       health: health,
       bullet_dmg: bullet_dmg
     }
@@ -23,13 +24,13 @@ defmodule Ship do
       %@for{ ship_data | kinematics: new_acceleration }
     end
 
-    # Rotates ship clockwise in degrees (Turns right)
+    # Rotates ship clockwise in radians (Turns right)
     def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :cw) do
       new_rotation = Movable.Motion.rotate(old_rotation, rad, :cw)
       %@for{ ship_data | kinematics: new_rotation }
     end
 
-    # Rotates ship counter-clockwise in degrees (Turns left)
+    # Rotates ship counter-clockwise in radians (Turns left)
     def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :ccw) do
       new_rotation = Movable.Motion.rotate(old_rotation, rad, :ccw)
       %@for{ ship_data | kinematics: new_rotation }
@@ -44,5 +45,11 @@ defmodule Ship do
   # Returns whether the passed ship is alive (>0 health)
   def alive?(%__MODULE__{health: health}) do
     health > 0
+  end
+  
+  # Respawns the ship at a provided position and angle (in radians)
+  def respawn(%__MODULE__{max_health: new_health} = ship_data, px, py, angle) do
+    new_pos = Movable.new_movable(px, py, 0, 0, angle)
+    %__MODULE__{ ship_data | health: new_health, kinematics: new_pos }
   end
 end
