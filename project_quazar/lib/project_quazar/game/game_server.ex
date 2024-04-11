@@ -1,7 +1,7 @@
 defmodule GameServer do
   use GenServer
 
-  defstruct [:ships, :projectiles]
+  defstruct [:players, :projectiles]
 
   @table GameState
   @tick_rate 1 # Ticks/second
@@ -17,7 +17,7 @@ defmodule GameServer do
     gamestate = case :ets.lookup(@table, __MODULE__) do
       [{_, savedstate}] -> savedstate
       [] -> %__MODULE__{
-        ships: [],
+        players: [],
         projectiles: []
       }
     end
@@ -28,9 +28,9 @@ defmodule GameServer do
 
   # Main gameplay loop.
   @impl true
-  def handle_info(:tick, %__MODULE__{ships: ships, projectiles: projectiles} = gamestate) do
-    new_gamestate = %{gamestate | ships: move_all(ships), projectiles: move_all(projectiles)}
-    Enum.each(ships, fn ship -> IO.inspect(ship) end)
+  def handle_info(:tick, %__MODULE__{players: players, projectiles: projectiles} = gamestate) do
+    new_gamestate = %{gamestate | players: move_all(players), projectiles: move_all(projectiles)}
+    Enum.each(players, fn player -> IO.inspect(player) end)
     IO.puts("bonk")
     :ets.insert(@table, {__MODULE__, new_gamestate})
     {:noreply, new_gamestate}
@@ -41,12 +41,13 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  def spawn_ship(name), do: GenServer.cast({:global, __MODULE__}, {:spawn_ship, name})
+  def spawn_player(name), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name})
 
   @impl true
-  def handle_cast({:spawn_ship, name}, %__MODULE__{ships: ships} = gamestate) do
-    new_ships = [Ship.new_ship(name, 0, 0, 0, 100, 10) | ships]
-    {:noreply, %{gamestate | ships: new_ships}}
+  def handle_cast({:spawn_player, name}, %__MODULE__{players: players} = gamestate) do
+    player_ship = Ship.new_ship(0, 0, 0, 100, 10)
+    new_players = [Player.new_player(name, player_ship) | players]
+    {:noreply, %{gamestate | players: new_players}}
   end
 
   def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
