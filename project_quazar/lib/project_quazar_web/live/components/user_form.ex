@@ -13,6 +13,7 @@ defmodule ProjectQuazarWeb.UserForm do
         </form>
         <p class="text-red-500"><%= @error_message %></p>
         <span phx-window-keydown="ping_server"></span>
+        <span phx-window-keydown="control"></span>
       </div>
     </div>
     """
