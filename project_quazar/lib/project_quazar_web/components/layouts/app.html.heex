@@ -1,32 +1,69 @@
-<header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+<script>
+  // Initialize audio objects for each track
+  var defaultAudio = new Audio("/audio/cosmic-audio.mp3");
+  var albertsTheme = new Audio("/audio/albert.mp3");
+
+  defaultAudio.loop = true;
+  defaultAudio.play().catch(e => console.error("Error playing default audio:", e));
+
+  // Function to play or pause the default audio
+  function toggleDefaultAudio() {
+    if (!defaultAudio.paused) {
+      console.log("Stopping default audio...");
+      defaultAudio.pause();
+    } else {
+      console.log("Playing default audio...");
+      stopOtherAudio(albertsTheme);
+      defaultAudio.play().catch(e => console.error("Error playing default audio:", e));
+    }
+  }
+
+  // Function to play or pause Albert's Theme
+  function toggleAlbertsTheme() {
+    if (!albertsTheme.paused) {
+      console.log("Stopping Albert's Theme...");
+      albertsTheme.pause();
+    } else {
+      console.log("Playing Albert's Theme...");
+      stopOtherAudio(defaultAudio);
+      albertsTheme.play().catch(e => console.error("Error playing Albert's Theme:", e));
+    }
+  }
+
+  // Helper function to stop other audio tracks
+  function stopOtherAudio(otherAudio) {
+    if (!otherAudio.paused) {
+      otherAudio.pause();
+      otherAudio.currentTime = 0; // Optionally reset the track to the beginning
+    }
+  }
+</script>
+
+
+<header class="px-4 sm:px-6 lg:px-8 bg-gray-900 text-white">
+  <div class="flex items-center justify-between border-b border-gray-800 py-3 text-sm">
     <div class="flex items-center gap-4">
-      <a href="/">
-        <img src={~p"/images/logo.svg"} width="36" />
-      </a>
-      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
-        v<%= Application.spec(:phoenix, :vsn) %>
+      <img src={~p"/images/logo.svg"} width="36" />
+      <p class="bg-green-600 text-white rounded-full px-2 font-medium leading-6">
+        Project Quazar
       </p>
     </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <a href="https://twitter.com/elixirphoenix" class="hover:text-zinc-700">
-        @elixirphoenix
-      </a>
-      <a href="https://github.com/phoenixframework/phoenix" class="hover:text-zinc-700">
-        GitHub
-      </a>
-      <a
-        href="https://hexdocs.pm/phoenix/overview.html"
-        class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80"
-      >
-        Get Started <span aria-hidden="true">&rarr;</span>
-      </a>
+    <div class="flex gap-2">
+      <button onclick="toggleDefaultAudio()" class="rounded-lg bg-gray-800 px-4 py-2 hover:bg-gray-700">
+        Play/Pause Cosmic Audio
+      </button>
+      <button onclick="toggleAlbertsTheme()" class="rounded-lg bg-gray-800 px-4 py-2 hover:bg-gray-700">
+        Play/Pause Albert's Theme
+      </button>
     </div>
   </div>
 </header>
+
+
 <main class="px-4 py-20 sm:px-6 lg:px-8">
   <div class="mx-auto max-w-2xl">
     <.flash_group flash={@flash} />
     <%= @inner_content %>
   </div>
 </main>
+
