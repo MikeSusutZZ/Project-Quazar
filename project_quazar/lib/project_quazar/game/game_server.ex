@@ -5,6 +5,8 @@ defmodule GameServer do
 
   @table GameState
   @tick_rate 1 # Ticks/second
+  @accel_rate 1
+  @turn_rate :math.pi() / 3
 
   def start_link(_arg) do
     GenServer.start_link(__MODULE__, nil, name: {:global, __MODULE__})
@@ -55,15 +57,15 @@ defmodule GameServer do
   @doc "Used for testing how players can interact/move."
   def modify_players(players) do
     if length(players) == 0 do
-      spawn_player("Bill") # Spawns a player
+      # spawn_player("Bill") # Spawns a player
       [] # Return empty list, cast will update players
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
         if Player.alive?(player) do
-          Player.take_damage(player, 10)
-          |> Player.inc_score(100)
-          |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
+          # Player.take_damage(player, 10) |>
+          Player.inc_score(player, 100)
+          # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
         else
           Player.respawn(player, 0, 0, 0)
@@ -72,13 +74,63 @@ defmodule GameServer do
     end
   end
 
+  # Debugging ping function.
   @impl true
   def handle_cast({:ping, pid}, state) do
     IO.inspect(pid)
     {:noreply, state}
   end
 
-  def ping() do
-    GenServer.cast({:global, __MODULE__}, {:ping, self()})
+  # Pings server for debugging.
+  def ping(socket) do
+    GenServer.cast({:global, __MODULE__}, {:ping, socket})
   end
+
+  # Accelerate the Player with the given name.
+  @impl true
+  def handle_cast({:accel, name}, %{players: players} = state) do
+    player = Enum.find(players, fn player -> player.name == name end)
+    if player == :default
+    do
+      {:noreply, state}
+    else
+      updated_players = update_players(players, Movable.Motion.accelerate(player, @accel_rate))
+      {:noreply, %{state | :players => updated_players}}
+    end
+  end
+
+  # Accelerate the Player with the given name.
+  def accelerate_player(name) do
+    GenServer.cast({:global, __MODULE__}, {:accel, name})
+  end
+
+  # Given a player and player list, replaces players with the same name in the list and returns the new list.
+  def update_players(players, updated_player) do
+    Enum.map(players, fn p -> if p.name == updated_player.name, do: updated_player, else: p end)
+  end
+
+  # Rotates the ship with the given name in the given direction.
+  def rotate_player(name, dir) do
+    GenServer.cast({:global, __MODULE__}, {:rotate, name, dir})
+  end
+
+  # Rotates the ship with the given name in the given direction
+  @impl true
+  def handle_cast({:rotate, name, dir}, %{players: players} = state) do
+    player = Enum.find(players, fn player -> player.name == name end)
+    if player == :default
+    do
+      {:noreply, state}
+    else
+      if dir == :cw || dir == :ccw
+      do
+        updated_players = update_players(players, Movable.Motion.rotate(player, @turn_rate, dir))
+        {:noreply, %{state | :players => updated_players}}
+      else
+        {:noreply, state}
+      end
+    end
+  end
+
+
 end

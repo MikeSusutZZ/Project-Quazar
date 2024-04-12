@@ -85,10 +85,36 @@ defmodule ProjectQuazarWeb.Game do
 
   # Pings the game server
   def handle_event("ping_server", %{"key" => "p"}, socket) do
-    IO.puts("Ping attempt")
-    GameServer.ping()
+    GameServer.ping(socket)
     {:noreply, socket}
   end
 
   def handle_event("ping_server", _, socket), do: {:noreply, socket}
+
+  # Spawn a test ship
+  def handle_event("control", %{"key" => "r"}, socket) do
+    GameServer.spawn_player("default")
+    {:noreply, socket}
+  end
+
+  # Accelerate the test ship
+  def handle_event("control", %{"key" => "w"}, socket) do
+    GameServer.accelerate_player("default")
+    {:noreply, socket}
+  end
+
+  # Rotate the test ship clockwise
+  def handle_event("control", %{"key" => "d"}, socket) do
+    GameServer.rotate_player("default", :cw)
+    {:noreply, socket}
+  end
+
+  # Rotate the test ship counter-clockwise
+  def handle_event("control", %{"key" => "a"}, socket) do
+    GameServer.rotate_player("default", :ccw)
+    {:noreply, socket}
+  end
+
+  # Catches all other keyboard events
+  def handle_event("control", _, socket), do: {:noreply, socket}
 end
