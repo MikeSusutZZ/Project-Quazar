@@ -50,7 +50,12 @@ defmodule Ship do
 
   @doc "Applies a set amount of damage to the provided ships health"
   def take_damage(%__MODULE__{health: old_health} = ship_data, amount) do
-    %__MODULE__{ ship_data | health: (old_health - amount) }
+    new_health = cond do
+      old_health <= 0 -> 0
+      (old_health - amount) <= 0 -> 0
+      true -> (old_health - amount)
+    end
+    %__MODULE__{ ship_data | health: new_health }
   end
 
   @doc "Returns whether the passed ship is alive (>0 health)"
