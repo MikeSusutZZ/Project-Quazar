@@ -28,11 +28,7 @@ defmodule Player do
   
   @doc "Returns whether the player is alive or not. (> 0 health, or ship destroyed)"
   def alive?(%__MODULE__{ship: ship}) do
-    if ship == nil do
-      false
-    else
-      Ship.alive?(ship)
-    end
+    Ship.alive?(ship)
   end
   
   @doc "Applies an amount of damage to the ships health."
@@ -44,7 +40,7 @@ defmodule Player do
   @doc "Respawns the player at a given position and angle (in radians)."
   def respawn(%__MODULE__{ship: ship} = player_data, px, py, angle) do
     respawned_ship = Ship.respawn(ship, px, py, angle)
-    %__MODULE__{ player_data | ship: respawned_ship }
+    %__MODULE__{ player_data | score: 0, ship: respawned_ship }
   end
   
   defimpl Movable.Motion, for: __MODULE__ do
