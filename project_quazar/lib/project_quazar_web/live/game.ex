@@ -20,6 +20,7 @@ defmodule ProjectQuazarWeb.Game do
       |> assign(:users, %{})
       |> assign(:error_message, "")
       |> assign(:top_scores, top_scores)
+      |> assign(:start, true)
       |> assign(:current_page, 1)
     }
   end
@@ -57,6 +58,10 @@ defmodule ProjectQuazarWeb.Game do
     IO.puts("Current page before update: #{current_page}")
 
     {:noreply, assign(socket, current_page: previous_page)}
+  end
+
+  def handle_event("show_start_game", _value, socket) do
+    {:noreply, assign(socket, :start, false)}
   end
 
 
