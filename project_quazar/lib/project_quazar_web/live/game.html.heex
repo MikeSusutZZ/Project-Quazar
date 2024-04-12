@@ -6,6 +6,8 @@
     - false: renders the lobby screen
 %>
 
+
+
 <%= if @joined do %>
   <%# Main Game Screen %>
   <%# TODO: Add the game board here %>
@@ -20,6 +22,12 @@
 <% else %>
   <%# Lobby Screen %>
 
+  <%# Start Screen %>
+  <.live_component
+    module={ProjectQuazarWeb.Start}
+    id="start"
+  />
+
   <%# User entry form menu %>
   <.live_component
     module={ProjectQuazarWeb.UserForm}
@@ -31,6 +39,4 @@
     id="all_time-high-scores-component"
     top_scores={@top_scores}
   />
-
-  <%# TODO: Add the all time high score screen here %>
 <% end %>
