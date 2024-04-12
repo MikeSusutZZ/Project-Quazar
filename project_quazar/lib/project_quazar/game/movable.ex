@@ -8,6 +8,8 @@ defmodule Movable do
     def accelerate(data, acl)
     @doc "Rotates an object clockwise in radians"
     def rotate(data, rad, cw_or_ccw)
+    @doc "Gets an object's x/y position and angle"
+    def get_pos(data)
   end
 
   defstruct [:px, :py, :vx, :vy, :angle] # x-coordinate, y-coordinate, x-velocity, y-velocity, orientation in radians
@@ -51,6 +53,11 @@ defmodule Movable do
     def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :ccw) do
       new_angle = angle + rad |> Movable.normalize_angle()
       %Movable{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
+    end
+    
+    # Gets the current position
+    def get_pos(%Movable{px: x, py: y, angle: angle}) do
+      %{x: x, y: y, angle: angle}
     end
   end
 end

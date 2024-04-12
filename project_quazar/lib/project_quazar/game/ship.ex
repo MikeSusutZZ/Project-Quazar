@@ -46,6 +46,11 @@ defmodule Ship do
       new_rotation = Movable.Motion.rotate(old_rotation, rad, :ccw)
       %@for{ ship_data | kinematics: new_rotation }
     end
+    
+    @doc "Gets the current X/Y position and angle"
+    def get_pos(%@for{kinematics: position}) do
+      Movable.Motion.get_pos(position)
+    end
   end
 
   @doc "Applies a set amount of damage to the provided ships health"

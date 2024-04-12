@@ -65,5 +65,10 @@ defmodule Player do
     def rotate(%@for{ship: ship} = player_data, rad, :ccw) do
       %@for{ player_data | ship: Movable.Motion.rotate(ship, rad, :ccw) }
     end
+        
+    # Gets the current position
+    def get_pos(%@for{ship: ship}) do
+      Movable.Motion.get_pos(ship)
+    end
   end
 end
