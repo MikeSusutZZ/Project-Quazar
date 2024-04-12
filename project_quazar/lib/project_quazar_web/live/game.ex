@@ -84,9 +84,11 @@ defmodule ProjectQuazarWeb.Game do
   end
 
   # Pings the game server
-  def handle_event("ping_server", _, socket) do
+  def handle_event("ping_server", %{"key" => "p"}, socket) do
     IO.puts("Ping attempt")
     GameServer.ping()
     {:noreply, socket}
   end
+
+  def handle_event("ping_server", _, socket), do: {:noreply, socket}
 end
