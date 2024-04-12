@@ -1,0 +1,36 @@
+<%# Master HTML Heex Page for all Front End %>
+<%# Main layout for the application %>
+<%#
+  @joined: boolean - determines if the user has joined the game
+    - true: renders the main game screen
+    - false: renders the lobby screen
+%>
+
+<%= if @joined do %>
+  <%# Main Game Screen %>
+  <%# TODO: Add the game board here %>
+
+  <%# Live scoreboard menu %>
+  <.live_component
+    module={ProjectQuazarWeb.Scoreboard}
+    id="scoreboard"
+    current_user={@current_user}
+    users={@users}
+  />
+<% else %>
+  <%# Lobby Screen %>
+
+  <%# User entry form menu %>
+  <.live_component
+    module={ProjectQuazarWeb.UserForm}
+    id="user-form"
+    error_message={@error_message}
+  />
+  <.live_component
+    module={ProjectQuazarWeb.AllTimeHighScores}
+    id="all_time-high-scores-component"
+    top_scores={@top_scores}
+  />
+
+  <%# TODO: Add the all time high score screen here %>
+<% end %>

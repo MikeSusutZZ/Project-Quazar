@@ -1,4 +1,4 @@
-defmodule MenusWeb.InGameScoresLive do
+defmodule ProjectQuazarWeb.CreateShipLive do
   use Phoenix.LiveView
 
   # `mount/3` prepares the socket for the live session.
@@ -12,7 +12,7 @@ defmodule MenusWeb.InGameScoresLive do
   # It should return valid HEEx or LEEx markup.
   @impl true
   def render(assigns) do
-    ~L"""
+    ~H"""
     <div>
       <%= @sample_assign %>
     </div>
