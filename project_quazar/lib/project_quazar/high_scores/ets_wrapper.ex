@@ -31,7 +31,7 @@ defmodule ProjectQuazar.HighScores.ETSWrapper do
 
   # handle the insert_entry call
   # returns {:ok, entry} if the entry was inserted successfully
-  # returns {:error, :username_exists} if the username already exists
+  # returns {:ok, :no_update} if there was no change
   def handle_call({:insert_entry, username, score}, _from, state) do
     current_datetime = DateTime.utc_now()
     entry = {score, username, current_datetime}
@@ -42,8 +42,16 @@ defmodule ProjectQuazar.HighScores.ETSWrapper do
         Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "high_scores:updates", :scores_updated)
         IO.puts("Broadcasted scores_updated message")
         {:reply, {:ok, entry}, state}
+
+      [{existing_score, _, _} = _existing_entry] when score > existing_score ->
+        :ets.delete(@table_name, username)
+        :ets.insert(@table_name, entry)
+        Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "high_scores:updates", :scores_updated)
+        IO.puts("Broadcasted scores_updated message")
+        {:reply, {:ok, entry}, state}
+
       _ ->
-        {:reply, {:error, :username_exists}, state}
+        {:reply, {:ok, :no_update}, state}
     end
   end
 
