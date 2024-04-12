@@ -6,28 +6,35 @@
   defaultAudio.loop = true;
   defaultAudio.play().catch(e => console.error("Error playing default audio:", e));
 
+  // Update button text based on audio state
+  function updateButtonLabels() {
+    var defaultAudioBtn = document.getElementById("defaultAudioBtn");
+    var albertsThemeBtn = document.getElementById("albertsThemeBtn");
+
+    defaultAudioBtn.innerHTML = defaultAudio.paused ? 'Play Cosmic Audio' : 'Pause Cosmic Audio';
+    albertsThemeBtn.innerHTML = albertsTheme.paused ? 'Play Albert\'s Theme' : 'Pause Albert\'s Theme';
+  }
+
   // Function to play or pause the default audio
   function toggleDefaultAudio() {
     if (!defaultAudio.paused) {
-      console.log("Stopping default audio...");
       defaultAudio.pause();
     } else {
-      console.log("Playing default audio...");
       stopOtherAudio(albertsTheme);
       defaultAudio.play().catch(e => console.error("Error playing default audio:", e));
     }
+    updateButtonLabels();
   }
 
   // Function to play or pause Albert's Theme
   function toggleAlbertsTheme() {
     if (!albertsTheme.paused) {
-      console.log("Stopping Albert's Theme...");
       albertsTheme.pause();
     } else {
-      console.log("Playing Albert's Theme...");
       stopOtherAudio(defaultAudio);
       albertsTheme.play().catch(e => console.error("Error playing Albert's Theme:", e));
     }
+    updateButtonLabels();
   }
 
   // Helper function to stop other audio tracks
@@ -49,11 +56,11 @@
       </p>
     </div>
     <div class="flex gap-2">
-      <button onclick="toggleDefaultAudio()" class="rounded-lg bg-gray-800 px-4 py-2 hover:bg-gray-700">
-        Play/Pause Cosmic Audio
+      <button id="defaultAudioBtn" onclick="toggleDefaultAudio()" class="rounded-lg bg-gray-800 px-4 py-2 hover:bg-gray-700">
+        Pause Cosmic Audio <!-- Placeholder, will be updated on page load -->
       </button>
-      <button onclick="toggleAlbertsTheme()" class="rounded-lg bg-gray-800 px-4 py-2 hover:bg-gray-700">
-        Play/Pause Albert's Theme
+      <button id="albertsThemeBtn" onclick="toggleAlbertsTheme()" class="rounded-lg bg-gray-800 px-4 py-2 hover:bg-gray-700">
+        Play Albert's Theme <!-- Placeholder, will be updated on page load -->
       </button>
     </div>
   </div>
@@ -67,3 +74,7 @@
   </div>
 </main>
 
+<script>
+  // Initially update button labels to reflect the current state
+  document.addEventListener("DOMContentLoaded", updateButtonLabels);
+</script>
