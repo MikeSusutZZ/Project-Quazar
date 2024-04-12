@@ -1,46 +1,76 @@
 defmodule Ship do
-  # Name, Position (x/y position, velocity & angle), Current health, & Bullet damage
-  # Not sure if this essentially is the player module, or if the player module contains
-  # more/different functionality that I'm not aware of at the moment.
-  defstruct [:name, :position, :health, :bullet_dmg]
+  @moduledoc """
+  Contains all ship-related functionality.
+  
+  Composed of:
+  - Kinematics (Movable component: x/y position, velocity & angle),
+  - Maximum & Current health,
+  - Bullet damage
+  """
+  
+  defstruct [:kinematics, :max_health, :health, :bullet_dmg]
 
-  def new_ship(name, px, py, angle, health, bullet_dmg) do
-    %Ship{name: name, position: Movable.new_movable(px, py, 0, 1, angle), health: health, bullet_dmg: bullet_dmg}
+  @doc "Creates a new `Ship` at x,y. Health sets maximum and current health, and bullet_dmg sets damage"
+  def new_ship(px, py, angle, health, bullet_dmg) do
+    %__MODULE__{
+      kinematics: Movable.new_movable(px, py, 0, 0, angle),
+      max_health: health,
+      health: health,
+      bullet_dmg: bullet_dmg
+    }
   end
 
-  defimpl Movable.Motion, for: Ship do
-    # Moves the ship according to its current pos, acceleration, & velocity
-    def move(%Ship{name: name, position: position, health: health, bullet_dmg: bullet_dmg}) do
-      new_pos = Movable.Motion.move(position)
-      %Ship{name: name, position: new_pos, health: health, bullet_dmg: bullet_dmg}
+  defimpl Movable.Motion, for: __MODULE__ do
+    @doc "Moves the ship according to its current XY position, acceleration, & velocity"
+    def move(%@for{kinematics: old_position} = ship_data) do
+      new_pos = Movable.Motion.move(old_position)
+      %@for{ ship_data | kinematics: new_pos }
     end
 
-    # Accelerates the ship in its current direction
-    def accelerate(%Ship{name: name, position: position, health: health, bullet_dmg: bullet_dmg}, acl) do
-      new_pos = Movable.Motion.accelerate(position, acl)
-      %Ship{name: name, position: new_pos, health: health, bullet_dmg: bullet_dmg}
+    @doc "Accelerates the ship in its current direction"
+    def accelerate(%@for{kinematics: old_acceleration} = ship_data, amount) do
+      new_acceleration = Movable.Motion.accelerate(old_acceleration, amount)
+      %@for{ ship_data | kinematics: new_acceleration }
     end
 
-    # Rotates ship clockwise in degrees (Turns right)
-    def rotate(%Ship{name: name, position: position, health: health, bullet_dmg: bullet_dmg}, rad, :cw) do
-      new_pos = Movable.Motion.rotate(position, rad, :cw)
-      %Ship{name: name, position: new_pos, health: health, bullet_dmg: bullet_dmg}
+    def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :cw) do
+      new_rotation = Movable.Motion.rotate(old_rotation, rad, :cw)
+      %@for{ ship_data | kinematics: new_rotation }
     end
 
-    # Rotates ship counter-clockwise in degrees (Turns left)
-    def rotate(%Ship{name: name, position: position, health: health, bullet_dmg: bullet_dmg}, rad, :ccw) do
-      new_pos = Movable.Motion.rotate(position, rad, :ccw)
-      %Ship{name: name, position: new_pos, health: health, bullet_dmg: bullet_dmg}
+    @doc """
+    Rotates ship either clockwise or counter-clockwise in radians.
+    Pass `:cw` for clockwise, `:ccw` for counter-clockwise
+    """
+    def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :ccw) do
+      new_rotation = Movable.Motion.rotate(old_rotation, rad, :ccw)
+      %@for{ ship_data | kinematics: new_rotation }
+    end
+    
+    @doc "Gets the current X/Y position and angle"
+    def get_pos(%@for{kinematics: position}) do
+      Movable.Motion.get_pos(position)
     end
   end
 
-  # Applies a set amount of damage to the provided ships health
-  def take_damage(%Ship{name: name, position: position, health: health, bullet_dmg: bullet_dmg}, damage) do
-    %Ship{name: name, position: position, health: (health - damage), bullet_dmg: bullet_dmg}
+  @doc "Applies a set amount of damage to the provided ships health"
+  def take_damage(%__MODULE__{health: old_health} = ship_data, amount) do
+    new_health = cond do
+      old_health <= 0 -> 0
+      (old_health - amount) <= 0 -> 0
+      true -> (old_health - amount)
+    end
+    %__MODULE__{ ship_data | health: new_health }
   end
 
-  # Returns whether the passed ship is alive (>0 health)
-  def is_alive(%Ship{name: _, position: _, health: health, bullet_dmg: _}) do
+  @doc "Returns whether the passed ship is alive (>0 health)"
+  def alive?(%__MODULE__{health: health}) do
     health > 0
+  end
+  
+  @doc "Respawns the ship at a provided position and angle (in radians)"
+  def respawn(%__MODULE__{max_health: new_health} = ship_data, px, py, angle) do
+    new_pos = Movable.new_movable(px, py, 0, 0, angle)
+    %__MODULE__{ ship_data | health: new_health, kinematics: new_pos }
   end
 end
