@@ -22,8 +22,8 @@ defmodule Movable do
   def normalize_angle(angle) do
     upper = 2 * pi()
     cond do
-      angle > upper -> angle - upper
-      angle < 0 -> angle + upper
+      angle > upper -> normalize_angle(angle - upper)
+      angle < 0 -> normalize_angle(angle + upper)
       true -> angle
     end
   end
@@ -54,7 +54,7 @@ defmodule Movable do
       new_angle = angle + rad |> Movable.normalize_angle()
       %Movable{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
     end
-    
+
     # Gets the current position
     def get_pos(%Movable{px: x, py: y, angle: angle}) do
       %{x: x, y: y, angle: angle}
