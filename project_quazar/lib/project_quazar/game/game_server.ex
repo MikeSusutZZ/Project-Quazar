@@ -29,7 +29,7 @@ defmodule GameServer do
   # Main gameplay loop.
   @impl true
   def handle_info(:tick, %__MODULE__{players: players, projectiles: projectiles} = gamestate) do
-    new_gamestate = %{gamestate | players: move_all(players), projectiles: move_all(projectiles)}
+    new_gamestate = %{gamestate | players: modify_players(players), projectiles: move_all(projectiles)}
     Enum.each(players, fn player -> IO.inspect(player) end)
     IO.puts("bonk")
     :ets.insert(@table, {__MODULE__, new_gamestate})
@@ -52,4 +52,23 @@ defmodule GameServer do
 
   def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
 
+  @doc "Used for testing how players can interact/move."
+  def modify_players(players) do
+    if length(players) == 0 do
+      spawn_player("Bill") # Spawns a player
+      [] # Return empty list, cast will update players
+    else
+      # Modify players as necessary by piping through state modification functions
+      Enum.map(players, fn player -> 
+        if Player.alive?(player) do
+          Player.take_damage(player, 10)
+          |> Player.inc_score(100)
+          |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
+          |> Movable.Motion.move()
+        else
+          Player.respawn(player, 0, 0, 0)
+        end
+      end)
+    end
+  end
 end
