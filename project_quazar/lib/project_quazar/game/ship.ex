@@ -33,15 +33,15 @@ defmodule Ship do
       %@for{ ship_data | kinematics: new_acceleration }
     end
 
-    @doc """
-    Rotates ship either clockwise or counter-clockwise in radians.
-    Pass `:cw` for clockwise, `:ccw` for counter-clockwise
-    """
     def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :cw) do
       new_rotation = Movable.Motion.rotate(old_rotation, rad, :cw)
       %@for{ ship_data | kinematics: new_rotation }
     end
 
+    @doc """
+    Rotates ship either clockwise or counter-clockwise in radians.
+    Pass `:cw` for clockwise, `:ccw` for counter-clockwise
+    """
     def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :ccw) do
       new_rotation = Movable.Motion.rotate(old_rotation, rad, :ccw)
       %@for{ ship_data | kinematics: new_rotation }

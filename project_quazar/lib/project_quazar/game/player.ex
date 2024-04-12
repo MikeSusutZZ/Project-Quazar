@@ -58,14 +58,14 @@ defmodule Player do
       %@for{ player_data | ship: Movable.Motion.accelerate(ship, amount) }
     end
 
-    @doc """
-    Rotates ship either clockwise or counter-clockwise in radians.
-    Pass `:cw` for clockwise, `:ccw` for counter-clockwise
-    """
     def rotate(%@for{ship: ship} = player_data, rad, :cw) do
       %@for{ player_data | ship: Movable.Motion.rotate(ship, rad, :cw) }
     end
 
+    @doc """
+    Rotates ship either clockwise or counter-clockwise in radians.
+    Pass `:cw` for clockwise, `:ccw` for counter-clockwise
+    """
     def rotate(%@for{ship: ship} = player_data, rad, :ccw) do
       %@for{ player_data | ship: Movable.Motion.rotate(ship, rad, :ccw) }
     end
