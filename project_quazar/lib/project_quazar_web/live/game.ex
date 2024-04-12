@@ -33,6 +33,7 @@ defmodule ProjectQuazarWeb.Game do
           points: 0,
         })
         Phoenix.PubSub.subscribe(PubSub, @presence)
+        Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
         {:noreply, socket
           |> assign(:joined, true)
           |> assign(:current_user, username)
@@ -80,6 +81,12 @@ defmodule ProjectQuazarWeb.Game do
   def handle_info(:scores_updated, socket) do
     top_scores = fetch_top_scores()
     {:noreply, assign(socket, :top_scores, top_scores)}
+  end
+
+  @impl true
+  def handle_info({:state_updated, new_state}, socket) do
+    IO.inspect(new_state)
+    {:noreply, socket}
   end
 
   defp handle_joins(socket, joins) do

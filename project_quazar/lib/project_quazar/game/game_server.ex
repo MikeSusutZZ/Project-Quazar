@@ -30,8 +30,11 @@ defmodule GameServer do
   @impl true
   def handle_info(:tick, %__MODULE__{players: players, projectiles: projectiles} = gamestate) do
     new_gamestate = %{gamestate | players: modify_players(players), projectiles: move_all(projectiles)}
-    Enum.each(players, fn player -> IO.inspect(player) end)
-    IO.puts("bonk")
+    # Enum.each(players, fn player -> IO.inspect(player) end)
+    # IO.puts("bonk")
+
+    Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "game_state:updates", {:state_updated, new_gamestate})
+
     :ets.insert(@table, {__MODULE__, new_gamestate})
     {:noreply, new_gamestate}
   end
@@ -59,7 +62,7 @@ defmodule GameServer do
       [] # Return empty list, cast will update players
     else
       # Modify players as necessary by piping through state modification functions
-      Enum.map(players, fn player -> 
+      Enum.map(players, fn player ->
         if Player.alive?(player) do
           Player.take_damage(player, 10)
           |> Player.inc_score(100)
