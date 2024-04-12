@@ -17,6 +17,11 @@
     current_user={@current_user}
     users={@users}
   />
+  <%# Change condition to if player is alive %>
+  <%= if true do %>
+    <span phx-window-keydown="key_down"></span>
+    <span phx-window-keyup="key_up"></span>
+  <% end %>
 <% else %>
   <%# Lobby Screen %>
 

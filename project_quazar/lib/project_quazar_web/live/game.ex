@@ -40,6 +40,34 @@ defmodule ProjectQuazarWeb.Game do
     end
   end
 
+  # Key down events received from heex
+  @impl true
+  def handle_event("key_down", %{"key" => key}, socket) when key in ["w", "a", "s", "d"] do
+    IO.puts("Live View: #{key}")
+    # Call GameServer like "GameServer.func()"
+    {:noreply, socket}
+  end
+
+  # Key up events received from heex
+  @impl true
+  def handle_event("key_up", %{"key" => key}, socket) when key in ["w", "a", "s", "d"] do
+    IO.puts("Live View: #{key}")
+    # Call GameServer like "GameServer.func()"
+    {:noreply, socket}
+  end
+
+  # Ignore other keys
+  @impl true
+  def handle_event("key_down", _payload, socket) do
+    {:noreply, socket}
+  end
+
+  # Ignore other keys
+  @impl true
+  def handle_event("key_up", _payload, socket) do
+    {:noreply, socket}
+  end
+
   @impl true
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
     {:noreply, socket
