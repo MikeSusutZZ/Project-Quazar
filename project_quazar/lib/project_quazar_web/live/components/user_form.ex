@@ -14,6 +14,7 @@ defmodule ProjectQuazarWeb.UserForm do
         <p class="text-red-500"><%= @error_message %></p>
         <span phx-window-keydown="ping_server"></span>
         <span phx-window-keydown="control"></span>
+        <span><%= @assigns.name %></span>
       </div>
     </div>
     """

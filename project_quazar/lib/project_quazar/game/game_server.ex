@@ -35,6 +35,7 @@ defmodule GameServer do
     Enum.each(players, fn player -> IO.inspect(player) end)
     IO.puts("bonk")
     :ets.insert(@table, {__MODULE__, new_gamestate})
+    Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "gamestate", {:new_gamestate, new_gamestate})
     {:noreply, new_gamestate}
   end
 

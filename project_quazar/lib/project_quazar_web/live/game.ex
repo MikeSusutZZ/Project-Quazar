@@ -1,6 +1,7 @@
 # game.ex
 defmodule ProjectQuazarWeb.Game do
   use ProjectQuazarWeb, :live_view
+  alias ElixirSense.Plugins.Phoenix
   alias ProjectQuazarWeb.Presence
   alias ProjectQuazar.PubSub
   alias ProjectQuazar.HighScores
@@ -14,6 +15,8 @@ defmodule ProjectQuazarWeb.Game do
     # PubSub seen in lib > project_quazar_web >channels > `high_scores_channel.ex`
     Phoenix.PubSub.subscribe(ProjectQuazar.PubSub, "high_scores:updates")
     top_scores = fetch_top_scores()
+
+    Phoenix.PubSub.subscribe(ProjectQuazar.PubSub, "gamestate")
 
     {:ok, socket
       |> assign(:joined, false)
@@ -117,4 +120,9 @@ defmodule ProjectQuazarWeb.Game do
 
   # Catches all other keyboard events
   def handle_event("control", _, socket), do: {:noreply, socket}
+
+  def handle_info({:new_gamestate, new_gs}, socket) do
+    IO.inspect(new_gs)
+    {:noreply, assign(socket, :gamestate, new_gs)}
+  end
 end
