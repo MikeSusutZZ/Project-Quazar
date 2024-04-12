@@ -12,6 +12,7 @@ defmodule ProjectQuazarWeb.UserForm do
           <input type="submit" value="Submit">
         </form>
         <p class="text-red-500"><%= @error_message %></p>
+        <span phx-window-keydown="ping_server"></span>
       </div>
     </div>
     """
