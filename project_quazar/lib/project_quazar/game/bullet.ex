@@ -27,5 +27,10 @@ defmodule Bullet do
       new_pos = Movable.Motion.move(old_position)
       %@for{bullet | kinematics: new_pos}
     end
+
+    @doc "Gets the current X/Y position and angle"
+    def get_pos(%@for{kinematics: position}) do
+      Movable.Motion.get_pos(position)
+    end
   end
 end
