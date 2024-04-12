@@ -20,6 +20,7 @@ defmodule ProjectQuazarWeb.Game do
       |> assign(:users, %{})
       |> assign(:error_message, "")
       |> assign(:top_scores, top_scores)
+      |> assign(:current_page, 1)
     }
   end
 
@@ -39,6 +40,25 @@ defmodule ProjectQuazarWeb.Game do
           |> handle_joins(Presence.list(@presence))}
     end
   end
+
+  def handle_event("next_page", _value, socket) do
+    IO.puts("Handling next page event")
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    next_page = current_page + 1
+    IO.puts("Current page before update: #{current_page}")
+
+    {:noreply, assign(socket, current_page: next_page)}
+  end
+
+  def handle_event("previous_page", _value, socket) do
+    IO.puts("Handling previous page event")
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    previous_page = max(current_page - 1, 1)
+    IO.puts("Current page before update: #{current_page}")
+
+    {:noreply, assign(socket, current_page: previous_page)}
+  end
+
 
   @impl true
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
