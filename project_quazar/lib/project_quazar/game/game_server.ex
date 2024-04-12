@@ -59,7 +59,7 @@ defmodule GameServer do
       [] # Return empty list, cast will update players
     else
       # Modify players as necessary by piping through state modification functions
-      Enum.map(players, fn player -> 
+      Enum.map(players, fn player ->
         if Player.alive?(player) do
           Player.take_damage(player, 10)
           |> Player.inc_score(100)
@@ -70,5 +70,15 @@ defmodule GameServer do
         end
       end)
     end
+  end
+
+  @impl true
+  def handle_cast({:ping, pid}, state) do
+    IO.inspect(pid)
+    {:noreply, state}
+  end
+
+  def ping() do
+    GenServer.cast({:global, __MODULE__}, {:ping, self()})
   end
 end
