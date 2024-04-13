@@ -8,6 +8,10 @@ defmodule GameServer do
   @accel_rate 1
   @turn_rate :math.pi() / 3
 
+  # bounds for the screen (assumption at present, can be done programmatically later)
+  @bounding_height 200
+  @bounding_width 200
+
   def start_link(_arg) do
     GenServer.start_link(__MODULE__, nil, name: {:global, __MODULE__})
   end
@@ -47,7 +51,7 @@ defmodule GameServer do
 
   @impl true
   def handle_cast({:spawn_player, name}, %__MODULE__{players: players} = gamestate) do
-    player_ship = Ship.new_ship(0, 0, 0, 100, 10)
+    player_ship = random_ship()
     new_players = [Player.new_player(name, player_ship) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
@@ -114,6 +118,27 @@ defmodule GameServer do
     GenServer.cast({:global, __MODULE__}, {:rotate, name, dir})
   end
 
+
+  ### functions to randomize position of Player ship at spawn
+
+  # Randomize position for new player joins
+  def random_ship do
+    {random_x, random_y} = {random_between(0, @bounding_width), random_between(0, @bounding_height)}
+    angle = random_angle()
+    Ship.new_ship(random_x, random_y, angle, 100, 10) # default health (100) and bullet_dmg (10) right now
+  end
+
+  # Spawn within bounds
+  def random_between(min, max), do: :rand.uniform(max - min + 1) + min
+
+  # Ships spawn angled at multiples of 90degrees
+  def random_angle do
+    angles = [0, :math.pi() / 2, :math.pi(), 3 * :math.pi() / 2]
+    Enum.random(angles)
+  end
+
+  ####### randomize functions end here
+
   # Rotates the ship with the given name in the given direction
   @impl true
   def handle_cast({:rotate, name, dir}, %{players: players} = state) do
@@ -131,6 +156,4 @@ defmodule GameServer do
       end
     end
   end
-
-
 end
