@@ -40,6 +40,44 @@ defmodule CollisionHandler do
     |> Enum.uniq()
   end
 
+  @doc """
+  Public function to be called by the game server to handle all collisions
+  Accepts a list of bullets and ships to be checked
+  Returns a tuple of lists of updated bullets and ships
+  """
+  def handle_collisions(bullets, ships) do
+    IO.puts("Checking for collisions...")
+    # Early exit if there are no entities to check for collisions
+    case {bullets, ships} do
+      {[], []} ->
+        IO.puts("No bullets or ships to check for collisions.")
+        {[], []}
+
+      {_, []} ->
+        IO.puts("No ships available to collide with bullets.")
+        {bullets, []}
+
+      {[], _} when length(ships) == 1 ->
+        IO.puts("Only one ship and no bullets; no ship-ship collisions possible.")
+        {[], ships}
+
+      {[], _} ->
+        IO.puts("Multiple ships but no bullets; checking for ship-ship collisions only.")
+        # {[], handle_ship_ship_collisions(ships)}
+        {[], handle_ship_ship_collisions()}
+
+      {_ , _} ->
+        # Normal case: Handle both bullet-ship and ship-ship collisions
+        bullet_ship_collisions = check_bullet_ship_collisions(bullets, ships)
+        # {updated_bullets, updated_ships} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, ships)
+
+        ship_ship_collisions = check_ship_ship_collisions(ships)
+        # final_updated_ships = handle_ship_ship_collisions(ship_ship_collisions, ships)
+        # {updated_bullets, final_updated_ships}
+    end
+  end
+
+
   # Checks for collision between two circles given their positions and sizes
   # Accepts positions in the format `{x, y}` and sizes
   # Returns true if there is a collision
@@ -50,5 +88,18 @@ defmodule CollisionHandler do
   # Calculates the distance between two points
   defp distance({px1, py1}, {px2, py2}) do
     :math.sqrt(:math.pow(px2 - px1, 2) + :math.pow(py2 - py1, 2))
+  end
+
+  # Handles bullet-ship collisions.
+  # Returns the updated list of bullets after removing those that have collided with ships.
+  defp handle_bullet_ship_collisions() do
+    # should be provided by Michelle
+    IO.puts("Bullet-ship collisions not yet implemented.")
+  end
+
+  #  Handles ship-ship collisions
+  defp handle_ship_ship_collisions() do
+    # should be provided by Michelle
+    IO.puts("Ship-ship collisions not yet implemented.")
   end
 end
