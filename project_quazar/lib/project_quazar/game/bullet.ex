@@ -20,6 +20,7 @@ defmodule Bullet do
 
   @doc "Creates a new bullet with specified attributes."
   def new_bullet(sender, px, py, vx, vy, angle, type) do
+    case Map.fetch(@bullet_types, type) do
     {:ok, attributes} ->
         kinematics = Movable.new_movable(px, py, vx, vy, angle)
         %__MODULE__{
@@ -32,6 +33,7 @@ defmodule Bullet do
         }
       :error ->
         {:error, "Invalid bullet type: #{type}"}
+      end
   end
 
   @doc "Implements the Movable.Motion protocol for the bullet"
