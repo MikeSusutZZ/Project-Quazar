@@ -72,11 +72,11 @@ defmodule CollisionHandler do
         # {updated_bullets, updated_updated_players} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, players)
 
         ship_ship_collisions = check_ship_ship_collisions(players)
-        # final_updated_ships = handle_ship_ship_collisions(ship_ship_collisions, players)
-        # {updated_bullets, final_updated_players}
+        final_updated_players = handle_ship_ship_collisions(ship_ship_collisions, updated_players)
+
+        {updated_bullets, final_updated_players}
     end
   end
-
 
   # Checks for collision between two circles given their positions and sizes
   # Accepts positions in the format `{x, y}` and sizes
@@ -97,9 +97,29 @@ defmodule CollisionHandler do
     IO.puts("Bullet-ship collisions not yet implemented.")
   end
 
-  #  Handles ship-ship collisions
-  defp handle_ship_ship_collisions() do
-    # should be provided by Michelle
-    IO.puts("Ship-ship collisions not yet implemented.")
+  @doc """
+  Processes collisions between ships, each ship's health is reduced by the amount of health the opposing ship has.
+  Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
+  Returns an updated list of `Player` structs after applying the collision effects.
+  """
+  defp handle_ship_ship_collisions(collisions, players) do
+    # Map of player to the total damage it should take (sum of healths of colliding ships)
+    damage_map = Enum.reduce(collisions, %{}, fn {:ship_ship_collision, player1, player2}, acc ->
+      acc
+      |> Map.update(player1, player2.ship.health, &(&1 + player2.ship.health))
+      |> Map.update(player2, player1.ship.health, &(&1 + player1.ship.health))
+    end)
+
+    # Apply the calculated damage to each ship
+    updated_players = Enum.map(players, fn player ->
+      case Map.fetch(damage_map, player) do
+        :error ->
+          player # no damage to apply, return the player as is
+        {:ok, damage} ->
+          Player.take_damage(player, damage)
+      end
+    end)
+
+    updated_players
   end
 end
