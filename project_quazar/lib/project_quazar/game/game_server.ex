@@ -30,6 +30,12 @@ defmodule GameServer do
   @impl true
   def handle_info(:tick, %__MODULE__{players: players, projectiles: projectiles} = gamestate) do
     new_gamestate = %{gamestate | players: modify_players(players), projectiles: move_all(projectiles)}
+
+    # Collision detection and handling
+    CollisionHandler.handle_collisions(projectiles, players)
+
+    # Remove dead ships
+    Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
     Enum.each(players, fn player -> IO.inspect(player) end)
     IO.puts("bonk")
     :ets.insert(@table, {__MODULE__, new_gamestate})
@@ -45,7 +51,7 @@ defmodule GameServer do
 
   @impl true
   def handle_cast({:spawn_player, name}, %__MODULE__{players: players} = gamestate) do
-    player_ship = Ship.new_ship(0, 0, 0, 100, 10)
+    player_ship = Ship.new_ship(0, 0, 0, 100, :destroyer)
     new_players = [Player.new_player(name, player_ship) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
@@ -59,7 +65,7 @@ defmodule GameServer do
       [] # Return empty list, cast will update players
     else
       # Modify players as necessary by piping through state modification functions
-      Enum.map(players, fn player -> 
+      Enum.map(players, fn player ->
         if Player.alive?(player) do
           Player.take_damage(player, 10)
           |> Player.inc_score(100)
@@ -71,4 +77,5 @@ defmodule GameServer do
       end)
     end
   end
+
 end
