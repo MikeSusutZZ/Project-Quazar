@@ -5,21 +5,35 @@ defmodule CollisionHandler do
 
   @doc """
   Checks for collisions between a list of bullets and ships.
+  Accepts a list of bullets and a list of ships.
   Returns tuples of collided bullets and ships.
   """
-  def check_collisions(bullets, players) do
+  def check_bullet_ship_collisions(bullets, ships) do
     Enum.flat_map(bullets, fn bullet ->
-      Enum.filter(players, fn player -> collide?(bullet, player.ship) end)
-      |> Enum.map(&{bullet, &1})
+      Enum.filter(ships, fn ship ->
+        bullet_pos = Movable.Motion.get_pos(bullet.kinematics)
+        ship_pos = Movable.Motion.get_pos(ship.kinematics)
+        collides?(bullet_pos, 1, ship_pos, ship.size) # Assuming bullet size as 1
+      end)
+      |> Enum.map(fn ship ->
+        # Log the collision
+        IO.puts("Collision detected between bullet and ship")
+        {:bullet_ship_collision, bullet, ship}
+      end)
     end)
   end
 
-  defp collide?(%Bullet{kinematics: %{px: bullet_px, py: bullet_py}},
-              %Ship{kinematics: %{px: ship_px, py: ship_py}, size: ship_size}) do
-    distance({bullet_px, bullet_py}, {ship_px, ship_py}) < ship_size
+
+  # Checks for collision between two circles given their positions and sizes
+  # Accepts positions in the format `{x, y}` and sizes
+  # Returns true if there is a collision
+  defp collides?(%{px: px1, py: py1}, size1, %{px: px2, py: py2}, size2) do
+    distance({px1, py1}, {px2, py2}) < (size1 + size2)
   end
 
-  defp distance({x1, y1}, {x2, y2}) do
-    :math.sqrt(:math.pow(x2 - x1, 2) + :math.pow(y2 - y1, 2))
+  # Calculates the distance between two points
+  defp distance({px1, py1}, {px2, py2}) do
+    :math.sqrt(:math.pow(px2 - px1, 2) + :math.pow(py2 - py1, 2))
   end
+
 end
