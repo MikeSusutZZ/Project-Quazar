@@ -22,6 +22,12 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+const DummyPlayerList = {
+  "players": [
+    { "name": "Player1", "score": 1200, "ship": { "kinematics": { "px": 100, "py": 150 }, "max_health": 100, "current_health": 80, "bullet_type": "laser" } }
+  ]
+};
+
 // Define the LogKey hook
 let Hooks = {};
 
@@ -40,10 +46,21 @@ Hooks.MoveHook = {
     let pressedKeys = new Set(); // Set to track pressed keys
 
     let canvas = document.getElementById("circleCanvas");
-    let myData = JSON.parse(canvas.getAttribute("data-pos"));
-    console.log("My data", myData);
+    // let myData = JSON.parse(canvas.getAttribute("data-pos"));
+    // console.log("My data", myData);
     // Start
     let ctx = canvas.getContext("2d");
+
+    // Parse player data directly from DummyPlayerList
+    let shipImage = new Image();
+    shipImage.src = "/images/test_space_ship.jpg"; // Path to your spaceship image
+    shipImage.onload = () => {
+      // Draw each ship when the image is loaded
+      DummyPlayerList.players.forEach(player => {
+        let ship = player.ship;
+        ctx.drawImage(shipImage, ship.kinematics.px, ship.kinematics.py, 130, 100);
+      });
+    };
 
     // Use Phoenix.HTML.raw to safely inject the game_board into JavaScript
     let game_board = JSON.parse(canvas.getAttribute("data-board"));
@@ -91,63 +108,17 @@ Hooks.MoveHook = {
     // End
     // Get the 2D rendering context
 
-    // Create a new image object
-    let image = new Image();
-    image.src = "/images/test_space_ship.jpg"; // Adjust the path to your image
-
-    // Draw the image onto the canvas when it's loaded
-    image.onload = function () {
-      ctx.drawImage(image, myData.x, myData.y, 130, 100);
+    // Function to create JSON payload
+    const createKeyPayload = (key, action) => {
+      return JSON.stringify({ key: key, action: action });
     };
 
     window.addEventListener("keydown", (e) => {
       if (!pressedKeys.has(e.key)) {
         pressedKeys.add(e.key); // Add pressed key to the set
-        this.pushEvent("start_move", { key: e.key }, (reply) => {
-          console.log("reply", reply);
-          let canvas = document.getElementById("circleCanvas");
-          let myData = JSON.parse(canvas.getAttribute("data-pos"));
-          console.log("My data", myData);
-
-          // Clear the canvas
-          // Draw the game board
-          for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-              let x = col * cellSize;
-              let y = row * cellSize;
-
-              ctx.fillStyle = "#FFFFFF"; // Set the background color
-              ctx.fillRect(x, y, cellSize, cellSize); // Draw the cell background
-
-              ctx.strokeStyle = "#000000"; // Set the border color
-              ctx.strokeRect(x, y, cellSize, cellSize); // Draw the cell border
-
-              let cellValue = " ";
-              ctx.fillStyle = "#000000"; // Set the text color
-              // Adjust text alignment and baseline for better centering
-              ctx.textAlign = "center";
-              ctx.textBaseline = "middle";
-              ctx.fillText(cellValue, x + cellSize / 2, y + cellSize / 2); // Draw the cell value
-            }
-          }
-
-          // Draw the grid lines
-          ctx.strokeStyle = "#000000"; // Set the color of the grid lines
-          for (let row = 0; row <= rows; row++) {
-            ctx.beginPath();
-            ctx.moveTo(0, row * cellSize);
-            ctx.lineTo(cols * cellSize, row * cellSize);
-            ctx.stroke();
-          }
-          for (let col = 0; col <= cols; col++) {
-            ctx.beginPath();
-            ctx.moveTo(col * cellSize, 0);
-            ctx.lineTo(col * cellSize, rows * cellSize);
-            ctx.stroke();
-          }
-
-          // Draw the image at the desired position and size
-          ctx.drawImage(image, myData.x, myData.y, 130, 100);
+        let keyPayload = createKeyPayload(e.key, 'start'); // Create JSON payload
+        this.pushEvent("start_move", { key_payload: keyPayload }, (reply) => {
+          console.log("Server reply", reply);
         });
       }
     });
@@ -155,7 +126,8 @@ Hooks.MoveHook = {
     window.addEventListener("keyup", (e) => {
       if (pressedKeys.has(e.key)) {
         pressedKeys.delete(e.key); // Remove released key from the set
-        this.pushEvent("stop_move", { key: e.key });
+        let keyPayload = createKeyPayload(e.key, 'stop'); // Create JSON payload
+        this.pushEvent("stop_move", { key_payload: keyPayload });
       }
     });
 
