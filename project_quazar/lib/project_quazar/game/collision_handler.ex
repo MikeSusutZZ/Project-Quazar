@@ -23,6 +23,22 @@ defmodule CollisionHandler do
     end)
   end
 
+  @doc """
+  Checks for collisions between a list of ships.
+  Accepts a list of ships.
+  Returns tuples of collided ships.
+  """
+  def check_ship_ship_collisions(ships) do
+    for ship1 <- ships, ship2 <- ships, ship1 != ship2 do
+      pos1 = Movable.Motion.get_pos(ship1.kinematics)
+      pos2 = Movable.Motion.get_pos(ship2.kinematics)
+      if collides?(pos1, ship1.size, pos2, ship2.size) do
+        IO.puts("Collision detected between two ships:")
+        {:ship_ship_collision, ship1, ship2}
+      end
+    end
+    |> Enum.uniq()
+  end
 
   # Checks for collision between two circles given their positions and sizes
   # Accepts positions in the format `{x, y}` and sizes
@@ -35,5 +51,4 @@ defmodule CollisionHandler do
   defp distance({px1, py1}, {px2, py2}) do
     :math.sqrt(:math.pow(px2 - px1, 2) + :math.pow(py2 - py1, 2))
   end
-
 end
