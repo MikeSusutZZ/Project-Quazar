@@ -91,10 +91,32 @@ defmodule CollisionHandler do
   end
 
   # Handles bullet-ship collisions.
-  # Returns the updated list of bullets after removing those that have collided with ships.
-  defp handle_bullet_ship_collisions() do
-    # should be provided by Michelle
-    IO.puts("Bullet-ship collisions not yet implemented.")
+  # Accepts a list of collision tuples, identifies bullets that have hit ships, and applies the corresponding damage.
+  # It also updates the score of the shooter in the high scores table.
+  # Returns the updated lists of bullets and players after removing those that have collided with ships.
+  defp handle_bullet_ship_collisions(collisions, bullets, players) do
+    # Filter out bullets that have collided and apply damage to the ships
+    collided_bullets = Enum.map(collisions, fn {_, bullet, _} -> bullet end)
+    updated_bullets = Enum.reject(bullets, fn bullet -> bullet in collided_bullets end)
+
+    # Update player ships with the damage and remove destroyed ships
+    updated_players = Enum.map(players, fn player ->
+      collisions
+      |> Enum.filter(fn {_, _, collided_player} -> collided_player == player end)
+      |> Enum.reduce(player, fn {_, bullet, _}, acc_player ->
+        # Apply damage to the ship
+        damaged_ship = Player.take_damage(acc_player, bullet.damage)
+
+        # Update the score for the player who fired the bullet
+        # Add score equal to the damage inflicted
+        ProjectQuazar.HighScores.add_entry(bullet.sender, bullet.damage)
+
+        # Update the player data with the damaged ship
+        %Player{acc_player | ship: damaged_ship}
+      end)
+    end)
+
+    {updated_bullets, updated_players}
   end
 
   # Processes collisions between ships, each ship's health is reduced by the amount of health the opposing ship has.
