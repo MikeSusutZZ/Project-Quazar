@@ -32,15 +32,16 @@ defmodule ProjectQuazar.HighScores.ETSWrapper do
   Initializes the GenServer and creates a new ETS table if it doesn't already exist.
   """
   def init(:ok) do
-    unless :ets.info(@table_name) do
+    if :ets.info(@table_name) == :undefined do
       :ets.new(@table_name, [:ordered_set, :public, :named_table, {:keypos, 2}])
     end
-
     {:ok, %{}}
   end
 
   @doc """
-  Handles the `insert_entry` call. Inserts a new entry or updates an existing one if the new score is higher.
+  Handles calls to the GenServer:
+    - {:insert_entry, username, score}: Inserts a new entry or updates an existing one if the new score is higher.
+    - :fetch_top_scores: Returns the top scores from the ETS table.
   """
   def handle_call({:insert_entry, username, score}, _from, state) do
     current_datetime = DateTime.utc_now()
@@ -61,16 +62,11 @@ defmodule ProjectQuazar.HighScores.ETSWrapper do
     end
   end
 
-  @doc """
-  Handles the `fetch_top_scores` call. Returns the top scores from the ETS table.
-  """
   def handle_call(:fetch_top_scores, _from, state) do
     {:reply, {:ok, top_scores()}, state}
   end
 
-  @doc """
-  Inserts an entry into the ETS table and broadcasts a `scores_updated` message.
-  """
+  # Inserts an entry into the ETS table and broadcasts a `scores_updated` message.
   defp broadcast_and_insert_entry(entry) do
     :ets.insert(@table_name, entry)
 
@@ -80,12 +76,10 @@ defmodule ProjectQuazar.HighScores.ETSWrapper do
       {:scores_updated, top_scores()}
     )
 
-    IO.puts("Broadcasted scores_updated message")
+    # IO.puts("Broadcasted scores_updated message")
   end
 
-  @doc """
-  Fetches and formats the top scores from the ETS table.
-  """
+  # Fetches and formats the top scores from the ETS table.
   defp top_scores do
     :ets.tab2list(@table_name)
     |> Enum.sort_by(&elem(&1, 0), :desc)
