@@ -97,11 +97,9 @@ defmodule CollisionHandler do
     IO.puts("Bullet-ship collisions not yet implemented.")
   end
 
-  @doc """
-  Processes collisions between ships, each ship's health is reduced by the amount of health the opposing ship has.
-  Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
-  Returns an updated list of `Player` structs after applying the collision effects.
-  """
+  # Processes collisions between ships, each ship's health is reduced by the amount of health the opposing ship has.
+  # Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
+  # Returns an updated list of `Player` structs after applying the collision effects.
   defp handle_ship_ship_collisions(collisions, players) do
     # Map of player to the total damage it should take (sum of healths of colliding ships)
     damage_map = Enum.reduce(collisions, %{}, fn {:ship_ship_collision, player1, player2}, acc ->
