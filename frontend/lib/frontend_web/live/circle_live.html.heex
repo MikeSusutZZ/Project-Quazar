@@ -1,0 +1,5 @@
+
+<div>
+    <%= Phoenix.HTML.raw(Jason.encode!(@circle_pos)) %>
+</div>
+<canvas id="circleCanvas" phx-hook="MoveHook" width="800" height="800" data-pos={"#{Jason.encode!(@circle_pos)}"}} data-board={"#{Jason.encode!(@game_board)}"}></canvas>
