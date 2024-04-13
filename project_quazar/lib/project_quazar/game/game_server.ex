@@ -8,6 +8,8 @@ defmodule GameServer do
   @accel_rate 1
   @turn_rate :math.pi() / 3
 
+  # implementing drag
+
   # bounds for the screen (assumption at present, can be done programmatically later)
   @bounding_height 200
   @bounding_width 200
