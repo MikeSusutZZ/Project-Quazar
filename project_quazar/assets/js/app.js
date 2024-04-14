@@ -142,7 +142,9 @@ Hooks.MoveHook = {
   },
 };
 
-let bullet_xy = [0, 400];
+let bullet1_xy = [0, 400];
+let bullet2_xy = [0, 500];
+let bullet3_xy = [0, 600];
 
 // Frontend Prototype 3
 const drawGame3 = () => {
@@ -155,21 +157,35 @@ const drawGame3 = () => {
   // Initialize canvas images
   let gameBoard = new Image();
   let player = new Image();
-  let bullet = new Image();
+  let bullet1 = new Image();
+  let bullet2 = new Image();
+  let bullet3 = new Image();
 
   // Link images to assets
   gameBoard.src = "/images/game_board_asset/Game_Background.png";
-  bullet.src = "/images/red_bullet_asset/Red_Bullet.png";
   player.src = "/images/side-eye.jpg";
+  bullet1.src = "/images/red_bullet_asset/Red_Bullet.png";
+  bullet2.src = "/images/green_bullet_asset/Green_Bullet.png";
+  bullet3.src = "/images/purple_bullet_asset/Purple_Bullet.png";
 
   // Render images when loaded
   gameBoard.onload = function () {
     ctx.drawImage(gameBoard, 0, 0, 800, 800);
   };
 
-  bullet.onload = function () {
-    ctx.drawImage(bullet, bullet_xy[0], bullet_xy[1], 40, 40);
-    bullet_xy[0] += 20;
+  bullet1.onload = function () {
+    ctx.drawImage(bullet1, bullet1_xy[0], bullet1_xy[1], 40, 40);
+    bullet1_xy[0] += 20;
+  };
+
+  bullet2.onload = function () {
+    ctx.drawImage(bullet2, bullet2_xy[0], bullet2_xy[1], 40, 40);
+    bullet2_xy[0] += 20;
+  };
+
+  bullet3.onload = function () {
+    ctx.drawImage(bullet3, bullet3_xy[0], bullet3_xy[1], 40, 40);
+    bullet3_xy[0] += 20;
   };
 
   player.onload = function () {
