@@ -8,10 +8,10 @@ defmodule Bullet do
   - Bullet type
   """
 
-  @doc "Defines the complete struct for a bullet"
+  # Defines the complete struct for a bullet
   defstruct sender: nil, kinematics: %Movable{}, type: nil, damage: 0, tick_wait: 0, speed: 0
 
-  @doc "Bullet type specifications"
+  # Bullet type specifications
   @bullet_types %{
     heavy: %{damage: 35, tick_wait: 30, speed: 0},
     medium: %{damage: 20, tick_wait: 22, speed: 2},
@@ -36,7 +36,7 @@ defmodule Bullet do
       end
   end
 
-  @doc "Implements the Movable.Motion protocol for the bullet"
+  # Implements the Movable.Motion protocol for the bullet
   defimpl Movable.Motion, for: __MODULE__ do
     @doc "Moves the bullet according to its current XY position & velocity"
     def move(%@for{kinematics: old_position} = bullet) do
