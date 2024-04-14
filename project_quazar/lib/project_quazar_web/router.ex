@@ -22,6 +22,7 @@ defmodule ProjectQuazarWeb.Router do
 
     live "/start", StartScreenLive, :show
     live "/create-ship", CreateShipLive, :show
+    live "/game-over", GameOver
   end
 
   # Other scopes may use custom stacks.
