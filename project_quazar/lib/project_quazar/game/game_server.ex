@@ -6,6 +6,7 @@ defmodule GameServer do
   @table GameState
   @tick_rate 1 # Ticks/second
   @accel_rate 1
+  @decel_rate 0.2
   @turn_rate :math.pi() / 3
 
   # bounds for the screen (assumption at present, can be done programmatically later)
@@ -71,6 +72,7 @@ defmodule GameServer do
           Player.inc_score(player, 100)
           # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
+          |> Movable.Motion.decelerate(@decel_rate)
         else
           Player.respawn(player, 0, 0, 0)
         end
