@@ -43,6 +43,18 @@ defmodule Player do
     %__MODULE__{ player_data | score: 0, ship: respawned_ship }
   end
 
+  @doc """
+  Fires a bullet from the player's ship, invoking the ship's fire method.
+  """
+  def fire(%__MODULE__{ship: ship, name: player_name}) do
+    case Ship.fire(ship, player_name) do
+      {:ok, bullet} ->
+        {:ok, bullet}
+      :error = error ->
+        error
+    end
+  end
+
   defimpl Movable.Motion, for: __MODULE__ do
     @doc "Moves the players ship according to its kinematics"
     def move(%@for{ship: ship} = player_data) do
@@ -59,14 +71,14 @@ defmodule Player do
       Movable.Motion.get_pos(ship)
     end
   end
-  
+
   defimpl Movable.Drag, for: __MODULE__ do
     @doc "Applies drag to slow down ship until it comes to full rest"
     def apply_drag(%@for{ship: ship} = player_data, amount) do
       %@for{ player_data | ship: Movable.Drag.apply_drag(ship, amount) }
     end
   end
-  
+
   defimpl Movable.Rotation, for: __MODULE__ do
     def rotate(%@for{ship: ship} = player_data, rad, :cw) do
       %@for{ player_data | ship: Movable.Rotation.rotate(ship, rad, :cw) }
