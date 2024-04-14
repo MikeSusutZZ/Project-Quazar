@@ -22,6 +22,12 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
+// Print viewport height
+console.log("Viewport Height: " + window.innerHeight);
+
+// Print viewport width
+console.log("Viewport Width: " + window.innerWidth);
+
 // Hooks initializer
 let Hooks = {};
 
