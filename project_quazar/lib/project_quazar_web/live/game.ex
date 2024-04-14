@@ -9,9 +9,6 @@ defmodule ProjectQuazarWeb.Game do
 
   @impl true
   def mount(_params, _session, socket) do
-
-    # For the `all-time high scores` component; subscribes to high_scores
-    # PubSub seen in lib > project_quazar_web >channels > `high_scores_channel.ex`
     Phoenix.PubSub.subscribe(ProjectQuazar.PubSub, "high_scores:updates")
     top_scores = fetch_top_scores()
 
@@ -47,10 +44,9 @@ defmodule ProjectQuazarWeb.Game do
       |> handle_joins(diff.joins)}
   end
 
-  # Fetches top scores for all-time high scores component (see below)
+  # accepts the new scores from the broadcast
   @impl true
-  def handle_info(:scores_updated, socket) do
-    top_scores = fetch_top_scores()
+  def handle_info({:scores_updated, top_scores}, socket) do
     {:noreply, assign(socket, :top_scores, top_scores)}
   end
 
