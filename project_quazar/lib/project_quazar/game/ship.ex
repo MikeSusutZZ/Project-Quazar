@@ -106,8 +106,8 @@ defmodule Ship do
   Returns a `Bullet` struct representing the new bullet, or an error if the bullet type is invalid.
   """
   def fire(%__MODULE__{kinematics: kinematics, bullet_type: bullet_type}, player_name) do
-    %{px: px, py: py, angle: angle} = Movable.Motion.get_pos(kinematics)
+    %{px: px, py: py, vx: vx, vy: vy, angle: angle} = kinematics
 
-    Bullet.new_bullet(player_name, px, py, angle, bullet_type)
+    Bullet.new_bullet(player_name, px, py, vx, vy, angle, bullet_type)
   end
 end
