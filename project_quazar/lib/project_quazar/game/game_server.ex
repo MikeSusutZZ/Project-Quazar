@@ -46,13 +46,13 @@ defmodule GameServer do
 
     # Remove dead ships
     Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
-    Enum.each(players, fn player -> 
+    Enum.each(players, fn player ->
       IO.inspect(player)
       # Game can call boundary checks like so and damage players accordingly
       # IO.inspect(Boundary.outside?(player, @bounds))
       # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
     end)
-    IO.puts("bonk")
+    # IO.puts("tick")
     :ets.insert(@table, {__MODULE__, new_gamestate})
     {:noreply, new_gamestate}
   end
