@@ -1,8 +1,8 @@
 defmodule ProjectQuazarWeb.GameOver do
   use ProjectQuazarWeb, :live_view
 
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, score: 100)} #this is being hard coded for now, will be dynamic
+  def mount(%{"score" => score} = params, _session, socket) do
+    {:ok, assign(socket, score: score)} #this is being hard coded for now, will be dynamic
   end
 
 
