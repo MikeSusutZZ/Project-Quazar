@@ -37,7 +37,7 @@ defmodule ProjectQuazarWeb.Game do
         true ->
           {:reply, %{error: "Username already taken"}, assign(socket, :error_message, "Username already taken")}
         false ->
-          # GameServer.spawn_player(username, ship_type, bullet_type) #where ship/bullet is string in all caps of ENUM
+          GameServer.spawn_player(username, ship_type) #where ship/bullet are atoms
           Presence.track(self(), @presence, username, %{
             points: 0,
           })

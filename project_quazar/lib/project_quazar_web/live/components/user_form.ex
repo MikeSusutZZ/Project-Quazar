@@ -43,6 +43,8 @@ defmodule ProjectQuazarWeb.UserForm do
 
             <div class='flex flex-col  items-center transition duration-0 ease-in-out transform hover:scale-105 '>
               <label class='mr-2'>Heavy</label>
+
+              <img src={~p"/images/red_bullet_asset/Red_Bullet.png"} alt="Example Image">
               <h1 class="text-red-600" >Damage: 35</h1>
               <h1 class="text-yellow-600" >Speed: Slow</h1>
               <div>
@@ -52,6 +54,7 @@ defmodule ProjectQuazarWeb.UserForm do
 
             <div class='flex flex-col items-center mr-3 ml-3 transition duration-0 ease-in-out transform hover:scale-105'>
               <label class='mr-2'>Medium</label>
+              <img src={~p"/images/green_bullet_asset/Green_Bullet.png"} alt="Example Image">
               <h1 class="text-red-600">Damage: 20</h1>
               <h1 class="text-yellow-600">Speed: fast</h1>
               <div>
@@ -61,6 +64,7 @@ defmodule ProjectQuazarWeb.UserForm do
 
             <div class='flex flex-col items-center transition duration-0 ease-in-out transform hover:scale-105'>
               <label class='mr-2'>Light</label>
+              <img src={~p"/images/purple_bullet_asset/Purple_Bullet.png"} alt="Example Image">
               <h1 class="text-red-600">Damage: 10</h1>
               <h1 class="text-yellow-600">Speed: very fast</h1>
               <div>
