@@ -7,7 +7,7 @@ defmodule ProjectQuazarWeb.GameOver do
 
 
   def handle_event("return_to_main_menu", _params, socket) do
-    # Logic to handle the event, possibly navigating to another page
-    {:noreply, socket}
+    {:noreply, push_redirect(socket, to: "/start")}
   end
+
 end
