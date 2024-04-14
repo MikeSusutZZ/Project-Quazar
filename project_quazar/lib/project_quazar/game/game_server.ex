@@ -6,7 +6,7 @@ defmodule GameServer do
   @table GameState
   @tick_rate 1 # Ticks/second
   @accel_rate 1
-  @decel_rate 0.2
+  @drag_rate 0.2
   @turn_rate :math.pi() / 3
 
   # implementing drag
