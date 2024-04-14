@@ -22,6 +22,12 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
+// Print viewport height
+console.log("Viewport Height: " + window.innerHeight);
+
+// Print viewport width
+console.log("Viewport Width: " + window.innerWidth);
+
 // Hooks initializer
 let Hooks = {};
 
@@ -53,11 +59,11 @@ Hooks.FadeIn = {
     console.log("FadeIn mounted, applying styles...");
     this.el.style.opacity = 0;
     setTimeout(() => {
-      this.el.style.transition = 'opacity 5s ease-in-out';
+      this.el.style.transition = "opacity 5s ease-in-out";
       this.el.style.opacity = 1;
       console.log("Styles applied, opacity should be 1 now.");
     }, 100);
-  }
+  },
 };
 
 // Frontend Prototype 2
@@ -168,40 +174,61 @@ const drawGame3 = () => {
 
   // Initialize canvas images
   let gameBoard = new Image();
-  let player = new Image();
+  let player1 = new Image();
+  let player2 = new Image();
+  let player3 = new Image();
   let bullet1 = new Image();
   let bullet2 = new Image();
   let bullet3 = new Image();
 
   // Link images to assets
   gameBoard.src = "/images/game_board_asset/Game_Background.png";
-  player.src = "/images/side-eye.jpg";
-  bullet1.src = "/images/red_bullet_asset/Red_Bullet.png";
-  bullet2.src = "/images/green_bullet_asset/Green_Bullet.png";
-  bullet3.src = "/images/purple_bullet_asset/Purple_Bullet.png";
 
   // Render images when loaded
   gameBoard.onload = function () {
+    console.log("Board rendered");
     ctx.drawImage(gameBoard, 0, 0, 800, 800);
+
+    // Once board is loaded, link to rest of assets to trigger onload
+    player1.src = "/images/ship_asset/blue_ship.png";
+    player2.src = "/images/ship_asset/purple_ship.png";
+    player3.src = "/images/ship_asset/red_ship.png";
+    bullet1.src = "/images/red_bullet_asset/Red_Bullet.png";
+    bullet2.src = "/images/green_bullet_asset/Green_Bullet.png";
+    bullet3.src = "/images/purple_bullet_asset/Purple_Bullet.png";
   };
 
   bullet1.onload = function () {
+    console.log("Bullet1 rendered");
     ctx.drawImage(bullet1, bullet1_xy[0], bullet1_xy[1], 40, 40);
     bullet1_xy[0] += 20;
   };
 
   bullet2.onload = function () {
+    console.log("Bullet2 rendered");
     ctx.drawImage(bullet2, bullet2_xy[0], bullet2_xy[1], 40, 40);
     bullet2_xy[0] += 20;
   };
 
   bullet3.onload = function () {
+    console.log("Bullet3 rendered");
     ctx.drawImage(bullet3, bullet3_xy[0], bullet3_xy[1], 40, 40);
     bullet3_xy[0] += 20;
   };
 
-  player.onload = function () {
-    ctx.drawImage(player, myData.x, myData.y, 130, 100);
+  player1.onload = function () {
+    console.log("Player rendered");
+    ctx.drawImage(player1, myData.x, myData.y, 300, 300);
+  };
+
+  player2.onload = function () {
+    console.log("Player rendered");
+    ctx.drawImage(player2, myData.x + 100, myData.y, 300, 300);
+  };
+
+  player3.onload = function () {
+    console.log("Player rendered");
+    ctx.drawImage(player3, myData.x + 200, myData.y, 300, 300);
   };
 };
 
@@ -238,12 +265,20 @@ Hooks.Game3 = {
   },
 };
 
-
 // Frontend Prototype 4
 const DummyPlayerList = {
-  "players": [
-    { "name": "Player1", "score": 1200, "ship": { "kinematics": { "px": 100, "py": 150 }, "max_health": 100, "current_health": 80, "bullet_type": "laser" } }
-  ]
+  players: [
+    {
+      name: "Player1",
+      score: 1200,
+      ship: {
+        kinematics: { px: 100, py: 150 },
+        max_health: 100,
+        current_health: 80,
+        bullet_type: "laser",
+      },
+    },
+  ],
 };
 
 const drawGame4 = () => {
@@ -289,7 +324,13 @@ const drawGame4 = () => {
 
   player.onload = function () {
     // Using the kinematics property from JSON to set player position
-    ctx.drawImage(player, playerData.ship.kinematics.px, playerData.ship.kinematics.py, 130, 100);
+    ctx.drawImage(
+      player,
+      playerData.ship.kinematics.px,
+      playerData.ship.kinematics.py,
+      130,
+      100
+    );
   };
 };
 
@@ -324,16 +365,14 @@ Hooks.Game4 = {
   },
 };
 
-
-
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");
 let liveSocket = new LiveSocket("/live", Socket, {
   hooks: Hooks,
   longPollFallbackMs: 2500,
-  params: {_csrf_token: csrfToken}
-})
+  params: { _csrf_token: csrfToken },
+});
 
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" });
