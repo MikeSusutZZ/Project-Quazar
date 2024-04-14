@@ -56,11 +56,11 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  def spawn_player(name), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name})
+  def spawn_player(name, ship_type), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type})
 
   @impl true
-  def handle_cast({:spawn_player, name}, %__MODULE__{players: players} = gamestate) do
-    player_ship = Ship.random_ship(@bounding_width, @bounding_height)
+  def handle_cast({:spawn_player, name, type}, %__MODULE__{players: players} = gamestate) do
+    player_ship = Ship.random_ship(type, @bounding_width, @bounding_height)
     new_players = [Player.new_player(name, player_ship) | players]
     {:noreply, %{gamestate | players: new_players}}
   end

@@ -46,10 +46,10 @@ defmodule Ship do
   end
 
   @doc "Creates a ship with randomized position within bounds (height and width), 0 intial velocity and 100hp, 10bulletDamage"
-  def random_ship(bounding_width, bounding_height) do
+  def random_ship(type, bounding_width, bounding_height) do
     {random_x, random_y} = {random_between(0, bounding_width), random_between(0, bounding_height)}
     angle = random_angle()
-    Ship.new_ship(random_x, random_y, angle, :destroyer) # Just passing a destroyer by default
+    Ship.new_ship(random_x, random_y, angle, type)
   end
 
   @doc "Generate coordinates within bounds"
