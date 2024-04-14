@@ -22,8 +22,33 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+let Hooks = {};
+
+Hooks.MoveCircle = {
+  mounted() {
+    console.log("circle mounted");
+    window.addEventListener("keydown", (e) => {
+      console.log(e);
+      if (e.key === "w") {
+        console.log("up");
+        this.pushEvent("move_up", {});
+      } else if (e.key === "a") {
+        console.log("left");
+        this.pushEvent("move_left", {});
+      } else if (e.key === "s") {
+        console.log("down");
+        this.pushEvent("move_down", {});
+      } else if (e.key === "d") {
+        console.log("right");
+        this.pushEvent("move_right", {});
+      }
+    });
+  },
+};
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
+  hooks: Hooks, 
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken}
 })
