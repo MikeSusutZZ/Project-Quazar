@@ -7,14 +7,21 @@ defmodule ProjectQuazarWeb.AllTimeHighScores do
     <div class="high-scores-container">
       <h1>All-Time High Scores</h1>
       <div id="scores">
-        <ul>
-          <%= for score <- @top_scores do %>
-            <li>
-              <span class="player"><%= score.player %></span>
-              <span class="score"><%= score.score %></span>
-            </li>
-          <% end %>
-        </ul>
+
+        <%= if Enum.empty?(@top_scores) do %>
+          <p>No scores yet!</p>
+
+        <%= else %>
+          <ul>
+            <%= for score <- @top_scores do %>
+              <li>
+                <span class="player"><%= score.player %></span>
+                <span class="score"><%= score.score %></span>
+              </li>
+            <% end %>
+          </ul>
+
+        <% end %>
       </div>
     </div>
     """
