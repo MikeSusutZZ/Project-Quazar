@@ -62,10 +62,9 @@ defmodule ProjectQuazarWeb.Game do
      |> handle_joins(diff.joins)}
   end
 
-  # Fetches top scores for all-time high scores component (see below)
+  # accepts the new scores from the broadcast
   @impl true
-  def handle_info(:scores_updated, socket) do
-    top_scores = fetch_top_scores()
+  def handle_info({:scores_updated, top_scores}, socket) do
     {:noreply, assign(socket, :top_scores, top_scores)}
   end
 
