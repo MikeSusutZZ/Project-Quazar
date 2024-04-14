@@ -9,11 +9,12 @@ defmodule GameServer do
   @drag_rate 0.2
   @turn_rate :math.pi() / 3
 
-  # implementing drag
-
   # bounds for the screen (assumption at present, can be done programmatically later)
-  @bounding_height 200
-  @bounding_width 200
+  @bounds %{
+    x: 800,
+    y: 800,
+    deadzone: 100 # Not actual "dead" zone, just the zone that players begin being damaged in
+  }
 
   def start_link(_arg) do
     GenServer.start_link(__MODULE__, nil, name: {:global, __MODULE__})
@@ -60,7 +61,7 @@ defmodule GameServer do
 
   @impl true
   def handle_cast({:spawn_player, name, type}, %__MODULE__{players: players} = gamestate) do
-    player_ship = Ship.random_ship(type, @bounding_width, @bounding_height)
+    player_ship = Ship.random_ship(type, @bounds.x, @bounds.y)
     new_players = [Player.new_player(name, player_ship) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
