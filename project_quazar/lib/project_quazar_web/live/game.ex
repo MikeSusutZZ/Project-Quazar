@@ -25,22 +25,31 @@ defmodule ProjectQuazarWeb.Game do
 
   @impl true
   def handle_event("join", %{"username" => username, "ship" => ship, "bullet" => bullet}, socket) do
+    IO.puts("------------------")
     IO.inspect(username)
     IO.inspect(ship)
     IO.inspect(bullet)
-    # if username == "", do: {:reply, %{error: "Username can't be blank"}, assign(socket, :error_message, "Username can't be blank")}
-    case Map.has_key?(Presence.list(@presence), username) do
-      true ->
-        {:reply, %{error: "Username already taken"}, assign(socket, :error_message, "Username already taken")}
-      false ->
-        Presence.track(self(), @presence, username, %{
-          points: 0,
-        })
-        Phoenix.PubSub.subscribe(PubSub, @presence)
-        {:noreply, socket
-          |> assign(:joined, true)
-          |> assign(:current_user, username)
-          |> handle_joins(Presence.list(@presence))}
+    ship_type = String.to_atom(ship)
+    bullet_type = String.to_atom(bullet)
+    IO.inspect(ship_type)
+    IO.inspect(bullet_type)
+    if username == "" do
+      {:reply, %{error: "Username can't be blank"}, assign(socket, :error_message, "Username can't be blank")}
+    else
+      case Map.has_key?(Presence.list(@presence), username) do
+        true ->
+          {:reply, %{error: "Username already taken"}, assign(socket, :error_message, "Username already taken")}
+        false ->
+          # GameServer.spawn_player(username, ship_type, bullet_type) #where ship/bullet is string in all caps of ENUM
+          Presence.track(self(), @presence, username, %{
+            points: 0,
+          })
+          Phoenix.PubSub.subscribe(PubSub, @presence)
+          {:noreply, socket
+            |> assign(:joined, true)
+            |> assign(:current_user, username)
+            |> handle_joins(Presence.list(@presence))}
+      end
     end
   end
 
