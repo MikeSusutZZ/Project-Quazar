@@ -48,7 +48,8 @@ defmodule GameServer do
     Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
     Enum.each(players, fn player -> 
       IO.inspect(player)
-      IO.inspect(Boundary.outside?(player, @bounds))
+      # Game can call boundary checks like so and damage players accordingly
+      # IO.inspect(Boundary.outside?(player, @bounds))
       # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
     end)
     IO.puts("bonk")
