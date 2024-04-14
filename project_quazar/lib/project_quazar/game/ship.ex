@@ -20,16 +20,17 @@ defmodule Ship do
     }
   end
 
+  @doc "Creates a ship with randomized position within bounds (height and width), 0 intial velocity and 100hp, 10bulletDamage"
   def random_ship(bounding_width, bounding_height) do
     {random_x, random_y} = {random_between(0, bounding_width), random_between(0, bounding_height)}
     angle = random_angle()
     Ship.new_ship(random_x, random_y, angle, 100, 10) # default health (100) and bullet_dmg (10) right now
   end
 
-  # Spawn within bounds
+  @doc "Generate coordinates within bounds"
   def random_between(min, max), do: :rand.uniform(max - min + 1) + min
 
-  # Ships spawn angled at multiples of 90degrees
+  @doc "Generate random angle (multiple of 90degree)"
   def random_angle do
     angles = [0, :math.pi() / 2, :math.pi(), 3 * :math.pi() / 2]
     Enum.random(angles)
