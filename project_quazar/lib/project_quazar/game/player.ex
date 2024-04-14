@@ -54,8 +54,22 @@ defmodule Player do
       %@for{ player_data | ship: Movable.Motion.accelerate(ship, amount) }
     end
 
+    # Gets the current position
+    def get_pos(%@for{ship: ship}) do
+      Movable.Motion.get_pos(ship)
+    end
+  end
+  
+  defimpl Movable.Drag, for: __MODULE__ do
+    @doc "Applies drag to slow down ship until it comes to full rest"
+    def apply_drag(%@for{ship: ship} = player_data, amount) do
+      %@for{ player_data | ship: Movable.Drag.apply_drag(ship, amount) }
+    end
+  end
+  
+  defimpl Movable.Rotation, for: __MODULE__ do
     def rotate(%@for{ship: ship} = player_data, rad, :cw) do
-      %@for{ player_data | ship: Movable.Motion.rotate(ship, rad, :cw) }
+      %@for{ player_data | ship: Movable.Rotation.rotate(ship, rad, :cw) }
     end
 
     @doc """
@@ -63,12 +77,7 @@ defmodule Player do
     Pass `:cw` for clockwise, `:ccw` for counter-clockwise
     """
     def rotate(%@for{ship: ship} = player_data, rad, :ccw) do
-      %@for{ player_data | ship: Movable.Motion.rotate(ship, rad, :ccw) }
-    end
-
-    # Gets the current position
-    def get_pos(%@for{ship: ship}) do
-      Movable.Motion.get_pos(ship)
+      %@for{ player_data | ship: Movable.Rotation.rotate(ship, rad, :ccw) }
     end
   end
 end

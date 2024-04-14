@@ -6,7 +6,14 @@ defmodule GameServer do
   @table GameState
   @tick_rate 1 # Ticks/second
   @accel_rate 1
+  @drag_rate 0.2
   @turn_rate :math.pi() / 3
+
+  # implementing drag
+
+  # bounds for the screen (assumption at present, can be done programmatically later)
+  @bounding_height 200
+  @bounding_width 200
 
   def start_link(_arg) do
     GenServer.start_link(__MODULE__, nil, name: {:global, __MODULE__})
@@ -49,11 +56,11 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  def spawn_player(name), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name})
+  def spawn_player(name, ship_type), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type})
 
   @impl true
-  def handle_cast({:spawn_player, name}, %__MODULE__{players: players} = gamestate) do
-    player_ship = Ship.new_ship(0, 0, 0, :destroyer)
+  def handle_cast({:spawn_player, name, type}, %__MODULE__{players: players} = gamestate) do
+    player_ship = Ship.random_ship(type, @bounding_width, @bounding_height)
     new_players = [Player.new_player(name, player_ship) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
@@ -73,6 +80,7 @@ defmodule GameServer do
           Player.inc_score(player, 100)
           # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
+          |> Movable.Drag.apply_drag(@drag_rate) # causes the ship to slow down over time
         else
           Player.respawn(player, 0, 0, 0)
         end
@@ -130,13 +138,11 @@ defmodule GameServer do
     else
       if dir == :cw || dir == :ccw
       do
-        updated_players = update_players(players, Movable.Motion.rotate(player, @turn_rate, dir))
+        updated_players = update_players(players, Movable.Rotation.rotate(player, @turn_rate, dir))
         {:noreply, %{state | :players => updated_players}}
       else
         {:noreply, state}
       end
     end
   end
-
-
 end
