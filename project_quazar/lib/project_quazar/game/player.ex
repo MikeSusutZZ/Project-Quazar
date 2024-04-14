@@ -42,11 +42,6 @@ defmodule Player do
     respawned_ship = Ship.respawn(ship, px, py, angle)
     %__MODULE__{ player_data | score: 0, ship: respawned_ship }
   end
-  
-  
-  def outside_coordinates?(%__MODULE__{ship: ship}, coords) do
-    Ship.outside_coordinates?(ship, coords)
-  end
 
   defimpl Movable.Motion, for: __MODULE__ do
     @doc "Moves the players ship according to its kinematics"

@@ -128,17 +128,6 @@ defmodule Ship do
     new_pos = Movable.new_movable(px, py, 0, 0, angle)
     %__MODULE__{ship_data | health: new_health, kinematics: new_pos}
   end
-  
-  
-  def outside_coordinates?(%__MODULE__{radius: radius, kinematics: %{px: px, py: py}}, %{ start: {sx, sy}, end: {ex, ey}}) do
-    # Check if we are outside the edges of the provided coordinates
-    if (
-      px + radius < sx
-      || px - radius > ex
-      || py + radius < sy
-      || py - radius > ey
-    ), do: true, else: false
-  end
 
   @doc """
   Fires a bullet from the ship, creating a new `Bullet` instance.
