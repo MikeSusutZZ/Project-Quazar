@@ -95,9 +95,9 @@ defmodule CollisionHandler do
   # It also updates the score of the shooter in the high scores table.
   # Returns the updated lists of bullets and players after removing those that have collided with ships.
   defp handle_bullet_ship_collisions(collisions, bullets, players) do
-    # Collect IDs of bullets that have collided
-    collided_bullets = Enum.map(collisions, fn {_, bullet, _} -> bullet end)
-    updated_bullets = Enum.reject(bullets, fn bullet -> bullet in collided_bullets end)
+    # Collect IDs of bullets that have collided using a Set for faster checks
+    collided_bullets = MapSet.new(Enum.map(collisions, fn {_, bullet, _} -> bullet end))
+    updated_bullets = Enum.reject(bullets, fn bullet -> MapSet.member?(collided_bullets, bullet) end)
 
     # Apply damage to ships and update players
     updated_players = Enum.reduce(players, [], fn player, acc ->
