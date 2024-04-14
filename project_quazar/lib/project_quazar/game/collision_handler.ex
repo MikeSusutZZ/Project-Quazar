@@ -123,23 +123,41 @@ defmodule CollisionHandler do
   # Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
   # Returns an updated list of `Player` structs after applying the collision effects.
   defp handle_ship_ship_collisions(collisions, players) do
-    # Map of player to the total damage it should take (sum of healths of colliding ships)
+    # Build a map of how much damage each player takes
     damage_map = Enum.reduce(collisions, %{}, fn {:ship_ship_collision, player1, player2}, acc ->
       acc
       |> Map.update(player1, player2.ship.health, &(&1 + player2.ship.health))
       |> Map.update(player2, player1.ship.health, &(&1 + player1.ship.health))
     end)
 
-    # Apply the calculated damage to each ship
-    updated_players = Enum.map(players, fn player ->
-      case Map.fetch(damage_map, player) do
-        :error ->
-          player # no damage to apply, return the player as is
-        {:ok, damage} ->
-          Player.take_damage(player, damage)
+    # Apply the calculated damage to each ship, checking for destruction
+    Enum.map(players, fn player ->
+      damage = Map.get(damage_map, player, 0)
+      if damage > 0 do
+        # Calculate new health after damage
+        new_health = player.ship.health - damage
+        destroyed = new_health <= 0
+
+        # Update the player's ship health
+        updated_ship = %{player.ship | health: max(new_health, 0)}
+        updated_player = %{player | ship: updated_ship}
+
+        # Check if the ship is destroyed and award points to the destroyer
+        if destroyed do
+          Enum.each(collisions, fn {:ship_ship_collision, destroyer, destroyed} ->
+            if destroyed == player do
+              # Award 250 points to the destroyer
+              ProjectQuazar.HighScores.add_entry(destroyer.name, 250)
+            end
+          end)
+        end
+
+        updated_player
+      else
+        # No damage means no update needed
+        player
       end
     end)
-
-    updated_players
   end
+
 end
