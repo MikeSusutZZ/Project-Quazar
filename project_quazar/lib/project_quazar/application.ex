@@ -20,7 +20,7 @@ defmodule ProjectQuazar.Application do
       # Start to serve requests, typically the last entry
       ProjectQuazarWeb.Endpoint,
       GameServer,
-      {ProjectQuazar.HighScores.ETSWrapper, []}
+      ProjectQuazar.HighScores.ETSWrapper
     ]
 
     :ets.new(GameState, [:named_table, :public])

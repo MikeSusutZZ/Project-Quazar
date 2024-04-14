@@ -13,7 +13,7 @@ defmodule Ship do
     :max_health,
     :health,
     :type,
-    :size,
+    :radius,
     :acceleration,
     :bullet_type
   ]
@@ -21,21 +21,21 @@ defmodule Ship do
   # Bullet type specifications
   # TODO: adjust size; bullet types
   @ship_types %{
-    tank: %{health: 250, acceleration: 0.25, size: 6, bullet_type: :heavy},
-    destroyer: %{health: 150, acceleration: 0.5, size: 4, bullet_type: :medium},
-    scout: %{health: 100, acceleration: 1, size: 2, bullet_type: :light}
+    tank: %{health: 250, acceleration: 0.25, radius: 6, bullet_type: :heavy},
+    destroyer: %{health: 150, acceleration: 0.5, radius: 4, bullet_type: :medium},
+    scout: %{health: 100, acceleration: 1, radius: 2, bullet_type: :light}
   }
 
   @doc "Creates a new Ship at x,y. Health sets maximum and current health, and bullet_dmg sets damage"
-  def new_ship(px, py, angle, health, type) do
+  def new_ship(px, py, angle, type) do
     case Map.fetch(@ship_types, type) do
       {:ok, attributes} ->
         %__MODULE__{
           kinematics: Movable.new_movable(px, py, 0, 0, angle),
-          max_health: health,
-          health: health,
+          max_health: attributes.health,
+          health: attributes.health,
           type: type,
-          size: attributes.size,
+          radius: attributes.radius,
           acceleration: attributes.acceleration,
           bullet_type: attributes.bullet_type
         }
@@ -44,6 +44,23 @@ defmodule Ship do
         {:error, "Invalid ship type: #{type}"}
     end
   end
+
+  @doc "Creates a ship with randomized position within bounds (height and width), 0 intial velocity and 100hp, 10bulletDamage"
+  def random_ship(type, bounding_width, bounding_height) do
+    {random_x, random_y} = {random_between(0, bounding_width), random_between(0, bounding_height)}
+    angle = random_angle()
+    Ship.new_ship(random_x, random_y, angle, type)
+  end
+
+  @doc "Generate coordinates within bounds"
+  def random_between(min, max), do: :rand.uniform(max - min + 1) + min
+
+  @doc "Generate random angle (multiple of 90degree)"
+  def random_angle do
+    angles = [0, :math.pi() / 2, :math.pi(), 3 * :math.pi() / 2]
+    Enum.random(angles)
+  end
+
 
   defimpl Movable.Motion, for: __MODULE__ do
     @doc "Moves the ship according to its current XY position, acceleration, & velocity"
@@ -58,8 +75,24 @@ defmodule Ship do
       %@for{ship_data | kinematics: new_acceleration}
     end
 
+    @doc "Gets the current X/Y position and angle"
+    def get_pos(%@for{kinematics: position}) do
+      Movable.Motion.get_pos(position)
+    end
+  end
+
+  defimpl Movable.Drag, for: __MODULE__ do
+    @doc "Slows down ship over time by applying an imaginary force opposite to direction of current veloctiy"
+    def apply_drag(%@for{kinematics: old_values} = ship_data, amount) do
+      # returns the slowed ship with new velocity values
+      new_values = Movable.Drag.apply_drag(old_values, amount)
+      %@for{ ship_data | kinematics: new_values}
+    end
+  end
+
+  defimpl Movable.Rotation, for: __MODULE__ do
     def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :cw) do
-      new_rotation = Movable.Motion.rotate(old_rotation, rad, :cw)
+      new_rotation = Movable.Rotation.rotate(old_rotation, rad, :cw)
       %@for{ship_data | kinematics: new_rotation}
     end
 
@@ -68,13 +101,8 @@ defmodule Ship do
     Pass `:cw` for clockwise, `:ccw` for counter-clockwise
     """
     def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :ccw) do
-      new_rotation = Movable.Motion.rotate(old_rotation, rad, :ccw)
+      new_rotation = Movable.Rotation.rotate(old_rotation, rad, :ccw)
       %@for{ship_data | kinematics: new_rotation}
-    end
-
-    @doc "Gets the current X/Y position and angle"
-    def get_pos(%@for{kinematics: position}) do
-      Movable.Motion.get_pos(position)
     end
   end
 
@@ -106,8 +134,8 @@ defmodule Ship do
   Returns a `Bullet` struct representing the new bullet, or an error if the bullet type is invalid.
   """
   def fire(%__MODULE__{kinematics: kinematics, bullet_type: bullet_type}, player_name) do
-    %{px: px, py: py, angle: angle} = Movable.Motion.get_pos(kinematics)
+    %{px: px, py: py, vx: vx, vy: vy, angle: angle} = kinematics
 
-    Bullet.new_bullet(player_name, px, py, angle, bullet_type)
+    Bullet.new_bullet(player_name, px, py, vx, vy, angle, bullet_type)
   end
 end

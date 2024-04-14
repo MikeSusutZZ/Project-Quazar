@@ -9,9 +9,6 @@ defmodule ProjectQuazarWeb.Game do
 
   @impl true
   def mount(_params, _session, socket) do
-
-    # For the `all-time high scores` component; subscribes to high_scores
-    # PubSub seen in lib > project_quazar_web >channels > `high_scores_channel.ex`
     Phoenix.PubSub.subscribe(ProjectQuazar.PubSub, "high_scores:updates")
     top_scores = fetch_top_scores()
 
@@ -47,10 +44,9 @@ defmodule ProjectQuazarWeb.Game do
       |> handle_joins(diff.joins)}
   end
 
-  # Fetches top scores for all-time high scores component (see below)
+  # accepts the new scores from the broadcast
   @impl true
-  def handle_info(:scores_updated, socket) do
-    top_scores = fetch_top_scores()
+  def handle_info({:scores_updated, top_scores}, socket) do
     {:noreply, assign(socket, :top_scores, top_scores)}
   end
 
@@ -82,4 +78,39 @@ defmodule ProjectQuazarWeb.Game do
       {:error, _reason} -> []
     end
   end
+
+  # Pings the game server
+  def handle_event("ping_server", %{"key" => "p"}, socket) do
+    GameServer.ping(socket)
+    {:noreply, socket}
+  end
+
+  def handle_event("ping_server", _, socket), do: {:noreply, socket}
+
+  # Spawn a test ship
+  def handle_event("control", %{"key" => "r"}, socket) do
+    GameServer.spawn_player("default")
+    {:noreply, socket}
+  end
+
+  # Accelerate the test ship
+  def handle_event("control", %{"key" => "w"}, socket) do
+    GameServer.accelerate_player("default")
+    {:noreply, socket}
+  end
+
+  # Rotate the test ship clockwise
+  def handle_event("control", %{"key" => "d"}, socket) do
+    GameServer.rotate_player("default", :cw)
+    {:noreply, socket}
+  end
+
+  # Rotate the test ship counter-clockwise
+  def handle_event("control", %{"key" => "a"}, socket) do
+    GameServer.rotate_player("default", :ccw)
+    {:noreply, socket}
+  end
+
+  # Catches all other keyboard events
+  def handle_event("control", _, socket), do: {:noreply, socket}
 end
