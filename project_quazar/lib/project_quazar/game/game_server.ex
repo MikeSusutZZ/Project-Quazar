@@ -74,7 +74,7 @@ defmodule GameServer do
           Player.inc_score(player, 100)
           # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
-          |> Movable.Drag.apply_drag(@decel_rate) # causes the ship to slow down over time
+          |> Movable.Drag.apply_drag(@drag_rate) # causes the ship to slow down over time
         else
           Player.respawn(player, 0, 0, 0)
         end
