@@ -123,23 +123,40 @@ defmodule CollisionHandler do
   # Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
   # Returns an updated list of `Player` structs after applying the collision effects.
   defp handle_ship_ship_collisions(collisions, players) do
-    # Map of player to the total damage it should take (sum of healths of colliding ships)
-    damage_map = Enum.reduce(collisions, %{}, fn {:ship_ship_collision, player1, player2}, acc ->
+    # Sort and remove duplicate collision pairs
+    unique_collisions = collisions
+    |> Enum.map(fn {:ship_ship_collision, player1, player2} ->
+      if player1.name < player2.name, do: {player1, player2}, else: {player2, player1}
+    end)
+    |> Enum.uniq()
+
+    # Create a damage map for each player based on unique collisions
+    damage_map = Enum.reduce(unique_collisions, %{}, fn {player1, player2}, acc ->
       acc
       |> Map.update(player1, player2.ship.health, &(&1 + player2.ship.health))
       |> Map.update(player2, player1.ship.health, &(&1 + player1.ship.health))
     end)
 
-    # Apply the calculated damage to each ship
-    updated_players = Enum.map(players, fn player ->
-      case Map.fetch(damage_map, player) do
-        :error ->
-          player # no damage to apply, return the player as is
-        {:ok, damage} ->
-          Player.take_damage(player, damage)
+    # Apply the calculated damage and filter out destroyed ships, award points to the destroyer
+    Enum.map(players, fn player ->
+      damage = Map.get(damage_map, player, 0)
+      if damage > 0 do
+        updated_player = Player.take_damage(player, damage)
+        if Ship.alive?(updated_player.ship) do
+          updated_player
+        else
+          # Find the collision that resulted in this player's destruction and award points to the other player
+          Enum.each(unique_collisions, fn {destroyer, destroyed} ->
+            if destroyed == player do
+              ProjectQuazar.HighScores.add_entry(destroyer.name, 250)  # award points to the destroyer
+            end
+          end)
+          nil  # Remove destroyed player
+        end
+      else
+        player  # No damage, return the player as is
       end
     end)
-
-    updated_players
+    |> Enum.reject(&is_nil/1)  # Filter out nil entries which represent destroyed ships
   end
 end
