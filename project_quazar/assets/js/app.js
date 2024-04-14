@@ -227,31 +227,91 @@ Hooks.Game3 = {
 };
 
 
-// Frontend Prototype 4 - Render Player Prototype
+// Frontend Prototype 4
 const DummyPlayerList = {
   "players": [
     { "name": "Player1", "score": 1200, "ship": { "kinematics": { "px": 100, "py": 150 }, "max_health": 100, "current_health": 80, "bullet_type": "laser" } }
   ]
 };
 
-Hooks.RenderPlayer = {
-  mounted() {
-    console.log("RenderPlayer mounted");
-    let canvas = document.getElementById("circleCanvas");
-    let ctx = canvas.getContext("2d");
+const drawGame4 = () => {
+  let canvas = document.getElementById("circleCanvas");
+  let ctx = canvas.getContext("2d");
 
-    // Parse player data directly from DummyPlayerList
-    let shipImage = new Image();
-    shipImage.src = "/images/side-eye.jpg";
-    shipImage.onload = () => {
-      // Draw each ship when the image is loaded
-      DummyPlayerList.players.forEach(player => {
-        let ship = player.ship;
-        ctx.drawImage(shipImage, ship.kinematics.px, ship.kinematics.py, 130, 100);
-      });
-    };
+  // Dummy data for player positions and attributes
+  const playerData = DummyPlayerList.players[0]; // Assuming single player for simplicity
+
+  // Initialize canvas images
+  let gameBoard = new Image();
+  let player = new Image();
+  let bullet1 = new Image();
+  let bullet2 = new Image();
+  let bullet3 = new Image();
+
+  // Link images to assets
+  gameBoard.src = "/images/game_board_asset/Game_Background.png";
+  player.src = "/images/side-eye.jpg";
+  bullet1.src = "/images/red_bullet_asset/Red_Bullet.png";
+  bullet2.src = "/images/green_bullet_asset/Green_Bullet.png";
+  bullet3.src = "/images/purple_bullet_asset/Purple_Bullet.png";
+
+  // Render images when loaded
+  gameBoard.onload = function () {
+    ctx.drawImage(gameBoard, 0, 0, 800, 800);
+  };
+
+  bullet1.onload = function () {
+    ctx.drawImage(bullet1, bullet1_xy[0], bullet1_xy[1], 40, 40);
+    bullet1_xy[0] += 20; // Example movement
+  };
+
+  bullet2.onload = function () {
+    ctx.drawImage(bullet2, bullet2_xy[0], bullet2_xy[1], 40, 40);
+    bullet2_xy[0] += 20; // Example movement
+  };
+
+  bullet3.onload = function () {
+    ctx.drawImage(bullet3, bullet3_xy[0], bullet3_xy[1], 40, 40);
+    bullet3_xy[0] += 20; // Example movement
+  };
+
+  player.onload = function () {
+    // Using the kinematics property from JSON to set player position
+    ctx.drawImage(player, playerData.ship.kinematics.px, playerData.ship.kinematics.py, 130, 100);
+  };
+};
+
+Hooks.Game4 = {
+  mounted() {
+    console.log("Game mounted");
+    let pressedKeys = new Set();
+
+    // Initial Render
+    drawGame4();
+
+    window.addEventListener("keydown", (e) => {
+      if (!pressedKeys.has(e.key)) {
+        pressedKeys.add(e.key);
+        this.pushEvent("start_move", { key: e.key }, (reply) => {
+          console.log("reply", reply);
+          drawGame4();
+        });
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      if (pressedKeys.has(e.key)) {
+        pressedKeys.delete(e.key);
+        this.pushEvent("stop_move", { key: e.key });
+      }
+    });
+
+    window.addEventListener("click", () => {
+      this.pushEvent("shoot", {});
+    });
   },
 };
+
 
 
 let csrfToken = document
