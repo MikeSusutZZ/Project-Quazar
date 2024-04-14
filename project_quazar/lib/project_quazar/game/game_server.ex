@@ -6,6 +6,7 @@ defmodule GameServer do
   @table GameState
   @tick_rate 1 # Ticks/second
   @accel_rate 1
+  @decel_rate 0.2
   @turn_rate :math.pi() / 3
 
   # implementing drag
@@ -53,7 +54,7 @@ defmodule GameServer do
 
   @impl true
   def handle_cast({:spawn_player, name}, %__MODULE__{players: players} = gamestate) do
-    player_ship = random_ship()
+    player_ship = Ship.random_ship(@bounding_width, @bounding_height)
     new_players = [Player.new_player(name, player_ship) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
@@ -73,6 +74,7 @@ defmodule GameServer do
           Player.inc_score(player, 100)
           # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
+          |> Movable.Motion.decelerate(@decel_rate)
         else
           Player.respawn(player, 0, 0, 0)
         end
@@ -119,27 +121,6 @@ defmodule GameServer do
   def rotate_player(name, dir) do
     GenServer.cast({:global, __MODULE__}, {:rotate, name, dir})
   end
-
-
-  ### functions to randomize position of Player ship at spawn
-
-  # Randomize position for new player joins
-  def random_ship do
-    {random_x, random_y} = {random_between(0, @bounding_width), random_between(0, @bounding_height)}
-    angle = random_angle()
-    Ship.new_ship(random_x, random_y, angle, 100, 10) # default health (100) and bullet_dmg (10) right now
-  end
-
-  # Spawn within bounds
-  def random_between(min, max), do: :rand.uniform(max - min + 1) + min
-
-  # Ships spawn angled at multiples of 90degrees
-  def random_angle do
-    angles = [0, :math.pi() / 2, :math.pi(), 3 * :math.pi() / 2]
-    Enum.random(angles)
-  end
-
-  ####### randomize functions end here
 
   # Rotates the ship with the given name in the given direction
   @impl true

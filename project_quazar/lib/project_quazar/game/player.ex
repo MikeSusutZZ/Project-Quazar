@@ -54,6 +54,10 @@ defmodule Player do
       %@for{ player_data | ship: Movable.Motion.accelerate(ship, amount) }
     end
 
+    def decelerate(%@for{ship: ship} = player_data, amount) do
+      %@for{ player_data | ship: Movable.Motion.decelerate(ship, amount) }
+    end
+
     def rotate(%@for{ship: ship} = player_data, rad, :cw) do
       %@for{ player_data | ship: Movable.Motion.rotate(ship, rad, :cw) }
     end
