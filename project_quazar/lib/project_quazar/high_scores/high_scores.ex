@@ -1,12 +1,19 @@
 defmodule ProjectQuazar.HighScores do
+  @moduledoc """
+  Module for managing high scores
+  """
   alias ProjectQuazar.HighScores.ETSWrapper
 
-  # calls the ETSWrapper to insert a new entry into the high scores table
+  @doc """
+  Calls the ETSWrapper to add an entry to the high scores table
+  """
   def add_entry(username, score) do
     ETSWrapper.insert_entry(username, score)
   end
 
-  # calls the ETSWrapper to fetch the top scores
+  @doc """
+  Calls the ETSWrapper to fetch the top scores from the high scores table
+  """
   def fetch_top_scores() do
     ETSWrapper.fetch_top_scores()
   end

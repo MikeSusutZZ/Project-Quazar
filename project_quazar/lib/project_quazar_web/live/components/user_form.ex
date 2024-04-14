@@ -73,6 +73,8 @@ defmodule ProjectQuazarWeb.UserForm do
           <input class= " mt-4 bg-green-600 p-2 rounded cursor-pointer hover:text-white" type="submit" value="Submit">
         </form>
         <p class="text-red-500"><%= @error_message %></p>
+        <span phx-window-keydown="ping_server"></span>
+        <span phx-window-keydown="control"></span>
       </div>
     </div>
     """
