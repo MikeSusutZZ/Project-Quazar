@@ -226,6 +226,34 @@ Hooks.Game3 = {
   },
 };
 
+
+// Frontend Prototype 4 - Render Player Prototype
+const DummyPlayerList = {
+  "players": [
+    { "name": "Player1", "score": 1200, "ship": { "kinematics": { "px": 100, "py": 150 }, "max_health": 100, "current_health": 80, "bullet_type": "laser" } }
+  ]
+};
+
+Hooks.RenderPlayer = {
+  mounted() {
+    console.log("RenderPlayer mounted");
+    let canvas = document.getElementById("circleCanvas");
+    let ctx = canvas.getContext("2d");
+
+    // Parse player data directly from DummyPlayerList
+    let shipImage = new Image();
+    shipImage.src = "/images/side-eye.jpg";
+    shipImage.onload = () => {
+      // Draw each ship when the image is loaded
+      DummyPlayerList.players.forEach(player => {
+        let ship = player.ship;
+        ctx.drawImage(shipImage, ship.kinematics.px, ship.kinematics.py, 130, 100);
+      });
+    };
+  },
+};
+
+
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");
