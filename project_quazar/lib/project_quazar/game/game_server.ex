@@ -74,7 +74,7 @@ defmodule GameServer do
           Player.inc_score(player, 100)
           # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
-          |> Movable.Motion.apply_drag(@decel_rate) # causes the ship to slow down over time
+          |> Movable.Drag.apply_drag(@decel_rate) # causes the ship to slow down over time
         else
           Player.respawn(player, 0, 0, 0)
         end
@@ -132,7 +132,7 @@ defmodule GameServer do
     else
       if dir == :cw || dir == :ccw
       do
-        updated_players = update_players(players, Movable.Motion.rotate(player, @turn_rate, dir))
+        updated_players = update_players(players, Movable.Rotation.rotate(player, @turn_rate, dir))
         {:noreply, %{state | :players => updated_players}}
       else
         {:noreply, state}

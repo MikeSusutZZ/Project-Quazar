@@ -50,15 +50,24 @@ defmodule Ship do
       %@for{ ship_data | kinematics: new_acceleration }
     end
 
+    @doc "Gets the current X/Y position and angle"
+    def get_pos(%@for{kinematics: position}) do
+      Movable.Motion.get_pos(position)
+    end
+  end
+
+  defimpl Movable.Drag, for: __MODULE__ do
     @doc "Slows down ship over time by applying an imaginary force opposite to direction of current veloctiy"
     def apply_drag(%@for{kinematics: old_values} = ship_data, amount) do
       # returns the slowed ship with new velocity values
-      new_values = Movable.Motion.apply_drag(old_values, amount)
+      new_values = Movable.Drag.apply_drag(old_values, amount)
       %@for{ ship_data | kinematics: new_values}
     end
+  end
 
+  defimpl Movable.Rotation, for: __MODULE__ do
     def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :cw) do
-      new_rotation = Movable.Motion.rotate(old_rotation, rad, :cw)
+      new_rotation = Movable.Rotation.rotate(old_rotation, rad, :cw)
       %@for{ ship_data | kinematics: new_rotation }
     end
 
@@ -67,13 +76,8 @@ defmodule Ship do
     Pass `:cw` for clockwise, `:ccw` for counter-clockwise
     """
     def rotate(%@for{kinematics: old_rotation} = ship_data, rad, :ccw) do
-      new_rotation = Movable.Motion.rotate(old_rotation, rad, :ccw)
+      new_rotation = Movable.Rotation.rotate(old_rotation, rad, :ccw)
       %@for{ ship_data | kinematics: new_rotation }
-    end
-
-    @doc "Gets the current X/Y position and angle"
-    def get_pos(%@for{kinematics: position}) do
-      Movable.Motion.get_pos(position)
     end
   end
 
