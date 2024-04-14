@@ -7,7 +7,7 @@ defmodule Movable do
     @doc "Accelerates an object in its current direction"
     def accelerate(data, acl)
     @doc "Decelerates an object with constant drag in opposite direction of current velocity"
-    def decelerate(data, dcl)
+    def apply_drag(data, dcl)
     @doc "Rotates an object clockwise in radians"
     def rotate(data, rad, cw_or_ccw)
     @doc "Gets an object's x/y position and angle"
@@ -46,7 +46,7 @@ defmodule Movable do
     end
 
     # Function to apply constant deceleration to the velocity vector
-    def decelerate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, dcl) do
+    def apply_drag(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, dcl) do
       # Calculate the magnitude of the velocity vector
       velocity_magnitude = :math.sqrt(vx * vx + vy * vy)
 
@@ -56,12 +56,12 @@ defmodule Movable do
         %Movable{px: px, py: py, vx: 0, vy: 0, angle: angle}
       else
         # Calculate the new velocity components after applying deceleration
-        {new_vx, new_vy} = apply_deceleration(vx, vy, dcl)
+        {new_vx, new_vy} = reduce_speed(vx, vy, dcl)
         %Movable{px: px, py: py, vx: new_vx, vy: new_vy, angle: angle}
       end
     end
 
-    defp apply_deceleration(vx, vy, deceleration) do
+    defp reduce_speed(vx, vy, deceleration) do
       # Calculate the magnitude of the velocity vector
       velocity_magnitude = :math.sqrt(vx * vx + vy * vy)
 

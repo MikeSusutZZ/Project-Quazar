@@ -54,8 +54,9 @@ defmodule Player do
       %@for{ player_data | ship: Movable.Motion.accelerate(ship, amount) }
     end
 
-    def decelerate(%@for{ship: ship} = player_data, amount) do
-      %@for{ player_data | ship: Movable.Motion.decelerate(ship, amount) }
+    @doc "Applies drag to slow down ship until it comes to full rest"
+    def apply_drag(%@for{ship: ship} = player_data, amount) do
+      %@for{ player_data | ship: Movable.Motion.apply_drag(ship, amount) }
     end
 
     def rotate(%@for{ship: ship} = player_data, rad, :cw) do

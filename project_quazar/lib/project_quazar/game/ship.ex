@@ -49,10 +49,10 @@ defmodule Ship do
       %@for{ ship_data | kinematics: new_acceleration }
     end
 
-    @doc "Decelerate ship in opposite direction of motion"
-    def decelerate(%@for{kinematics: old_values} = ship_data, amount) do
-      # returns the decelerated ship with decrease velocity
-      new_values = Movable.Motion.decelerate(old_values, amount)
+    @doc "Slows down ship over time by applying an imaginary force opposite to direction of current veloctiy"
+    def apply_drag(%@for{kinematics: old_values} = ship_data, amount) do
+      # returns the slowed ship with new velocity values
+      new_values = Movable.Motion.apply_drag(old_values, amount)
       %@for{ ship_data | kinematics: new_values}
     end
 
