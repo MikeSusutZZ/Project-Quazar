@@ -46,7 +46,11 @@ defmodule GameServer do
 
     # Remove dead ships
     Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
-    Enum.each(players, fn player -> IO.inspect(player) end)
+    Enum.each(players, fn player -> 
+      IO.inspect(player)
+      IO.inspect(Player.outside_coordinates?(player, %{ start: {0, 0}, end: {@bounds.x, @bounds.y} }))
+      IO.inspect(Player.outside_coordinates?(player, %{ start: {@bounds.deadzone, @bounds.deadzone}, end: {@bounds.x - @bounds.deadzone, @bounds.y - @bounds.deadzone} }))
+    end)
     IO.puts("bonk")
     :ets.insert(@table, {__MODULE__, new_gamestate})
     {:noreply, new_gamestate}
