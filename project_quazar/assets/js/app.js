@@ -174,7 +174,9 @@ const drawGame3 = () => {
 
   // Initialize canvas images
   let gameBoard = new Image();
-  let player = new Image();
+  let player1 = new Image();
+  let player2 = new Image();
+  let player3 = new Image();
   let bullet1 = new Image();
   let bullet2 = new Image();
   let bullet3 = new Image();
@@ -188,7 +190,9 @@ const drawGame3 = () => {
     ctx.drawImage(gameBoard, 0, 0, 800, 800);
 
     // Once board is loaded, link to rest of assets to trigger onload
-    player.src = "/images/side-eye.jpg";
+    player1.src = "/images/ship_asset/blue_ship.png";
+    player2.src = "/images/ship_asset/purple_ship.png";
+    player3.src = "/images/ship_asset/red_ship.png";
     bullet1.src = "/images/red_bullet_asset/Red_Bullet.png";
     bullet2.src = "/images/green_bullet_asset/Green_Bullet.png";
     bullet3.src = "/images/purple_bullet_asset/Purple_Bullet.png";
@@ -212,9 +216,19 @@ const drawGame3 = () => {
     bullet3_xy[0] += 20;
   };
 
-  player.onload = function () {
+  player1.onload = function () {
     console.log("Player rendered");
-    ctx.drawImage(player, myData.x, myData.y, 130, 100);
+    ctx.drawImage(player1, myData.x, myData.y, 300, 300);
+  };
+
+  player2.onload = function () {
+    console.log("Player rendered");
+    ctx.drawImage(player2, myData.x + 100, myData.y, 300, 300);
+  };
+
+  player3.onload = function () {
+    console.log("Player rendered");
+    ctx.drawImage(player3, myData.x + 200, myData.y, 300, 300);
   };
 };
 
