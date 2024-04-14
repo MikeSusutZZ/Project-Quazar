@@ -95,29 +95,41 @@ defmodule CollisionHandler do
   # It also updates the score of the shooter in the high scores table.
   # Returns the updated lists of bullets and players after removing those that have collided with ships.
   defp handle_bullet_ship_collisions(collisions, bullets, players) do
-    # Filter out bullets that have collided and apply damage to the ships
+    # Collect IDs of bullets that have collided
     collided_bullets = Enum.map(collisions, fn {_, bullet, _} -> bullet end)
     updated_bullets = Enum.reject(bullets, fn bullet -> bullet in collided_bullets end)
 
-    # Update player ships with the damage and remove destroyed ships
-    updated_players = Enum.map(players, fn player ->
-      collisions
-      |> Enum.filter(fn {_, _, collided_player} -> collided_player == player end)
-      |> Enum.reduce(player, fn {_, bullet, _}, acc_player ->
-        # Apply damage to the ship
-        damaged_ship = Player.take_damage(acc_player, bullet.damage)
+    # Apply damage to ships and update players
+    updated_players = Enum.reduce(players, [], fn player, acc ->
+      # Find all collisions for this particular player
+      player_collisions = Enum.filter(collisions, fn {_, _, collided_player} -> collided_player == player end)
 
-        # Update the score for the player who fired the bullet
-        # Add score equal to the damage inflicted
-        ProjectQuazar.HighScores.add_entry(bullet.sender, bullet.damage)
+      # Check if this player had any collisions
+      if Enum.any?(player_collisions) do
+        # Process each collision to apply damage
+        updated_player = Enum.reduce(player_collisions, player, fn {_, bullet, _}, acc_player ->
+          damaged_player = Player.take_damage(acc_player, bullet.damage)
 
-        # Update the player data with the damaged ship
-        %Player{acc_player | ship: damaged_ship}
-      end)
+          # Update the score for the player who fired the bullet
+          ProjectQuazar.HighScores.insert_entry(bullet.sender, bullet.damage)
+
+          # Return the updated player
+          damaged_player
+        end)
+
+        # Only keep the player if their ship is still alive
+        if Player.alive?(updated_player) do
+          [updated_player | acc]
+        else
+          acc
+        end
+      else
+        [player | acc] # No collisions for this player, add them back to the list unchanged
+      end
     end)
 
     {updated_bullets, updated_players}
-  end
+end
 
   # Processes collisions between ships, each ship's health is reduced by the amount of health the opposing ship has.
   # Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
@@ -148,7 +160,7 @@ defmodule CollisionHandler do
           # Find the collision that resulted in this player's destruction and award points to the other player
           Enum.each(unique_collisions, fn {destroyer, destroyed} ->
             if destroyed == player do
-              ProjectQuazar.HighScores.add_entry(destroyer.name, 250)  # award points to the destroyer
+              ProjectQuazar.HighScores.insert_entry(destroyer.name, 250)  # award points to the destroyer
             end
           end)
           nil  # Remove destroyed player
