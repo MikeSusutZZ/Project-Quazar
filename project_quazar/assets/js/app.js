@@ -142,6 +142,74 @@ Hooks.MoveHook = {
   },
 };
 
+let bullet_xy = [0, 400];
+
+// Frontend Prototype 3
+const drawGame3 = () => {
+  let canvas = document.getElementById("circleCanvas");
+  let myData = JSON.parse(canvas.getAttribute("data-pos"));
+  console.log("My data", myData);
+  // Start
+  let ctx = canvas.getContext("2d");
+
+  // Initialize canvas images
+  let gameBoard = new Image();
+  let player = new Image();
+  let bullet = new Image();
+
+  // Link images to assets
+  gameBoard.src = "/images/game_board_asset/Game_Background.png";
+  bullet.src = "/images/red_bullet_asset/Red_Bullet.png";
+  player.src = "/images/side-eye.jpg";
+
+  // Render images when loaded
+  gameBoard.onload = function () {
+    ctx.drawImage(gameBoard, 0, 0, 800, 800);
+  };
+
+  bullet.onload = function () {
+    ctx.drawImage(bullet, bullet_xy[0], bullet_xy[1], 40, 40);
+    bullet_xy[0] += 20;
+  };
+
+  player.onload = function () {
+    ctx.drawImage(player, myData.x, myData.y, 130, 100);
+  };
+};
+
+Hooks.Game3 = {
+  mounted() {
+    console.log("Game mounted");
+    let pressedKeys = new Set(); // Set to track pressed keys
+
+    // Initial Render
+    drawGame3();
+
+    window.addEventListener("keydown", (e) => {
+      if (!pressedKeys.has(e.key)) {
+        pressedKeys.add(e.key); // Add pressed key to the set
+        this.pushEvent("start_move", { key: e.key }, (reply) => {
+          console.log("reply", reply);
+          // Render on key-event, will be changed to on broadcast received
+          drawGame3();
+        });
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      if (pressedKeys.has(e.key)) {
+        pressedKeys.delete(e.key); // Remove released key from the set
+        this.pushEvent("stop_move", { key: e.key });
+      }
+    });
+
+    // Add event listener for the "click" event
+    window.addEventListener("click", () => {
+      this.pushEvent("shoot", {});
+    });
+  },
+};
+
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");

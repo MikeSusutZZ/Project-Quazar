@@ -1,5 +1,5 @@
-# Prototype 2
-defmodule ProjectQuazarWeb.Prototype2 do
+# Prototype 3
+defmodule ProjectQuazarWeb.Prototype3 do
   use ProjectQuazarWeb, :live_view
 
   def mount(_params, _session, socket) do
