@@ -123,8 +123,15 @@ defmodule CollisionHandler do
   # Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
   # Returns an updated list of `Player` structs after applying the collision effects.
   defp handle_ship_ship_collisions(collisions, players) do
+    # Sort each collision pair and remove duplicates
+    unique_collisions = collisions
+    |> Enum.map(fn {:ship_ship_collision, player1, player2} ->
+      if player1.name < player2.name, do: {player1, player2}, else: {player2, player1}
+    end)
+    |> Enum.uniq()
+
     # Build a map of how much damage each player takes
-    damage_map = Enum.reduce(collisions, %{}, fn {:ship_ship_collision, player1, player2}, acc ->
+    damage_map = Enum.reduce(unique_collisions, %{}, fn {player1, player2}, acc ->
       acc
       |> Map.update(player1, player2.ship.health, &(&1 + player2.ship.health))
       |> Map.update(player2, player1.ship.health, &(&1 + player1.ship.health))
@@ -134,7 +141,6 @@ defmodule CollisionHandler do
     Enum.map(players, fn player ->
       damage = Map.get(damage_map, player, 0)
       if damage > 0 do
-        # Calculate new health after damage
         new_health = player.ship.health - damage
         destroyed = new_health <= 0
 
@@ -144,7 +150,7 @@ defmodule CollisionHandler do
 
         # Check if the ship is destroyed and award points to the destroyer
         if destroyed do
-          Enum.each(collisions, fn {:ship_ship_collision, destroyer, destroyed} ->
+          Enum.each(unique_collisions, fn {destroyer, destroyed} ->
             if destroyed == player do
               # Award 250 points to the destroyer
               ProjectQuazar.HighScores.add_entry(destroyer.name, 250)
@@ -154,10 +160,8 @@ defmodule CollisionHandler do
 
         updated_player
       else
-        # No damage means no update needed
         player
       end
     end)
   end
-
 end
