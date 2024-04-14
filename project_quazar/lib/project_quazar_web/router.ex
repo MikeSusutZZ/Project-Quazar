@@ -25,6 +25,9 @@ defmodule ProjectQuazarWeb.Router do
 
     # Frontend Prototype 1
     live("/test", TestLive)
+
+    # Frontend Prototype 2
+    live("/prototype-2", Prototype2)
   end
 
   # Other scopes may use custom stacks.
