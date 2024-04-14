@@ -5,24 +5,24 @@ defmodule ProjectQuazarWeb.AllTimeHighScores do
   def render(assigns) do
     ~H"""
     <div class="base-container">
-      <h1 class="title">Score Leaderboard</h1>
+
+      <h1 class="title">All-Time Score Leaderboard</h1>
 
       <div id="user-list-container">
         <%= if Enum.empty?(@top_scores) do %>
           <p class="no-scores">No scores yet!</p>
 
-        <%= else %>
-          <ul>
+        <% else %>
+
             <%= for score <- @top_scores do %>
-              <li>
-                <span class="text-lg"><%= score.player %></span>
-                <span class="text-xl text-green-600"><%= score.score %></span>
-              </li>
+              <div class="user-item-base mt-4">
+                <span class="user-id"><%= score.player %></span>
+                <span class="user-points"><%= score.score %></span>
+              </div>
             <% end %>
-          </ul>
+
         <% end %>
       </div>
-
     </div>
     """
   end
