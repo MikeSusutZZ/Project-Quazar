@@ -13,7 +13,7 @@ defmodule Ship do
     :max_health,
     :health,
     :type,
-    :size,
+    :radius,
     :acceleration,
     :bullet_type
   ]
@@ -21,21 +21,21 @@ defmodule Ship do
   # Bullet type specifications
   # TODO: adjust size; bullet types
   @ship_types %{
-    tank: %{health: 250, acceleration: 0.25, size: 6, bullet_type: :heavy},
-    destroyer: %{health: 150, acceleration: 0.5, size: 4, bullet_type: :medium},
-    scout: %{health: 100, acceleration: 1, size: 2, bullet_type: :light}
+    tank: %{health: 250, acceleration: 0.25, radius: 6, bullet_type: :heavy},
+    destroyer: %{health: 150, acceleration: 0.5, radius: 4, bullet_type: :medium},
+    scout: %{health: 100, acceleration: 1, radius: 2, bullet_type: :light}
   }
 
   @doc "Creates a new Ship at x,y. Health sets maximum and current health, and bullet_dmg sets damage"
-  def new_ship(px, py, angle, health, type) do
+  def new_ship(px, py, angle, type) do
     case Map.fetch(@ship_types, type) do
       {:ok, attributes} ->
         %__MODULE__{
           kinematics: Movable.new_movable(px, py, 0, 0, angle),
-          max_health: health,
-          health: health,
+          max_health: attributes.health,
+          health: attributes.health,
           type: type,
-          size: attributes.size,
+          radius: attributes.radius,
           acceleration: attributes.acceleration,
           bullet_type: attributes.bullet_type
         }
