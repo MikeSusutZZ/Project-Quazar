@@ -169,4 +169,9 @@ defmodule ProjectQuazarWeb.Game do
     IO.inspect("Pew")
     {:noreply, socket}
   end
+
+  def handle_event("game_over", %{"score" => score}, socket) do
+    {:noreply, push_redirect(socket, to: "/game-over?score=#{score}")}
+  end
+
 end
