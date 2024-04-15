@@ -49,6 +49,9 @@ Hooks.MoveCircle = {
       } else if (e.key === "d") {
         console.log("right");
         this.pushEvent("move_right", {});
+      } else if (e.key === "e") {
+        console.log("shoot");
+        this.pushEvent("shoot", {})
       }
     });
   },

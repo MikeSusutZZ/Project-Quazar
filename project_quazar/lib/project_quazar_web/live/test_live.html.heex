@@ -1,2 +1,31 @@
-<p id="move" phx-hook="MoveCircle"></p>
+<div style="position: relative; width: 100vw; height: 100vh;">
 
+    <!-- Circle image -->
+    <img
+        id="circle"
+        phx-hook="MoveCircle"
+        src={~p"/images/ship_asset/purple_ship.png"}
+        width="100"
+        height="100"
+        style={
+            "position: absolute;
+            top: #{@circle_coords.y}px;
+            left: #{@circle_coords.x}px;
+            transform: rotate(#{@rotation_angle}deg);"
+        }
+    />
+
+      <%= for bullet <- @circle_coords.bullet do %>
+    <img
+      src={~p"/images/purple_bullet_asset/Purple_Bullet.png"}
+      width="100"
+      height="100"
+      style={
+        "position: absolute;
+        top: #{bullet.y}px;
+        left: #{bullet.x}px;"
+      }
+    />
+  <% end %>
+
+</div>
