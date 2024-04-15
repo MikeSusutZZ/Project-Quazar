@@ -21,6 +21,7 @@ defmodule ProjectQuazarWeb.Game do
       |> assign(:error_message, "")
       |> assign(:top_scores, top_scores)
       |> assign(:start, true)
+      |> assign(:show_help, false)
       |> assign(:current_page, 1)
     }
   end
@@ -62,6 +63,14 @@ defmodule ProjectQuazarWeb.Game do
 
   def handle_event("show_start_game", _value, socket) do
     {:noreply, assign(socket, :start, false)}
+  end
+
+  def handle_event("show_help", _value, socket) do
+    {:noreply, assign(socket, :show_help, true)}
+  end
+
+  def handle_event("hide_help", _value, socket) do
+    {:noreply, assign(socket, :show_help, false)}
   end
 
 

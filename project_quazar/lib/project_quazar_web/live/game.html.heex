@@ -21,18 +21,20 @@
   />
 <% else %>
   <%= if @start do %>
-  <%# Start Screen %>
-  <.live_component
-    module={ProjectQuazarWeb.Start}
-    id="start"
-  />
+    <%# Start Screen %>
+    <.live_component
+      module={ProjectQuazarWeb.Start}
+      id="start"
+    />
 
-  <%# Help Screen %>
-  <.live_component
-    module={ProjectQuazarWeb.Help}
-    id="help"
-    current_page={@current_page} 
-  />
+    <%= if @show_help do %>
+      <%# Help Screen %>
+      <.live_component
+        module={ProjectQuazarWeb.Help}
+        id="help"
+        current_page={@current_page} 
+      />
+    <% end %>
   <% else %>
 
 

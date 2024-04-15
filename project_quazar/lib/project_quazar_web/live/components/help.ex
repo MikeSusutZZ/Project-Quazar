@@ -29,7 +29,8 @@ defmodule ProjectQuazarWeb.Help do
       end
 
     ~H"""
-    <div id="help" class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md mx-auto">
+    <div id="help" class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md mx-auto mt-5">
+      <button phx-click="hide_help" class="bg-gray-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Back</button>
       <h2 class="text-white text-3xl font-bold text-center mb-6">How To Play</h2>
       <p class="text-white text-center">Page: <%= current_page %></p>
       <%= raw(page_content) %>
