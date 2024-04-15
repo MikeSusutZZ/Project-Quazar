@@ -30,7 +30,7 @@ defmodule ProjectQuazarWeb.Help do
 
     ~H"""
     <div id="help" class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md mx-auto">
-      <h2 class="text-white text-3xl font-bold text-center mb-6">Help</h2>
+      <h2 class="text-white text-3xl font-bold text-center mb-6">How To Play</h2>
       <p class="text-white text-center">Page: <%= current_page %></p>
       <%= raw(page_content) %>
       <div class="flex justify-between w-full mt-6">

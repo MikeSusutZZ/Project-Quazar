@@ -11,13 +11,9 @@ defmodule ProjectQuazarWeb.Start do
       <h2 class="text-white text-3xl font-bold text-center mb-6">Project Quazar</h2>
       <div class="flex flex-col space-y-4 items-center">
         <button phx-click="show_start_game" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" phx-submit="start">Start Game</button>
-        <button phx-click="show_high_scores" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">All Time High Scores</button>
+        <button phx-click="show_help" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">How To Play</button>
       </div>
     </div>
     """
-  end
-
-  def handle_event("show_high_scores", _value, socket) do
-    {:noreply, assign(socket, show_high_scores: true)}
   end
 end
