@@ -117,22 +117,6 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, assign(socket, current_page: previous_page)}
   end
 
-  @doc "Handle the state for start component"
-  def handle_event("show_start_game", _value, socket) do
-    {:noreply, assign(socket, :start, false)}
-  end
-
-  @doc "Handle the state for displaying help component"
-  def handle_event("show_help", _value, socket) do
-    {:noreply, assign(socket, :show_help, true)}
-  end
-
-  @doc "Handle the state for hiding help component"
-  def handle_event("hide_help", _value, socket) do
-    {:noreply, assign(socket, :show_help, false)}
-  end
-
-
   @doc "Handle Presence event whenever there is change to Presence (leaving/joining)."
   @impl true
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
