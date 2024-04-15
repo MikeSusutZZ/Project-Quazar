@@ -23,19 +23,12 @@ defmodule ProjectQuazarWeb.Game do
     json_pos = Map.merge(json_pos, player_status)
     # End
 
-    {:ok,
-     socket
-     |> assign(:joined, false)
-     |> assign(:users, %{})
-     |> assign(:error_message, "")
-     |> assign(:top_scores, top_scores)
-     # Frontend Test Data
-     |> assign(:circle_pos, json_pos)}
     {:ok, socket
       |> assign(:joined, false)
       |> assign(:users, %{})
       |> assign(:error_message, "")
       |> assign(:top_scores, top_scores)
+      |> assign(:circle_pos, json_pos)
       # assigns for start and how to play components
       |> assign(:start, true)
       |> assign(:show_help, false)
@@ -55,6 +48,7 @@ defmodule ProjectQuazarWeb.Game do
          assign(socket, :error_message, "Username already taken")}
 
       false ->
+        GameServer.spawn_player(username, "default")
         Presence.track(self(), @presence, username, %{
           points: 0
         })
