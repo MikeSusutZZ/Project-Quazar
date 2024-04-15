@@ -29,19 +29,19 @@ defmodule ProjectQuazarWeb.Help do
       end
 
     ~H"""
-    <div id="help" class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-lg mx-auto mt-8">
+    <div id="help" class="container mt-8">
       <div class="flex justify-end">
-        <button phx-click="hide_help" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">X</button>
+        <button phx-click="hide_help" class="button-tertiary">X</button>
       </div>
-      <h2 class="text-white text-4xl font-bold text-center mb-8">How To Play</h2>
+      <h2 class="startup-title">How To Play</h2>
       <p class="text-white text-center text-lg">Page: <%= current_page %></p>
       <%= raw(page_content) %>
       <div class="flex justify-between w-full mt-8">
         <%= if current_page > 1 do %>
-          <button phx-click="previous_page" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg">Previous</button>
+          <button phx-click="previous_page" class="button-secondary">Previous</button>
         <% end %>
         <%= if current_page < 3 do %>
-          <button phx-click="next_page" class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-lg">Next</button>
+          <button phx-click="next_page" class="button-primary">Next</button>
         <% end %>
       </div>
     </div>
