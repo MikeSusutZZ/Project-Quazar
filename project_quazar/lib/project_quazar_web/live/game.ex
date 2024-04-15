@@ -5,6 +5,7 @@ defmodule ProjectQuazarWeb.Game do
   alias ProjectQuazar.PubSub
   alias ProjectQuazar.HighScores
 
+  @doc "PubSub topic for presence"
   @presence "project_quazar:presence"
 
   @impl true
@@ -32,6 +33,10 @@ defmodule ProjectQuazarWeb.Game do
      |> assign(:circle_pos, json_pos)}
   end
 
+  @doc """
+  Join event called by submit button. Check if username already exists, if not, start tracking them
+  with Presence and subscribe their socket to the Presence PubSub topic.
+  """
   @impl true
   def handle_event("join", %{"username" => username}, socket) do
     case Map.has_key?(Presence.list(@presence), username) do
@@ -54,6 +59,7 @@ defmodule ProjectQuazarWeb.Game do
     end
   end
 
+  @doc "Handle Presence event whenever there is change to Presence (leaving/joining)."
   @impl true
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
     {:noreply,
@@ -68,6 +74,10 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, assign(socket, :top_scores, top_scores)}
   end
 
+  @doc """
+  Handle the 'joins' object retrieved from the 'presence_diff' event.
+  Update the socket's users map using the 'joins' object.
+  """
   defp handle_joins(socket, joins) do
     users =
       joins
@@ -78,6 +88,10 @@ defmodule ProjectQuazarWeb.Game do
     |> sort_users_by_points()
   end
 
+  @doc """
+  Handle the 'leaves' object retrieved from the 'presence_diff' event.
+  Update the socket's users map using the 'leaves' object.
+  """
   defp handle_leaves(socket, leaves) do
     Enum.reduce(leaves, socket, fn {user, _}, socket ->
       assign(socket, :users, Map.delete(socket.assigns.users, user))
