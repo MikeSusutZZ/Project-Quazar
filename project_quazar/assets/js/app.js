@@ -22,11 +22,9 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
-// Print viewport height
-console.log("Viewport Height: " + window.innerHeight);
-
-// Print viewport width
-console.log("Viewport Width: " + window.innerWidth);
+// Game Channel imports
+import "./game_socket.js";
+import socket from "./game_socket.js";
 
 // Hooks initializer
 let Hooks = {};
@@ -361,6 +359,82 @@ Hooks.Game4 = {
 
     window.addEventListener("click", () => {
       this.pushEvent("shoot", {});
+    });
+  },
+};
+
+Hooks.ChannelHook = {
+  mounted() {
+    console.log("Channel mounted");
+    const currentUrl = window.location.href;
+    const url = new URL(currentUrl);
+    const pathname = url.pathname;
+    const parts = pathname.split("/");
+    const name = parts[parts.length - 1];
+    let pressedKeys = new Set(); // Set to track pressed keys
+
+    this.pushEvent("greet", { channelSocket: socket });
+    let channel = socket.channel("room:lobby", { name: name });
+
+    // Join the channel (Like + Subscribe + Notifications)
+    channel
+      .join()
+      .receive("ok", (resp) => {
+        console.log("Joined successfully", resp);
+      })
+      .receive("error", (resp) => {
+        console.log("Unable to join", resp);
+      });
+
+    // On mount message
+    channel.push("mounted", {}).receive("ok", (resp) => {
+      console.log("Reply from server:", resp);
+    });
+
+    // Display "Game State"
+    let messagesContainer = document.querySelector("#messages");
+
+    // Keydown event listener
+    window.addEventListener("keydown", (e) => {
+      if (!pressedKeys.has(e.key)) {
+        pressedKeys.add(e.key); // Add pressed key to the set
+        channel.push("keydown", { key: e.key });
+      }
+    });
+
+    // Attempts to promote this client to be the broadcast owner
+    function sendPromoteMessage() {
+      console.log("Promoting...");
+      channel.push("promote", {}).receive("ok", (resp) => {
+        console.log("Reply from server:", resp);
+      });
+    }
+
+    // Attempt to promote every second
+    setInterval(sendPromoteMessage, 1000);
+
+    // Key Up event listener
+    window.addEventListener("keyup", (e) => {
+      if (pressedKeys.has(e.key)) {
+        pressedKeys.delete(e.key); // Remove released key from the set
+        // channel.push("keyup", { key: e.key });
+      }
+    });
+
+    // Listens to channel for user state
+    channel.on("user_state", (payload) => {
+      messagesContainer.innerHTML = "";
+      let messageItem = document.createElement("p");
+      console.log(payload);
+      messageItem.innerText = `Frame: ${payload.count}, Data: ${JSON.stringify(
+        payload.users
+      )}`;
+      messagesContainer.appendChild(messageItem);
+    });
+
+    // Listens to channel for broadcast logging
+    channel.on("broadcast", () => {
+      console.log("Interval broadcast detected");
     });
   },
 };

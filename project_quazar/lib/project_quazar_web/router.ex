@@ -32,10 +32,13 @@ defmodule ProjectQuazarWeb.Router do
     # Frontend prototype 3
     live("/prototype-3", Prototype3)
 
-    live "/game-over", GameOver
+    live("/game-over", GameOver)
 
     # Frontend prototype 4
     live("/prototype-4", Prototype4)
+
+    # Frontend Channel Prototype
+    live("/channel-prototype/:name", ChannelPrototypeLive)
   end
 
   # Other scopes may use custom stacks.
