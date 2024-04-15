@@ -39,6 +39,61 @@
   .high-scores-container .score {
     float: right;
   }
+  /* ***************** */ 
+  /* User details form */
+  /* ***************** */ 
+  .outer-user-form-container{
+    @apply rounded bg-gray-50 border-4 border-gray-200 p-3
+  }
+  .inner--user-form-container{
+    @apply w-full flex justify-center items-center
+  }
+
+  .username_form_label{
+    @apply mb-2 block
+  }
+
+  .username_form_inputbox{
+    @apply mb-2
+  }
+
+  .error_message{
+    @apply  text-red-500
+  }
+
+  .radio-btn-options-container-row{
+    @apply flex flex-row w-full justify-between  mt-3 mr-3
+  }
+
+  .radio-button-option-col{
+    @apply flex flex-col items-center mr-3 transition duration-0 ease-in-out transform hover:scale-105
+  }
+
+  .option_label{
+    @apply mr-2
+  }
+
+  .bullet_selection_heading{
+    @apply mt-2
+  }
+
+  .health_text{
+    @apply text-green-600
+  }
+  .damage_text{
+    @apply text-red-600
+  }
+  .speed_text{
+    @apply text-yellow-600
+  }
+
+  .submit_btn{
+    @apply mt-4 bg-green-600 p-2 rounded cursor-pointer hover:text-white 
+  }
+
+  /* ***************** */ 
+  /*End of User details form */
+  /* ***************** */ 
 
 
   /* Base container styling */
