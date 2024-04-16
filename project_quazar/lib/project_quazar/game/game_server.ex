@@ -46,7 +46,7 @@ defmodule GameServer do
     # Remove dead ships
     Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
     Enum.each(players, fn player -> IO.inspect(player) end)
-    IO.puts("bonk")
+    # IO.puts("tick")
     :ets.insert(@table, {__MODULE__, new_gamestate})
     {:noreply, new_gamestate}
   end
