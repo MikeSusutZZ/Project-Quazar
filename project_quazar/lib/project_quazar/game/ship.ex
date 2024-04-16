@@ -46,8 +46,9 @@ defmodule Ship do
   end
 
   @doc "Creates a ship with randomized position within bounds (height and width), 0 intial velocity and 100hp, 10bulletDamage"
-  def random_ship(type, bounding_width, bounding_height) do
-    {random_x, random_y} = {random_between(0, bounding_width), random_between(0, bounding_height)}
+  def random_ship(type, %{x: bounding_width, y: bounding_height, damage_zone: damage_zone}) do
+    random_x = random_between(0 + damage_zone, bounding_width - damage_zone)
+    random_y = random_between(0 + damage_zone, bounding_height - damage_zone)
     angle = random_angle()
     Ship.new_ship(random_x, random_y, angle, type)
   end
