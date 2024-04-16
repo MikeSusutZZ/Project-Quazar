@@ -10,19 +10,17 @@ defmodule Boundary do
   # Checks if a passed player is outside of a given X Y boundary. Assumes [0,X] & [0,Y]
   def outside?(%Player{ship: ship}, %{x: _, y: _} = coords) do
     %{x: x, y: y} = Movable.Motion.get_pos(ship)
-    r = ship.radius
-    outside?(%{x: x, y: y, r: r}, coords)
+    outside?(%{x: x, y: y}, coords)
   end
 
   # Checks if a passed bullet is outside of a given bounds. Assumes [0,X] & [0,Y]
   def outside?(%Bullet{} = bullet, %{x: _, y: _} = coords) do
     %{x: x, y: y} = Movable.Motion.get_pos(bullet)
-    r = 1 # Assuming bullet radius 1
-    outside?(%{x: x, y: y, r: r}, coords)
+    outside?(%{x: x, y: y}, coords)
   end
 
   @doc "Checks if the passed object is (halfway or greater) outside the provided bounds (Assuming from 0 to x, 0 to y)"
-  def outside?(%{x: x, y: y, r: r}, %{x: max_x, y: max_y}) do
+  def outside?(%{x: x, y: y}, %{x: max_x, y: max_y}) do
     cond do
       # Check if Player_x is < minimum_x (e.g. [-1, 0] + 1r < 0)
       x < 0 -> true
