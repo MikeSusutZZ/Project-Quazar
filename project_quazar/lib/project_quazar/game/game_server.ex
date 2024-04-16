@@ -53,6 +53,10 @@ defmodule GameServer do
       # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
     end)
     # IO.puts("tick")
+
+    # Broadcast gamestate to each client
+    Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "game_state:updates", {:state_updated, new_gamestate})
+
     :ets.insert(@table, {__MODULE__, new_gamestate})
     {:noreply, new_gamestate}
   end

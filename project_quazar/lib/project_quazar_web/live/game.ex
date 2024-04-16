@@ -50,6 +50,7 @@ defmodule ProjectQuazarWeb.Game do
         })
 
         Phoenix.PubSub.subscribe(PubSub, @presence)
+        Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
 
         {:noreply,
          socket
@@ -72,6 +73,15 @@ defmodule ProjectQuazarWeb.Game do
   @impl true
   def handle_info({:scores_updated, top_scores}, socket) do
     {:noreply, assign(socket, :top_scores, top_scores)}
+  end
+
+  @doc """
+  Handle the state_updated sent by GameServer in each tick.
+  """
+  @impl true
+  def handle_info({:state_updated, new_state}, socket) do
+    IO.inspect(new_state)
+    {:noreply, socket}
   end
 
   @doc """
