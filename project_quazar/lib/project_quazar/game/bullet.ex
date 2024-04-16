@@ -9,28 +9,32 @@ defmodule Bullet do
   """
 
   # Defines the complete struct for a bullet
-  defstruct sender: nil, kinematics: %Movable{}, type: nil, damage: 0, tick_wait: 0, speed: 0
+  defstruct sender: nil, kinematics: %Movable{}, type: nil, damage: 0, tick_wait: 0, speed: 0, radius: 0
 
   # Bullet type specifications
   @bullet_types %{
-    heavy: %{damage: 35, tick_wait: 30, speed: 0},
-    medium: %{damage: 20, tick_wait: 22, speed: 2},
-    light: %{damage: 10, tick_wait: 15, speed: 5}
+    heavy: %{damage: 35, tick_wait: 30, speed: 0, radius: 2},
+    medium: %{damage: 20, tick_wait: 22, speed: 2, radius: 1},
+    light: %{damage: 10, tick_wait: 15, speed: 5, radius: 1}
   }
 
   @doc "Creates a new bullet with specified attributes."
   def new_bullet(sender, px, py, vx, vy, angle, type) do
     case Map.fetch(@bullet_types, type) do
     {:ok, attributes} ->
-        kinematics = Movable.new_movable(px, py, vx, vy, angle)
-        %__MODULE__{
+        bullet_px = px + attributes.radius
+        bullet_py = py + attributes.radius
+        kinematics = Movable.new_movable(bullet_px, bullet_py, vx, vy, angle)
+        IO.puts("bullet's pos: #{inspect(kinematics)}")
+        {:ok, %__MODULE__{
           sender: sender,
           type: type,
           kinematics: kinematics,
           damage: attributes.damage,
           tick_wait: attributes.tick_wait,
-          speed: attributes.speed
-        }
+          speed: attributes.speed,
+          radius: attributes.radius
+        }}
       :error ->
         {:error, "Invalid bullet type: #{type}"}
       end
