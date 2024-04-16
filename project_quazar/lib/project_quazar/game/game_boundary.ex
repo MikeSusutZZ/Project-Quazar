@@ -22,13 +22,13 @@ defmodule Boundary do
   @doc "Checks if the passed object is (halfway or greater) outside the provided bounds (Assuming from 0 to x, 0 to y)"
   def outside?(%{x: x, y: y}, %{x: max_x, y: max_y}) do
     cond do
-      # Check if Player_x is < minimum_x (e.g. [-1, 0] + 1r < 0)
+      # Check if Player_x is < minimum_x (e.g. [-1, 0] < 0)
       x < 0 -> true
-      # Check if Player_y is < minimum_y (e.g. [0, -1] + 1r < 0)
+      # Check if Player_y is < minimum_y (e.g. [0, -1] < 0)
       y < 0 -> true
-      # Check if Player_x is > max_x (e.g. [11, 0] - 1r < 10 for bounds 10)
+      # Check if Player_x is > max_x (e.g. [11, 0] < 10 for bounds 10)
       x > max_x -> true
-      # Check if Player_y is > max_y (e.g. [0, 11] - 1r < 10 for bounds 10)
+      # Check if Player_y is > max_y (e.g. [0, 11] < 10 for bounds 10)
       y > max_y -> true
       # Player is not outside of the bounds, return false.
       true -> false
