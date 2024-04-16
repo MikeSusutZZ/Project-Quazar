@@ -64,12 +64,12 @@ defmodule CollisionHandler do
       {[], _} ->
         IO.puts("Multiple ships but no bullets; checking for ship-ship collisions only.")
         # {[], handle_ship_ship_collisions(players)}
-        {[], handle_ship_ship_collisions()}
+        {[], handle_ship_ship_collisions(check_ship_ship_collisions(players), players)}
 
       {_ , _} ->
         # Normal case: Handle both bullet-ship and ship-ship collisions
         bullet_ship_collisions = check_bullet_ship_collisions(bullets, players)
-        {updated_bullets, updated_updated_players} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, players)
+        {updated_bullets, updated_players} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, players)
 
         ship_ship_collisions = check_ship_ship_collisions(players)
         final_updated_ships = handle_ship_ship_collisions(ship_ship_collisions, players)
