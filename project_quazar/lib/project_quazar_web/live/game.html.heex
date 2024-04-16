@@ -10,6 +10,9 @@
   <%# Main Game Screen %>
   <%# TODO: Add the game board here %>
 
+    <%# Live Game Board %>
+    <.live_component module={ProjectQuazarWeb.GameBoard} id="game-board" circle_pos={@circle_pos} />
+
   <%# Live scoreboard menu %>
   <.live_component
     module={ProjectQuazarWeb.Scoreboard}
