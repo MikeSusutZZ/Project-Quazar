@@ -12,36 +12,42 @@ defmodule ProjectQuazarWeb.Game do
     Phoenix.PubSub.subscribe(ProjectQuazar.PubSub, "high_scores:updates")
     top_scores = fetch_top_scores()
 
-    {:ok, socket
-      |> assign(:joined, false)
-      |> assign(:users, %{})
-      |> assign(:error_message, "")
-      |> assign(:top_scores, top_scores)
-    }
+    {:ok,
+     socket
+     |> assign(:joined, false)
+     |> assign(:users, %{})
+     |> assign(:error_message, "")
+     |> assign(:top_scores, top_scores)}
   end
 
   @impl true
   def handle_event("join", %{"username" => username}, socket) do
     case Map.has_key?(Presence.list(@presence), username) do
       true ->
-        {:reply, %{error: "Username already taken"}, assign(socket, :error_message, "Username already taken")}
+        {:reply, %{error: "Username already taken"},
+         assign(socket, :error_message, "Username already taken")}
+
       false ->
         Presence.track(self(), @presence, username, %{
-          points: 0,
+          points: 0
         })
+
         Phoenix.PubSub.subscribe(PubSub, @presence)
-        {:noreply, socket
-          |> assign(:joined, true)
-          |> assign(:current_user, username)
-          |> handle_joins(Presence.list(@presence))}
+
+        {:noreply,
+         socket
+         |> assign(:joined, true)
+         |> assign(:current_user, username)
+         |> handle_joins(Presence.list(@presence))}
     end
   end
 
   @impl true
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
-    {:noreply, socket
-      |> handle_leaves(diff.leaves)
-      |> handle_joins(diff.joins)}
+    {:noreply,
+     socket
+     |> handle_leaves(diff.leaves)
+     |> handle_joins(diff.joins)}
   end
 
   # accepts the new scores from the broadcast
@@ -51,9 +57,11 @@ defmodule ProjectQuazarWeb.Game do
   end
 
   defp handle_joins(socket, joins) do
-    users = joins
+    users =
+      joins
       |> Enum.map(fn {user, %{metas: [meta | _]}} -> {user, meta} end)
       |> Enum.into(%{})
+
     assign(socket, :users, Map.merge(socket.assigns.users, users))
     |> sort_users_by_points()
   end
@@ -65,9 +73,11 @@ defmodule ProjectQuazarWeb.Game do
   end
 
   defp sort_users_by_points(socket) do
-    sorted_users = socket.assigns.users
+    sorted_users =
+      socket.assigns.users
       |> Enum.sort_by(fn {_, %{points: points}} -> -points end)
       |> Enum.into(%{})
+
     assign(socket, :users, sorted_users)
   end
 
@@ -89,7 +99,8 @@ defmodule ProjectQuazarWeb.Game do
 
   # Spawn a test ship
   def handle_event("control", %{"key" => "r"}, socket) do
-    GameServer.spawn_player("default")
+    IO.puts("Spawning test ship")
+    GameServer.spawn_player("default", :destroyer, :light)
     {:noreply, socket}
   end
 
@@ -108,6 +119,21 @@ defmodule ProjectQuazarWeb.Game do
   # Rotate the test ship counter-clockwise
   def handle_event("control", %{"key" => "a"}, socket) do
     GameServer.rotate_player("default", :ccw)
+    {:noreply, socket}
+  end
+
+  # Fire the bullet
+  def handle_event("control", %{"key" => " "}, socket) do
+    current_user = Map.get(socket.assigns, :current_user)
+
+    # Check if `current_user` is present
+    if current_user do
+      GameServer.fire(current_user)
+    else
+      IO.puts("No current user set. Cannot fire.")
+      # GameServer.fire("default")  # test test ship firing
+    end
+
     {:noreply, socket}
   end
 
