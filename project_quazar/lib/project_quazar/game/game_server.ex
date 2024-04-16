@@ -81,7 +81,6 @@ defmodule GameServer do
           # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
           |> Movable.Drag.apply_drag(@drag_rate) # causes the ship to slow down over time
-          |> Player.fire(player)
         else
           Player.respawn(player, 0, 0, 0)
         end
@@ -121,8 +120,7 @@ defmodule GameServer do
   def handle_cast({:fire, name}, %{players: players, projectiles: projectiles} = state) do
     # Find the player who is firing
     player = Enum.find(players, fn player -> player.name == name end)
-
-    case Player.fire(player) do
+    case Ship.fire(player.ship, player.name) do
       {:ok, bullet} ->
         # Add the new bullet to the projectile list
         new_projectiles = [bullet | projectiles]
