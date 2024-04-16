@@ -40,8 +40,10 @@ defmodule GameServer do
   def handle_info(:tick, %__MODULE__{players: players, projectiles: projectiles} = gamestate) do
     new_gamestate = %{gamestate | players: modify_players(players), projectiles: move_all(projectiles)}
 
-    # Collision detection and handling to be used by Michelle
-    CollisionHandler.handle_collisions(projectiles, players)
+    {updated_projectiles, updated_players} = CollisionHandler.handle_collisions(new_gamestate.projectiles, new_gamestate.players)
+
+    # Update the game state with the new lists of players and projectiles
+    updated_gamestate = %{new_gamestate | players: updated_players, projectiles: updated_projectiles}
 
     # Remove dead ships
     Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
