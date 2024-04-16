@@ -66,7 +66,7 @@ defmodule GameServer do
 
   @impl true
   def handle_cast({:spawn_player, name, type}, %__MODULE__{players: players} = gamestate) do
-    player_ship = Ship.random_ship(type, @bounds.x, @bounds.y)
+    player_ship = Ship.random_ship(type, @bounds)
     new_players = [Player.new_player(name, player_ship) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
