@@ -69,11 +69,11 @@ defmodule CollisionHandler do
       {_ , _} ->
         # Normal case: Handle both bullet-ship and ship-ship collisions
         bullet_ship_collisions = check_bullet_ship_collisions(bullets, players)
-        # {updated_bullets, updated_updated_players} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, players)
+        {updated_bullets, updated_updated_players} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, players)
 
         ship_ship_collisions = check_ship_ship_collisions(players)
-        # final_updated_ships = handle_ship_ship_collisions(ship_ship_collisions, players)
-        # {updated_bullets, final_updated_players}
+        final_updated_ships = handle_ship_ship_collisions(ship_ship_collisions, players)
+        {updated_bullets, final_updated_players}
     end
   end
 
