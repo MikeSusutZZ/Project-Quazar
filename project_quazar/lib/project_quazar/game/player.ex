@@ -43,18 +43,6 @@ defmodule Player do
     %__MODULE__{ player_data | score: 0, ship: respawned_ship }
   end
 
-  @doc """
-  Fires a bullet from the player's ship, invoking the ship's fire method.
-  """
-  def fire(%__MODULE__{ship: ship, name: player_name}) do
-    case Ship.fire(ship, player_name) do
-      {:ok, bullet} ->
-        {:ok, bullet}
-      :error = error ->
-        error
-    end
-  end
-
   defimpl Movable.Motion, for: __MODULE__ do
     @doc "Moves the players ship according to its kinematics"
     def move(%@for{ship: ship} = player_data) do
