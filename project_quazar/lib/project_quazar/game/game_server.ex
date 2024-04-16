@@ -13,7 +13,7 @@ defmodule GameServer do
   @bounds %{
     x: 800,
     y: 800,
-    deadzone: 100 # Not actual "dead" zone, just the zone that players begin being damaged in
+    damage_zone: 100 # Creates a damage zone around the map. E.g. A 100px border.
   }
 
   def start_link(_arg) do
