@@ -25,7 +25,6 @@ defmodule Bullet do
         bullet_px = px + attributes.radius
         bullet_py = py + attributes.radius
         kinematics = Movable.new_movable(bullet_px, bullet_py, vx, vy, angle)
-        IO.puts("bullet's pos: #{inspect(kinematics)}")
         {:ok, %__MODULE__{
           sender: sender,
           type: type,

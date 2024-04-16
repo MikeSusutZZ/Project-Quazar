@@ -132,16 +132,18 @@ defmodule Ship do
   @doc """
   Fires a bullet from the ship, creating a new `Bullet` instance.
   The bullet is accelerated by its predefined speed.
-  Returns a `Bullet` struct representing the new bullet, or an error if the bullet type is invalid.
+  Returns `{:ok, bullet}` where `bullet` is the newly created `Bullet` struct, or `{:error, reason}` if the bullet type is invalid.
   """
-  def fire(%__MODULE__{kinematics: kinematics, bullet_type: bullet_type}, player_name) do
+  def fire(%__MODULE__{kinematics: kinematics, radius: radius, bullet_type: bullet_type}, player_name) do
     %{px: px, py: py, vx: vx, vy: vy, angle: angle} = kinematics
+    # Bullet will start at the edge of the ship, in the direction the ship is facing.
+    ship_front_x = px + radius
+    ship_front_y = py + radius
 
     # Create the bullet with the ship's current position and velocity
-    case Bullet.new_bullet(player_name, px, py, vx, vy, angle, bullet_type) do
+    case Bullet.new_bullet(player_name, ship_front_x, ship_front_y, vx, vy, angle, bullet_type) do
       {:ok, bullet} ->
-        # The bullet's speed acts as the acceleration magnitude
-        Movable.Motion.accelerate(bullet, bullet.speed)
+        {:ok, Movable.Motion.accelerate(bullet, bullet.speed)}
       :error ->
         {:error, "Invalid bullet type: #{bullet_type}"}
     end
