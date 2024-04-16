@@ -64,15 +64,19 @@ defmodule CollisionHandler do
       {[], _} ->
         IO.puts("Multiple ships but no bullets; checking for ship-ship collisions only.")
         # {[], handle_ship_ship_collisions(players)}
-        {[], handle_ship_ship_collisions(check_ship_ship_collisions(players), players)}
+        new_players = handle_ship_ship_collisions(check_ship_ship_collisions(players), players)
+        {[], new_players}
 
       {_ , _} ->
-        # Normal case: Handle both bullet-ship and ship-ship collisions
+        # Handle bullet-ship collisions and update both bullets and players accordingly
         bullet_ship_collisions = check_bullet_ship_collisions(bullets, players)
-        {updated_bullets, updated_players} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, players)
+        {updated_bullets, intermediate_updated_players} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, players)
 
-        ship_ship_collisions = check_ship_ship_collisions(players)
-        final_updated_ships = handle_ship_ship_collisions(ship_ship_collisions, players)
+        # Now handle ship-ship collisions using the updated players list
+        ship_ship_collisions = check_ship_ship_collisions(intermediate_updated_players)
+        final_updated_players = handle_ship_ship_collisions(ship_ship_collisions, intermediate_updated_players)
+
+        # Return the final updated lists of bullets and players
         {updated_bullets, final_updated_players}
     end
   end
@@ -111,7 +115,7 @@ defmodule CollisionHandler do
           damaged_player = Player.take_damage(acc_player, bullet.damage)
 
           # Update the score for the player who fired the bullet
-          ProjectQuazar.HighScores.insert_entry(bullet.sender, bullet.damage)
+          ProjectQuazar.HighScores.add_entry(bullet.sender, bullet.damage)
 
           # Return the updated player
           damaged_player
@@ -160,7 +164,7 @@ end
           # Find the collision that resulted in this player's destruction and award points to the other player
           Enum.each(unique_collisions, fn {destroyer, destroyed} ->
             if destroyed == player do
-              ProjectQuazar.HighScores.insert_entry(destroyer.name, 250)  # award points to the destroyer
+              ProjectQuazar.HighScores.add_entry(destroyer.name, 250)  # award points to the destroyer
             end
           end)
           nil  # Remove destroyed player
