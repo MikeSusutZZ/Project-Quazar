@@ -139,8 +139,16 @@ end
   # Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
   # Returns an updated list of `Player` structs after applying the collision effects.
   defp handle_ship_ship_collisions(collisions, players) do
+    IO.inspect(collisions, label: "Handling collisions for players")
+
+    # Validate and filter out invalid collisions
+    valid_collisions = Enum.filter(collisions, fn
+      {:ship_ship_collision, %Player{}, %Player{}} -> true
+      _ -> false
+    end)
+
     # Sort and remove duplicate collision pairs
-    unique_collisions = collisions
+    unique_collisions = valid_collisions
     |> Enum.map(fn {:ship_ship_collision, player1, player2} ->
       if player1.name < player2.name, do: {player1, player2}, else: {player2, player1}
     end)
