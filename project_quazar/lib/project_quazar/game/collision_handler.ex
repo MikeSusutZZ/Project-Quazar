@@ -29,7 +29,9 @@ defmodule CollisionHandler do
   Returns tuples of collided players.
   """
   def check_ship_ship_collisions(players) do
-    for player1 <- players, player2 <- players, player1 != player2 do
+    for player1 <- players, player2 <- players,
+      player1 != player2 and not is_nil(player1) and not is_nil(player2) do
+
       %{x: ship1_x, y: ship1_y} = Movable.Motion.get_pos(player1.ship.kinematics)
       %{x: ship2_x, y: ship2_y} = Movable.Motion.get_pos(player2.ship.kinematics)
       if collides?({ship1_x, ship1_y}, player1.ship.radius, {ship2_x, ship2_y}, player2.ship.radius) do
@@ -138,13 +140,13 @@ end
   # Processes collisions between ships, each ship's health is reduced by the amount of health the opposing ship has.
   # Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
   # Returns an updated list of `Player` structs after applying the collision effects.
-  defp handle_ship_ship_collisions(collisions, players) do
-    IO.inspect(collisions, label: "Handling collisions for players")
-
-    # Validate and filter out invalid collisions
+  def handle_ship_ship_collisions(collisions, players) do
+    # Filter only valid collisions and ensure both players in the collision are not nil
     valid_collisions = Enum.filter(collisions, fn
-      {:ship_ship_collision, %Player{}, %Player{}} -> true
-      _ -> false
+      {:ship_ship_collision, %Player{} = player1, %Player{} = player2} ->
+        player1 != nil and player2 != nil
+      _ ->
+        false
     end)
 
     # Sort and remove duplicate collision pairs
@@ -154,33 +156,28 @@ end
     end)
     |> Enum.uniq()
 
-    # Create a damage map for each player based on unique collisions
+    # Create a damage map for each player
     damage_map = Enum.reduce(unique_collisions, %{}, fn {player1, player2}, acc ->
       acc
       |> Map.update(player1, player2.ship.health, &(&1 + player2.ship.health))
       |> Map.update(player2, player1.ship.health, &(&1 + player1.ship.health))
     end)
 
-    # Apply the calculated damage and filter out destroyed ships, award points to the destroyer
+    # Apply calculated damage and update players
     Enum.map(players, fn player ->
       damage = Map.get(damage_map, player, 0)
       if damage > 0 do
         updated_player = Player.take_damage(player, damage)
         if Ship.alive?(updated_player.ship) do
-          updated_player
+          # If the ship is still alive, increment the score
+          Player.inc_score(updated_player, 250)
         else
-          # Find the collision that resulted in this player's destruction and award points to the other player
-          Enum.each(unique_collisions, fn {destroyer, destroyed} ->
-            if destroyed == player do
-              ProjectQuazar.HighScores.add_entry(destroyer.name, 250)  # award points to the destroyer
-            end
-          end)
-          nil  # Remove destroyed player
+          # If the ship is not alive, just update without changing the score
+          updated_player
         end
       else
-        player  # No damage, return the player as is
+        player
       end
     end)
-    |> Enum.reject(&is_nil/1)  # Filter out nil entries which represent destroyed ships
   end
 end

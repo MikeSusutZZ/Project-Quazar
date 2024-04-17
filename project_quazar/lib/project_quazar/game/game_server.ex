@@ -47,9 +47,11 @@ defmodule GameServer do
     updated_gamestate = %{new_gamestate | players: updated_players, projectiles: updated_projectiles}
 
     # Remove dead ships
-    Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
-    Enum.each(players, fn player ->
-      IO.inspect(player)
+    Enum.each(updated_projectiles, fn updated_projectile ->
+      IO.inspect(updated_projectile)
+    end)
+    Enum.each(updated_players, fn updated_player ->
+      IO.inspect(updated_player)
       # Game can call boundary checks like so and damage players accordingly
       # IO.inspect(Boundary.outside?(player, @bounds))
       # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
@@ -90,7 +92,8 @@ defmodule GameServer do
           |> Movable.Motion.move()
           |> Movable.Drag.apply_drag(@drag_rate) # causes the ship to slow down over time
         else
-          Player.respawn(player, 0, 0, 0)
+          player
+          # Player.respawn(player, 0, 0, 0)
         end
       end)
     end
