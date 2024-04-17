@@ -9,6 +9,7 @@ defmodule Bullet do
   """
 
   # Defines the complete struct for a bullet
+  @derive Jason.Encoder
   defstruct sender: nil, kinematics: %Movable{}, type: nil, damage: 0, tick_wait: 0, speed: 0, radius: 0
 
   # Bullet type specifications
@@ -36,7 +37,7 @@ defmodule Bullet do
         }}
       :error ->
         {:error, "Invalid bullet type: #{type}"}
-      end
+    end
   end
 
   # Implements the Movable.Motion protocol for the bullet
@@ -50,7 +51,7 @@ defmodule Bullet do
     @doc "Accelerates the bullet when it was shot"
     def accelerate(%@for{kinematics: old_acceleration} = bullet, amount) do
       new_acceleration = Movable.Motion.accelerate(old_acceleration, amount)
-      %@for{ bullet | kinematics: new_acceleration }
+      %@for{bullet | kinematics: new_acceleration}
     end
 
     @doc "Gets the current X/Y position and angle"

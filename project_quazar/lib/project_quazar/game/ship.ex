@@ -8,6 +8,7 @@ defmodule Ship do
   - Bullet damage
   """
 
+  @derive Jason.Encoder
   defstruct [
     :kinematics,
     :max_health,
@@ -62,7 +63,6 @@ defmodule Ship do
     Enum.random(angles)
   end
 
-
   defimpl Movable.Motion, for: __MODULE__ do
     @doc "Moves the ship according to its current XY position, acceleration, & velocity"
     def move(%@for{kinematics: old_position} = ship_data) do
@@ -87,7 +87,7 @@ defmodule Ship do
     def apply_drag(%@for{kinematics: old_values} = ship_data, amount) do
       # returns the slowed ship with new velocity values
       new_values = Movable.Drag.apply_drag(old_values, amount)
-      %@for{ ship_data | kinematics: new_values}
+      %@for{ship_data | kinematics: new_values}
     end
   end
 
