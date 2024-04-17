@@ -4,7 +4,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
 
   def render(assigns) do
     ~H"""
-    <span id="main" phx-window-keydown="key_down" phx-hook="PubsubPrototype" data-game-state={"#{Jason.encode!(@game_state)}"}>Pubsub Prototype</span>
+    <canvas id="main" phx-window-keydown="key_down" data-game-state={"#{Jason.encode!(@game_state)}"} phx-hook="GameBoardHook">Pubsub Prototype</canvas>
     <span phx-window-keyup="key_up"></span>
     """
   end
