@@ -2,7 +2,6 @@ defmodule GameServer do
   use GenServer
 
   @derive Jason.Encoder
-  @derive Jason.Encoder
   defstruct [:players, :projectiles]
 
   @table GameState
