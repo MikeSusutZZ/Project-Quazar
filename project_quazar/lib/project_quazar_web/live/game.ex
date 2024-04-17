@@ -25,7 +25,8 @@ defmodule ProjectQuazarWeb.Game do
 
     {:ok, socket
       |> assign(:joined, false)
-      |> assign(:users, %{})
+      |> assign(:players, [])
+     |> assign(:projectiles, [])
       |> assign(:error_message, "")
       |> assign(:top_scores, top_scores)
       |> assign(:circle_pos, json_pos)
@@ -54,12 +55,14 @@ defmodule ProjectQuazarWeb.Game do
         })
 
         Phoenix.PubSub.subscribe(PubSub, @presence)
+        Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
+        # default ship destroyer, change when implemented ship choice
+        GameServer.spawn_player(username, :destroyer)
 
         {:noreply,
          socket
          |> assign(:joined, true)
-         |> assign(:current_user, username)
-         |> handle_joins(Presence.list(@presence))}
+         |> assign(:current_user, username)}
     end
   end
 
@@ -111,13 +114,60 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, assign(socket, current_page: previous_page)}
   end
 
-  @doc "Handle Presence event whenever there is change to Presence (leaving/joining)."
+  @doc "Handle the event for next page in how to play component"
+  def handle_event("next_page", _value, socket) do
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    next_page = current_page + 1
+
+    {:noreply, assign(socket, current_page: next_page)}
+  end
+
+  @doc "Handle the event for previous page in how to play component"
+  def handle_event("previous_page", _value, socket) do
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    previous_page = max(current_page - 1, 1)
+
+    {:noreply, assign(socket, current_page: previous_page)}
+  end
+
+  @doc "Handle the state for start component"
+  def handle_event("show_start_game", _value, socket) do
+    {:noreply, assign(socket, :start, false)}
+  end
+
+  @doc "Handle the state for displaying help component"
+  def handle_event("show_help", _value, socket) do
+    {:noreply, assign(socket, :show_help, true)}
+  end
+
+  @doc "Handle the state for hiding help component"
+  def handle_event("hide_help", _value, socket) do
+    {:noreply, assign(socket, :show_help, false)}
+  end
+
+
+  @doc "Handle the event for next page in how to play component"
+  def handle_event("next_page", _value, socket) do
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    next_page = current_page + 1
+
+    {:noreply, assign(socket, current_page: next_page)}
+  end
+
+  @doc "Handle the event for previous page in how to play component"
+  def handle_event("previous_page", _value, socket) do
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    previous_page = max(current_page - 1, 1)
+
+    {:noreply, assign(socket, current_page: previous_page)}
+  end
+
+  @doc "Handle Presence event whenever there is change to Presence."
   @impl true
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
     {:noreply,
      socket
-     |> handle_leaves(diff.leaves)
-     |> handle_joins(diff.joins)}
+     |> handle_leaves(diff.leaves)}
   end
 
   # accepts the new scores from the broadcast
@@ -127,36 +177,34 @@ defmodule ProjectQuazarWeb.Game do
   end
 
   @doc """
-  Handle the 'joins' object retrieved from the 'presence_diff' event.
-  Update the socket's users map using the 'joins' object.
+  Handle the state_updated sent by GameServer in each tick.
   """
-  defp handle_joins(socket, joins) do
-    users =
-      joins
-      |> Enum.map(fn {user, %{metas: [meta | _]}} -> {user, meta} end)
-      |> Enum.into(%{})
-
-    assign(socket, :users, Map.merge(socket.assigns.users, users))
-    |> sort_users_by_points()
+  @impl true
+  def handle_info({:state_updated, new_state}, socket) do
+    {:noreply,
+    socket
+    |> assign(:players, new_state.players)
+    |> sort_players_by_score()
+    |> assign(:projectiles, new_state.projectiles)}
   end
 
   @doc """
   Handle the 'leaves' object retrieved from the 'presence_diff' event.
-  Update the socket's users map using the 'leaves' object.
+  Update the socket's players map using the 'leaves' object.
   """
   defp handle_leaves(socket, leaves) do
-    Enum.reduce(leaves, socket, fn {user, _}, socket ->
-      assign(socket, :users, Map.delete(socket.assigns.users, user))
+    Enum.reduce(leaves, socket, fn {player, _}, socket ->
+      GameServer.remove_player(player)
+      assign(socket, :players, List.delete(socket.assigns.players, player))
     end)
   end
 
-  defp sort_users_by_points(socket) do
-    sorted_users =
-      socket.assigns.users
-      |> Enum.sort_by(fn {_, %{points: points}} -> -points end)
-      |> Enum.into(%{})
+  defp sort_players_by_score(socket) do
+    sorted_players =
+      socket.assigns.players
+      |> Enum.sort_by(&(&1.score), &>=/2)
 
-    assign(socket, :users, sorted_users)
+    assign(socket, :players, sorted_players)
   end
 
   # Fetches top scores for all-time high scores component
