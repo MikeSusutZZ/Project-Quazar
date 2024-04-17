@@ -42,53 +42,51 @@ defmodule ProjectQuazarWeb.Prototype4 do
     ]
   }
 
+  # Function to retrieve a player by name
+  def get_player(name) do
+    Enum.find(@dummy_data["players"], fn player -> player["name"] == name end)
+  end
+
+  # Function to retrieve player position (px, py)
+  def get_player_position(name) do
+    player = get_player(name)
+    kinematics = player["ship"]["kinematics"]
+    {kinematics["px"], kinematics["py"]}
+  end
+
+  # Function to retrieve player bullet type
+  def get_player_bullet_type(name) do
+    player = get_player(name)
+    player["ship"]["bullet_type"]
+  end
+
+  # Function to retrieve bullet positions by sender
+  def get_bullet_positions(sender) do
+    Enum.filter_map(
+      @dummy_data["projectiles"],
+      fn projectile -> projectile["sender"] == sender end,
+      fn projectile -> {projectile["kinematics"]["px"], projectile["kinematics"]["py"]} end
+    )
+  end
+
+  # Function to retrieve player rotation (angle)
+  def get_player_rotation(name) do
+    player = get_player(name)
+    player["ship"]["kinematics"]["angle"]
+  end
+
+  # Function to retrieve bullet rotation (angle) by sender
+  def get_bullet_rotation(sender) do
+    Enum.map(filter_projectiles_by_sender(sender), & &1["kinematics"]["angle"])
+  end
+
+  defp filter_projectiles_by_sender(sender) do
+    Enum.filter(@dummy_data["projectiles"], fn projectile -> projectile["sender"] == sender end)
+  end
+
   def mount(_params, _session, socket) do
-    # Function to retrieve a player by name
-    def get_player(name) do
-      Enum.find(@dummy_data["players"], fn player -> player["name"] == name end)
-    end
-
-    # Function to retrieve player position (px, py)
-    def get_player_position(name) do
-      player = get_player(name)
-      kinematics = player["ship"]["kinematics"]
-      {kinematics["px"], kinematics["py"]}
-    end
-
-    # Function to retrieve player bullet type
-    def get_player_bullet_type(name) do
-      player = get_player(name)
-      player["ship"]["bullet_type"]
-    end
-
-    # Function to retrieve bullet positions by sender
-    def get_bullet_positions(sender) do
-      Enum.filter_map(
-        @dummy_data["projectiles"],
-        fn projectile -> projectile["sender"] == sender end,
-        fn projectile -> {projectile["kinematics"]["px"], projectile["kinematics"]["py"]} end
-      )
-    end
-
-    # Function to retrieve player rotation (angle)
-    def get_player_rotation(name) do
-      player = get_player(name)
-      player["ship"]["kinematics"]["angle"]
-    end
-
-    # Function to retrieve bullet rotation (angle) by sender
-    def get_bullet_rotation(sender) do
-      Enum.map(filter_projectiles_by_sender(sender), & &1["kinematics"]["angle"])
-    end
-
-    defp filter_projectiles_by_sender(sender) do
-      Enum.filter(@dummy_data["projectiles"], fn projectile -> projectile["sender"] == sender end)
-    end
-
     # Assume single player for simplicity
-    player = player_list["players"] |> List.first()
-
-    game_board = fetch_game_board_data()
+    player = @dummy_data["players"] |> List.first()
 
     # Assign dummy data to socket
     socket =
@@ -139,9 +137,7 @@ defmodule ProjectQuazarWeb.Prototype4 do
       kinematics = projectile["kinematics"]
       new_px = kinematics["px"] + kinematics["vx"] * kinematics["speed"]
       new_py = kinematics["py"] + kinematics["vy"] * kinematics["speed"]
-      # Update position
-      put_in(projectile, ["kinematics", "px"], new_px)
-      |> put_in(["kinematics", "py"], new_py)
+      projectile |> put_in(["kinematics", "px"], new_px) |> put_in(["kinematics", "py"], new_py)
     end)
     |> Enum.filter(fn p -> within_bounds?(p["kinematics"]["px"], p["kinematics"]["py"]) end)
   end
