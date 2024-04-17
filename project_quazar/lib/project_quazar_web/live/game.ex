@@ -27,6 +27,8 @@ defmodule ProjectQuazarWeb.Game do
      socket
      |> assign(:joined, false)
      |> assign(:users, %{})
+     |> assign(:players, [])
+     |> assign(:projectiles, [])
      |> assign(:error_message, "")
      |> assign(:top_scores, top_scores)
      # Frontend Test Data
@@ -45,12 +47,12 @@ defmodule ProjectQuazarWeb.Game do
          assign(socket, :error_message, "Username already taken")}
 
       false ->
-        Presence.track(self(), @presence, username, %{
-          points: 0
-        })
+        Presence.track(self(), @presence, username, %{})
 
         Phoenix.PubSub.subscribe(PubSub, @presence)
         Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
+        # default ship destroyer, change when implemented ship choice
+        GameServer.spawn_player(username, :destroyer)
 
         {:noreply,
          socket
@@ -81,7 +83,11 @@ defmodule ProjectQuazarWeb.Game do
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
     IO.inspect(new_state)
-    {:noreply, socket}
+    {:noreply,
+    socket
+    |> assign(:players, new_state.players)
+    |> sort_users_by_score()
+    |> assign(:projectiles, new_state.projectiles)}
   end
 
   @doc """
@@ -95,7 +101,7 @@ defmodule ProjectQuazarWeb.Game do
       |> Enum.into(%{})
 
     assign(socket, :users, Map.merge(socket.assigns.users, users))
-    |> sort_users_by_points()
+    |> sort_users_by_score()
   end
 
   @doc """
@@ -108,13 +114,12 @@ defmodule ProjectQuazarWeb.Game do
     end)
   end
 
-  defp sort_users_by_points(socket) do
-    sorted_users =
-      socket.assigns.users
-      |> Enum.sort_by(fn {_, %{points: points}} -> -points end)
-      |> Enum.into(%{})
+  defp sort_users_by_score(socket) do
+    sorted_players =
+      socket.assigns.players
+      |> Enum.sort_by(&(&1.score), &>=/2)
 
-    assign(socket, :users, sorted_users)
+    assign(socket, :players, sorted_players)
   end
 
   # Fetches top scores for all-time high scores component
