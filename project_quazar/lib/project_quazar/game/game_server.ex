@@ -8,6 +8,8 @@ defmodule GameServer do
   @accel_rate 1
   @drag_rate 0.2
   @turn_rate :math.pi() / 3
+  @health_increment 1
+  @score_increment 100
 
   # bounds for the screen (assumption at present, can be done programmatically later)
   @bounds %{
@@ -87,7 +89,8 @@ defmodule GameServer do
       Enum.map(players, fn player ->
         if Player.alive?(player) do
           # Player.take_damage(player, 10) |>
-          Player.inc_score(player, 100)
+          Player.inc_health(player, @health_increment)
+          Player.inc_score(player, @score_increment)
           # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
           |> Movable.Drag.apply_drag(@drag_rate) # causes the ship to slow down over time

@@ -21,6 +21,11 @@ defmodule Player do
     %__MODULE__{ player_data | score: (old_score + amount) }
   end
 
+  @doc "Increments the players ship health by a specified amount."
+  def inc_health(%__MODULE__{} = player_data, amount) do
+    %__MODULE__{ player_data | ship: Ship.inc_health(player_data.ship, amount) }
+  end
+
   @doc "Resets the players current score."
   def reset_score(%__MODULE__{} = player_data) do
     %__MODULE__{ player_data | score: 0 }
@@ -59,14 +64,14 @@ defmodule Player do
       Movable.Motion.get_pos(ship)
     end
   end
-  
+
   defimpl Movable.Drag, for: __MODULE__ do
     @doc "Applies drag to slow down ship until it comes to full rest"
     def apply_drag(%@for{ship: ship} = player_data, amount) do
       %@for{ player_data | ship: Movable.Drag.apply_drag(ship, amount) }
     end
   end
-  
+
   defimpl Movable.Rotation, for: __MODULE__ do
     def rotate(%@for{ship: ship} = player_data, rad, :cw) do
       %@for{ player_data | ship: Movable.Rotation.rotate(ship, rad, :cw) }
