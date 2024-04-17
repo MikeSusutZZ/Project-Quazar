@@ -5,6 +5,7 @@ defmodule ProjectQuazarWeb.UserForm do
   def render(assigns) do
     ~H"""
     <div class="outer-user-form-container">
+    <h1 class="title"> Join Game </h1>
       <div class="inner--user-form-container ">
 
         <form  action="#" method="post" phx-submit="join">
@@ -17,6 +18,7 @@ defmodule ProjectQuazarWeb.UserForm do
             <div class='radio-button-option-col'>
               <label class='option_label sub_heading'>Tank</label>
               <h1 class="health_text">Health: 250</h1>
+              <h1 class="speed_text">Speed: Slow</h1>
               <div>
                 <input type='radio' name='ship' value='tank' checked>
               </div>
@@ -25,6 +27,7 @@ defmodule ProjectQuazarWeb.UserForm do
             <div class='radio-button-option-col'>
               <label class='option_label sub_heading'>Destroyer</label>
               <h1 class="health_text">Health: 150</h1>
+              <h1 class="speed_text">Speed: normal</h1>
               <div>
                 <input type='radio' name='ship' value='destroyer' checked>
               </div>
@@ -33,6 +36,7 @@ defmodule ProjectQuazarWeb.UserForm do
             <div class='radio-button-option-col'>
               <label class='sub_heading'>Scout</label>
               <h1 class="health_text">Health: 100</h1>
+              <h1 class="speed_text">Speed: fast</h1>
               <div>
                 <input type='radio' name='ship' value='scout' checked>
               </div>

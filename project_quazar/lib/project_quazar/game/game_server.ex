@@ -9,11 +9,12 @@ defmodule GameServer do
   @drag_rate 0.2
   @turn_rate :math.pi() / 3
 
-  # implementing drag
-
   # bounds for the screen (assumption at present, can be done programmatically later)
-  @bounding_height 200
-  @bounding_width 200
+  @bounds %{
+    x: 800,
+    y: 800,
+    damage_zone: 100 # Creates a damage zone around the map. E.g. A 100px border.
+  }
 
   def start_link(_arg) do
     GenServer.start_link(__MODULE__, nil, name: {:global, __MODULE__})
@@ -45,8 +46,17 @@ defmodule GameServer do
 
     # Remove dead ships
     Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
-    Enum.each(players, fn player -> IO.inspect(player) end)
+    Enum.each(players, fn player ->
+      IO.inspect(player)
+      # Game can call boundary checks like so and damage players accordingly
+      # IO.inspect(Boundary.outside?(player, @bounds))
+      # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
+    end)
     # IO.puts("tick")
+
+    # Broadcast gamestate to each client
+    Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "game_state:updates", {:state_updated, new_gamestate})
+
     :ets.insert(@table, {__MODULE__, new_gamestate})
     {:noreply, new_gamestate}
   end
@@ -60,7 +70,7 @@ defmodule GameServer do
 
   @impl true
   def handle_cast({:spawn_player, name, type}, %__MODULE__{players: players} = gamestate) do
-    player_ship = Ship.random_ship(type, @bounding_width, @bounding_height)
+    player_ship = Ship.random_ship(type, @bounds)
     new_players = [Player.new_player(name, player_ship) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
@@ -144,5 +154,37 @@ defmodule GameServer do
         {:noreply, state}
       end
     end
+  end
+
+  @doc "Removes a player from the game state."
+  @impl true
+  def handle_cast({:remove_player, name}, %{players: players} = state) do
+    new_players = Enum.reject(players, fn player -> player.name == name end)
+    new_state = %{state | players: new_players}
+    {:noreply, new_state}
+  end
+
+  def remove_player(name) do
+    GenServer.cast({:global, __MODULE__}, {:remove_player, name})
+  end
+
+  @doc """
+  Removes players that are not in the presence list. This is to ensure
+  that leftover players are removed from the game state.
+  """
+  @impl true
+  def handle_cast({:remove_leftover_players, presence_list}, %{players: players} = state) do
+    state.players
+    |> Enum.map(&(&1.name))
+    |> Enum.each(fn player ->
+      if !Map.has_key?(presence_list, player) do
+        GameServer.remove_player(player)
+      end
+    end)
+    {:noreply, state}
+  end
+
+  def remove_leftover_players(presence_list) do
+    GenServer.cast({:global, __MODULE__}, {:remove_leftover_players, presence_list})
   end
 end
