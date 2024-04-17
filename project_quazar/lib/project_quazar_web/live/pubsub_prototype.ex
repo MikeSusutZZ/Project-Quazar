@@ -4,16 +4,16 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
 
   def render(assigns) do
     ~H"""
-    <span id="main" phx-window-keydown="key_down" phx-hook="PubsubPrototype" data-game-state={"#{Jason.encode!(@game_state)}"} data-frames={"#{Jason.encode!(@count)}"}>Pubsub Prototype</span>
+    <span id="main" phx-window-keydown="key_down" phx-hook="PubsubPrototype" data-game-state={"#{Jason.encode!(@game_state)}"}>Pubsub Prototype</span>
     <span phx-window-keyup="key_up"></span>
     """
   end
 
   def mount(params, _session, socket) do
-    Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
     {_, name} = Map.fetch(params, "name")
     IO.inspect(name)
-    GamePrototype.add(%{name: name, key: ""})
+    GameServer.spawn_player(name, :destroyer)
+    Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
     updated_socket = assign(socket, name: name, game_state: "", count: "")
     {:ok, updated_socket}
   end
@@ -28,7 +28,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   # Ignore other keys
   @impl true
   def handle_event("key_down", %{"key" => key}, socket) do
-    GamePrototype.update_user(socket.assigns.name, key)
+    # GamePrototype.update_user(socket.assigns.name, key)
     {:noreply, socket}
   end
 
@@ -42,15 +42,17 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
     IO.puts("Broadcast")
-    IO.inspect(socket.assigns)
-    {game_state, count} = new_state
+    # IO.inspect(socket.assigns)
+    # IO.inspect(new_state)
+    json = Jason.encode!(new_state)
+    IO.puts(json)
+    # {game_state, count} = new_state
     name = socket.assigns.name
 
     updated_socket =
       socket
       |> update(:name, fn _name -> name end)
-      |> update(:game_state, fn _game_state -> game_state end)
-      |> update(:count, fn _count -> count end)
+      |> update(:game_state, fn _game_state -> new_state end)
 
     send(self(), :update_client)
 
