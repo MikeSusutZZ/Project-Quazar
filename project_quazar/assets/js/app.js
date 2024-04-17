@@ -283,9 +283,6 @@ const drawGame4 = () => {
   let canvas = document.getElementById("circleCanvas");
   let ctx = canvas.getContext("2d");
 
-  // Dummy data for player positions and attributes
-  const playerData = DummyPlayerList.players[0]; // Assuming single player for simplicity
-
   // Initialize canvas images
   let gameBoard = new Image();
   let player = new Image();
@@ -320,16 +317,23 @@ const drawGame4 = () => {
     bullet3_xy[0] += 20; // Example movement
   };
 
-  player.onload = function () {
-    // Using the kinematics property from JSON to set player position
-    ctx.drawImage(
-      player,
-      playerData.ship.kinematics.px,
-      playerData.ship.kinematics.py,
-      130,
-      100
-    );
-  };
+  // Draw the player
+  const playerData = DummyPlayerList.players[0]; // Assuming single player for simplicity
+  ctx.drawImage(
+    gameImages.player,
+    playerData.ship.kinematics.px,
+    playerData.ship.kinematics.py,
+    130,
+    100
+  );
+
+  // Draw bullets with simulated movement
+  let bullets = [bullet1_xy, bullet2_xy, bullet3_xy]; // Example bullet positions
+  let bulletImages = [gameImages.bullet1, gameImages.bullet2, gameImages.bullet3];
+  bullets.forEach((pos, index) => {
+    ctx.drawImage(bulletImages[index], pos[0], pos[1], 40, 40);
+    pos[0] += 20; // Move bullets
+  });
 };
 
 Hooks.Game4 = {
