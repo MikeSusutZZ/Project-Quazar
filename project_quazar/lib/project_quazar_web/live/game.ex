@@ -49,10 +49,8 @@ defmodule ProjectQuazarWeb.Game do
          assign(socket, :error_message, "Username already taken")}
 
       false ->
-        GameServer.spawn_player(username, "default")
-        Presence.track(self(), @presence, username, %{
-          points: 0
-        })
+        GameServer.remove_leftover_players(Presence.list(@presence))
+        Presence.track(self(), @presence, username, %{})
 
         Phoenix.PubSub.subscribe(PubSub, @presence)
         Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
