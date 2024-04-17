@@ -49,3 +49,28 @@
 .user-points {
   @apply text-xl text-yellow-400;
 }
+
+/* Startup Screens Styles */
+
+/* Base container styling */
+.container {
+  @apply bg-gray-900 p-6 rounded-lg shadow-lg max-w-lg mx-auto;
+}
+
+/* Title styling */
+.startup-title {
+  @apply text-white text-4xl font-bold text-center mb-8;
+}
+
+/* Button styling */
+.button-primary {
+  @apply bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-lg;
+}
+
+.button-secondary {
+  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-lg;
+}
+
+.button-tertiary {
+  @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded;
+}

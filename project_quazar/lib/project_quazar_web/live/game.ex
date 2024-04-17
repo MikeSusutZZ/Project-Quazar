@@ -23,14 +23,17 @@ defmodule ProjectQuazarWeb.Game do
     json_pos = Map.merge(json_pos, player_status)
     # End
 
-    {:ok,
-     socket
-     |> assign(:joined, false)
-     |> assign(:users, %{})
-     |> assign(:error_message, "")
-     |> assign(:top_scores, top_scores)
-     # Frontend Test Data
-     |> assign(:circle_pos, json_pos)}
+    {:ok, socket
+      |> assign(:joined, false)
+      |> assign(:users, %{})
+      |> assign(:error_message, "")
+      |> assign(:top_scores, top_scores)
+      |> assign(:circle_pos, json_pos)
+      # assigns for start and how to play components
+      |> assign(:start, true)
+      |> assign(:show_help, false)
+      |> assign(:current_page, 1) # handles pagination for how to play
+    }
   end
 
   @doc """
@@ -45,6 +48,7 @@ defmodule ProjectQuazarWeb.Game do
          assign(socket, :error_message, "Username already taken")}
 
       false ->
+        GameServer.spawn_player(username, "default")
         Presence.track(self(), @presence, username, %{
           points: 0
         })
@@ -57,6 +61,54 @@ defmodule ProjectQuazarWeb.Game do
          |> assign(:current_user, username)
          |> handle_joins(Presence.list(@presence))}
     end
+  end
+
+  @doc "Handle the event for next page in how to play component"
+  def handle_event("next_page", _value, socket) do
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    next_page = current_page + 1
+
+    {:noreply, assign(socket, current_page: next_page)}
+  end
+
+  @doc "Handle the event for previous page in how to play component"
+  def handle_event("previous_page", _value, socket) do
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    previous_page = max(current_page - 1, 1)
+
+    {:noreply, assign(socket, current_page: previous_page)}
+  end
+
+  @doc "Handle the state for start component"
+  def handle_event("show_start_game", _value, socket) do
+    {:noreply, assign(socket, :start, false)}
+  end
+
+  @doc "Handle the state for displaying help component"
+  def handle_event("show_help", _value, socket) do
+    {:noreply, assign(socket, :show_help, true)}
+  end
+
+  @doc "Handle the state for hiding help component"
+  def handle_event("hide_help", _value, socket) do
+    {:noreply, assign(socket, :show_help, false)}
+  end
+
+
+  @doc "Handle the event for next page in how to play component"
+  def handle_event("next_page", _value, socket) do
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    next_page = current_page + 1
+
+    {:noreply, assign(socket, current_page: next_page)}
+  end
+
+  @doc "Handle the event for previous page in how to play component"
+  def handle_event("previous_page", _value, socket) do
+    current_page = Map.get(socket.assigns, :current_page, 1)
+    previous_page = max(current_page - 1, 1)
+
+    {:noreply, assign(socket, current_page: previous_page)}
   end
 
   @doc "Handle Presence event whenever there is change to Presence (leaving/joining)."
