@@ -26,7 +26,6 @@ defmodule ProjectQuazarWeb.Game do
     {:ok,
      socket
      |> assign(:joined, false)
-     |> assign(:users, %{})
      |> assign(:players, [])
      |> assign(:projectiles, [])
      |> assign(:error_message, "")
@@ -47,6 +46,7 @@ defmodule ProjectQuazarWeb.Game do
          assign(socket, :error_message, "Username already taken")}
 
       false ->
+        GameServer.remove_leftover_players(Presence.list(@presence))
         Presence.track(self(), @presence, username, %{})
 
         Phoenix.PubSub.subscribe(PubSub, @presence)
@@ -61,19 +61,7 @@ defmodule ProjectQuazarWeb.Game do
     end
   end
 
-  defp remove_leftover_players(socket, state) do
-    presence_users = Presence.list(@presence)
-    # remove any leftover players that have left the game
-    state.players
-    |> Enum.map(&(&1.name))
-    |> Enum.each(fn player ->
-      if !Map.has_key?(presence_users, player) do
-        GameServer.remove_player(player)
-      end
-    end)
-  end
-
-  @doc "Handle Presence event whenever there is change to Presence (leaving/joining)."
+  @doc "Handle Presence event whenever there is change to Presence."
   @impl true
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
     {:noreply,
@@ -92,17 +80,16 @@ defmodule ProjectQuazarWeb.Game do
   """
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
-    remove_leftover_players(socket, new_state)
     {:noreply,
     socket
     |> assign(:players, new_state.players)
-    |> sort_users_by_score()
+    |> sort_players_by_score()
     |> assign(:projectiles, new_state.projectiles)}
   end
 
   @doc """
   Handle the 'leaves' object retrieved from the 'presence_diff' event.
-  Update the socket's users map using the 'leaves' object.
+  Update the socket's players map using the 'leaves' object.
   """
   defp handle_leaves(socket, leaves) do
     Enum.reduce(leaves, socket, fn {player, _}, socket ->
@@ -111,7 +98,7 @@ defmodule ProjectQuazarWeb.Game do
     end)
   end
 
-  defp sort_users_by_score(socket) do
+  defp sort_players_by_score(socket) do
     sorted_players =
       socket.assigns.players
       |> Enum.sort_by(&(&1.score), &>=/2)

@@ -156,6 +156,7 @@ defmodule GameServer do
     end
   end
 
+  @doc "Removes a player from the game state."
   @impl true
   def handle_cast({:remove_player, name}, %{players: players} = state) do
     new_players = Enum.reject(players, fn player -> player.name == name end)
@@ -165,5 +166,25 @@ defmodule GameServer do
 
   def remove_player(name) do
     GenServer.cast({:global, __MODULE__}, {:remove_player, name})
+  end
+
+  @doc """
+  Removes players that are not in the presence list. This is to ensure
+  that leftover players are removed from the game state.
+  """
+  @impl true
+  def handle_cast({:remove_leftover_players, presence_list}, %{players: players} = state) do
+    state.players
+    |> Enum.map(&(&1.name))
+    |> Enum.each(fn player ->
+      if !Map.has_key?(presence_list, player) do
+        GameServer.remove_player(player)
+      end
+    end)
+    {:noreply, state}
+  end
+
+  def remove_leftover_players(presence_list) do
+    GenServer.cast({:global, __MODULE__}, {:remove_leftover_players, presence_list})
   end
 end
