@@ -87,12 +87,11 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  def spawn_player(name, ship_type),
-    do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type})
+  def spawn_player(name, ship_type, bullet_type), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
 
   @impl true
-  def handle_cast({:spawn_player, name, type}, %__MODULE__{players: players} = gamestate) do
-    player_ship = Ship.random_ship(type, @bounds)
+  def handle_cast({:spawn_player, name, type, bullet_type}, %__MODULE__{players: players} = gamestate) do
+    player_ship = Ship.random_ship(type, bullet_type, @bounds)
     new_players = [Player.new_player(name, player_ship) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
@@ -102,9 +101,8 @@ defmodule GameServer do
   @doc "Used for testing how players can interact/move."
   def modify_players(players) do
     if length(players) == 0 do
-      # spawn_player("Bill") # Spawns a player
-      # Return empty list, cast will update players
-      []
+      # spawn_player("Bill", :destroyer, :light) # Spawns a player
+      [] # Return empty list, cast will update players
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
@@ -145,6 +143,29 @@ defmodule GameServer do
       updated_players = update_players(players, Movable.Motion.accelerate(player, @accel_rate))
       {:noreply, %{state | :players => updated_players}}
     end
+  end
+
+  @doc """
+  Fires a bullet from the player with the given name.
+  """
+  @impl true
+  def handle_cast({:fire, name}, %{players: players, projectiles: projectiles} = state) do
+    # Find the player who is firing
+    player = Enum.find(players, fn player -> player.name == name end)
+    case Ship.fire(player.ship, player.name) do
+      {:ok, bullet} ->
+        # Add the new bullet to the projectile list
+        new_projectiles = [bullet | projectiles]
+        {:noreply, %{state | projectiles: new_projectiles}}
+      :error ->
+        {:noreply, state}
+    end
+
+  end
+
+  @doc "Fire a bullet from the player with the given name."
+  def fire(name) do
+    GenServer.cast({:global, __MODULE__}, {:fire, name})
   end
 
   # Accelerate the Player with the given name.

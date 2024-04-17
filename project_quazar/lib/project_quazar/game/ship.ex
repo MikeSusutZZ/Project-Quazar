@@ -20,15 +20,15 @@ defmodule Ship do
   ]
 
   # Bullet type specifications
-  # TODO: adjust size; bullet types
+  # TODO: adjust size
   @ship_types %{
-    tank: %{health: 250, acceleration: 0.25, radius: 6, bullet_type: :heavy},
-    destroyer: %{health: 150, acceleration: 0.5, radius: 4, bullet_type: :medium},
-    scout: %{health: 100, acceleration: 1, radius: 2, bullet_type: :light}
+    tank: %{health: 250, acceleration: 0.25, radius: 6},
+    destroyer: %{health: 150, acceleration: 0.5, radius: 4},
+    scout: %{health: 100, acceleration: 1, radius: 2}
   }
 
-  @doc "Creates a new Ship at x,y. Health sets maximum and current health, and bullet_dmg sets damage"
-  def new_ship(px, py, angle, type) do
+  @doc "Creates a new Ship at x,y. Health sets maximum and current health, and bullet_type sets type of bullet"
+  def new_ship(px, py, angle, type, bullet_type) do
     case Map.fetch(@ship_types, type) do
       {:ok, attributes} ->
         %__MODULE__{
@@ -38,7 +38,7 @@ defmodule Ship do
           type: type,
           radius: attributes.radius,
           acceleration: attributes.acceleration,
-          bullet_type: attributes.bullet_type
+          bullet_type: bullet_type
         }
 
       :error ->
@@ -47,11 +47,11 @@ defmodule Ship do
   end
 
   @doc "Creates a ship with randomized position within bounds (height and width), 0 intial velocity and 100hp, 10bulletDamage"
-  def random_ship(type, %{x: bounding_width, y: bounding_height, damage_zone: damage_zone}) do
+  def random_ship(type, bullet_type, %{x: bounding_width, y: bounding_height, damage_zone: damage_zone}) do
     random_x = random_between(0 + damage_zone, bounding_width - damage_zone)
     random_y = random_between(0 + damage_zone, bounding_height - damage_zone)
     angle = random_angle()
-    Ship.new_ship(random_x, random_y, angle, type)
+    Ship.new_ship(random_x, random_y, angle, type, bullet_type)
   end
 
   @doc "Generate coordinates within bounds"
@@ -132,11 +132,21 @@ defmodule Ship do
 
   @doc """
   Fires a bullet from the ship, creating a new `Bullet` instance.
-  Returns a `Bullet` struct representing the new bullet, or an error if the bullet type is invalid.
+  The bullet is accelerated by its predefined speed.
+  Returns `{:ok, bullet}` where `bullet` is the newly created `Bullet` struct, or `{:error, reason}` if the bullet type is invalid.
   """
-  def fire(%__MODULE__{kinematics: kinematics, bullet_type: bullet_type}, player_name) do
+  def fire(%__MODULE__{kinematics: kinematics, radius: radius, bullet_type: bullet_type}, player_name) do
     %{px: px, py: py, vx: vx, vy: vy, angle: angle} = kinematics
+    # Bullet will start at the edge of the ship, in the direction the ship is facing.
+    ship_front_x = px + radius
+    ship_front_y = py + radius
 
-    Bullet.new_bullet(player_name, px, py, vx, vy, angle, bullet_type)
+    # Create the bullet with the ship's current position and velocity
+    case Bullet.new_bullet(player_name, ship_front_x, ship_front_y, vx, vy, angle, bullet_type) do
+      {:ok, bullet} ->
+        {:ok, Movable.Motion.accelerate(bullet, bullet.speed)}
+      :error ->
+        {:error, "Invalid bullet type: #{bullet_type}"}
+    end
   end
 end
