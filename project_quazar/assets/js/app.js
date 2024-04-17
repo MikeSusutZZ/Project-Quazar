@@ -29,6 +29,69 @@ import socket from "./game_socket.js";
 // Hooks initializer
 let Hooks = {};
 
+//Render game board hook
+Hooks.GameBoardHook = {
+  mounted() {
+    //assets
+    const canvas = document.getElementById("main");
+    gameBoard = new Image();
+    gameBoard.src = "/images/game_board_asset/Game_Background.png";
+    gameBoard.onload = function () {
+      drawGameBoard(canvas, gameBoard, myShip, enemyShip);
+    };
+    myShip = new Image();
+    myShip.src = "/images/ship_asset/blue_ship.png";
+    enemyShip = new Image();
+    enemyShip.src = "/images/ship_asset/red_ship.png";
+
+    // event handlers
+    this.handleEvent("update", (_) => {
+      drawGameBoard(canvas, gameBoard, myShip, enemyShip);
+    });
+  },
+};
+
+function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
+  // drawing the background
+  canvas.width = 800;
+  canvas.height = 800;
+  ctx = canvas.getContext("2d");
+  ctx.drawImage(gameBoard, 0, 0, 800, 800);
+
+  // getting the data
+  const data = JSON.parse(canvas.getAttribute("data-game-state"));
+  console.log("Data", data);
+
+  // drawing the ships
+  const me = data.players[0];
+  drawShip(
+    ctx,
+    myShip,
+    me.ship.kinematics.px,
+    me.ship.kinematics.py,
+    me.ship.kinematics.angle
+  );
+
+  const enemies = data.players.slice(1);
+  enemies.forEach((enemy) => {
+    drawShip(
+      ctx,
+      enemyShip,
+      enemy.ship.kinematics.px,
+      enemy.ship.kinematics.py,
+      enemy.ship.kinematics.angle
+    );
+  });
+}
+
+function drawShip(ctx, ship, px, py, angle) {
+  ctx.save();
+  ctx.translate(px + 125, py + 125);
+  ctx.rotate(angle);
+  ctx.drawImage(ship, -125, -125, 250, 250);
+  ctx.restore();
+}
+
 // Frontend Prototype 1
 Hooks.MoveCircle = {
   mounted() {
@@ -167,6 +230,7 @@ const drawGame3 = () => {
   let canvas = document.getElementById("circleCanvas");
   let myData = JSON.parse(canvas.getAttribute("data-pos"));
   console.log("My data", myData);
+
   // Start
   let ctx = canvas.getContext("2d");
 
@@ -329,7 +393,11 @@ const drawGame4 = () => {
 
   // Draw bullets with simulated movement
   let bullets = [bullet1_xy, bullet2_xy, bullet3_xy]; // Example bullet positions
-  let bulletImages = [gameImages.bullet1, gameImages.bullet2, gameImages.bullet3];
+  let bulletImages = [
+    gameImages.bullet1,
+    gameImages.bullet2,
+    gameImages.bullet3,
+  ];
   bullets.forEach((pos, index) => {
     ctx.drawImage(bulletImages[index], pos[0], pos[1], 40, 40);
     pos[0] += 20; // Move bullets
