@@ -123,7 +123,7 @@ defmodule Ship do
   Increments the health of the ship by a specified amount without exceeding the maximum health, only if the ship is alive.
   """
   def inc_health(%__MODULE__{health: current_health, max_health: max_health} = ship, increment) do
-    if alive?(ship) do
+    if current_health > 0 do
       new_health = min(current_health + increment, max_health)
       %__MODULE__{ship | health: new_health}
     else

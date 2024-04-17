@@ -96,7 +96,7 @@ defmodule GameServer do
   def handle_cast({:spawn_player, name, type}, %__MODULE__{players: players} = gamestate) do
     player_ship = Ship.random_ship(type, @bounds)
     new_players = [Player.new_player(name, player_ship) | players]
-    {:noreply, %{gamestate | players: new_players}}
+        {:noreply, %{gamestate | players: new_players}}
   end
 
   def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
@@ -110,14 +110,18 @@ defmodule GameServer do
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
+        IO.inspect(player)
         if Player.alive?(player) do
+          player
           # Player.take_damage(player, 10) |>
-          Player.inc_health(player, @health_increment)
-          Player.inc_score(player, @score_increment)
+          # IO.inspect(player)
+          |> Player.inc_score(@score_increment)
           # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
           # causes the ship to slow down over time
           |> Movable.Drag.apply_drag(@drag_rate)
+          # increments the health of the player
+          |> Player.inc_health(@health_increment)
         else
           Player.respawn(player, 0, 0, 0)
         end
