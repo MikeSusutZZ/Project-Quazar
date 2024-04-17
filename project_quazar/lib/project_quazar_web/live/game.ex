@@ -57,9 +57,20 @@ defmodule ProjectQuazarWeb.Game do
         {:noreply,
          socket
          |> assign(:joined, true)
-         |> assign(:current_user, username)
-         |> handle_joins(Presence.list(@presence))}
+         |> assign(:current_user, username)}
     end
+  end
+
+  defp remove_leftover_players(socket, state) do
+    presence_users = Presence.list(@presence)
+    # remove any leftover players that have left the game
+    state.players
+    |> Enum.map(&(&1.name))
+    |> Enum.each(fn player ->
+      if !Map.has_key?(presence_users, player) do
+        GameServer.remove_player(player)
+      end
+    end)
   end
 
   @doc "Handle Presence event whenever there is change to Presence (leaving/joining)."
@@ -67,8 +78,7 @@ defmodule ProjectQuazarWeb.Game do
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
     {:noreply,
      socket
-     |> handle_leaves(diff.leaves)
-     |> handle_joins(diff.joins)}
+     |> handle_leaves(diff.leaves)}
   end
 
   # accepts the new scores from the broadcast
@@ -82,7 +92,7 @@ defmodule ProjectQuazarWeb.Game do
   """
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
-    IO.inspect(new_state)
+    remove_leftover_players(socket, new_state)
     {:noreply,
     socket
     |> assign(:players, new_state.players)
@@ -91,26 +101,13 @@ defmodule ProjectQuazarWeb.Game do
   end
 
   @doc """
-  Handle the 'joins' object retrieved from the 'presence_diff' event.
-  Update the socket's users map using the 'joins' object.
-  """
-  defp handle_joins(socket, joins) do
-    users =
-      joins
-      |> Enum.map(fn {user, %{metas: [meta | _]}} -> {user, meta} end)
-      |> Enum.into(%{})
-
-    assign(socket, :users, Map.merge(socket.assigns.users, users))
-    |> sort_users_by_score()
-  end
-
-  @doc """
   Handle the 'leaves' object retrieved from the 'presence_diff' event.
   Update the socket's users map using the 'leaves' object.
   """
   defp handle_leaves(socket, leaves) do
-    Enum.reduce(leaves, socket, fn {user, _}, socket ->
-      assign(socket, :users, Map.delete(socket.assigns.users, user))
+    Enum.reduce(leaves, socket, fn {player, _}, socket ->
+      GameServer.remove_player(player)
+      assign(socket, :players, List.delete(socket.assigns.players, player))
     end)
   end
 

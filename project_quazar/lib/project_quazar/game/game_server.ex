@@ -155,4 +155,15 @@ defmodule GameServer do
       end
     end
   end
+
+  @impl true
+  def handle_cast({:remove_player, name}, %{players: players} = state) do
+    new_players = Enum.reject(players, fn player -> player.name == name end)
+    new_state = %{state | players: new_players}
+    {:noreply, new_state}
+  end
+
+  def remove_player(name) do
+    GenServer.cast({:global, __MODULE__}, {:remove_player, name})
+  end
 end
