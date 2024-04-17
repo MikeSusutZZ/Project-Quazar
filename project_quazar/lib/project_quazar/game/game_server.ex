@@ -2,9 +2,12 @@ defmodule GameServer do
   use GenServer
 
   @derive Jason.Encoder
+  @derive Jason.Encoder
   defstruct [:players, :projectiles]
 
   @table GameState
+  # Ticks/second
+  @tick_rate 1
   # Ticks/second
   @tick_rate 1
   @accel_rate 1
