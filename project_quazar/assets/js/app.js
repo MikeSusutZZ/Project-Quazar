@@ -443,6 +443,30 @@ Hooks.ChannelHook = {
   },
 };
 
+const updateElements = () => {
+  let dataElement = document.getElementById("main");
+  console.log(dataElement);
+  let gameState = JSON.parse(dataElement.getAttribute("data-game-state"));
+  let frames = JSON.parse(dataElement.getAttribute("data-frames"));
+  console.log("My data", gameState);
+  console.log("My data", frames);
+
+  dataElement.innerHTML = `Frame: ${frames}, Data: ${JSON.stringify(
+    gameState
+  )}`;
+};
+
+Hooks.PubsubPrototype = {
+  mounted() {
+    console.log("Mounted");
+
+    this.handleEvent("update", (data) => {
+      console.log(data);
+      updateElements();
+    });
+  },
+};
+
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
   .getAttribute("content");
