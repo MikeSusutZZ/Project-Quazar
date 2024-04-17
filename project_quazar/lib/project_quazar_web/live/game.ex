@@ -34,6 +34,7 @@ defmodule ProjectQuazarWeb.Game do
       |> assign(:start, true)
       |> assign(:show_help, false)
       |> assign(:current_page, 1) # handles pagination for how to play
+      |> assign(:game_over, true)
     }
   end
 
@@ -84,7 +85,12 @@ defmodule ProjectQuazarWeb.Game do
 
   @doc "Handle the state for start component"
   def handle_event("show_start_game", _value, socket) do
-    {:noreply, assign(socket, :start, false)}
+
+    {:noreply, socket
+|> assign(:start, false)
+|> assign(:game_over, false)
+}
+
   end
 
   @doc "Handle the state for displaying help component"
@@ -250,6 +256,8 @@ defmodule ProjectQuazarWeb.Game do
   # Catches all other keyboard events
   def handle_event("control", _, socket), do: {:noreply, socket}
 
+
+
   ## Frontend Events
   def handle_event("start_move", %{"key" => key}, socket) do
     IO.inspect("#{key} pressed")
@@ -282,10 +290,6 @@ defmodule ProjectQuazarWeb.Game do
   def handle_event("shoot", _value, socket) do
     IO.inspect("Pew")
     {:noreply, socket}
-  end
-
-  def handle_event("game_over", %{"score" => score}, socket) do
-    {:noreply, push_redirect(socket, to: "/game-over?score=#{score}")}
   end
 
 end
