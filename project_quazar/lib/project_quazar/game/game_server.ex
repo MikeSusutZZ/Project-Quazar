@@ -96,7 +96,7 @@ defmodule GameServer do
   def handle_cast({:spawn_player, name, type}, %__MODULE__{players: players} = gamestate) do
     player_ship = Ship.random_ship(type, @bounds)
     new_players = [Player.new_player(name, player_ship) | players]
-        {:noreply, %{gamestate | players: new_players}}
+    {:noreply, %{gamestate | players: new_players}}
   end
 
   def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
