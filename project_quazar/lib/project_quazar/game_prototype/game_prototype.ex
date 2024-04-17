@@ -23,7 +23,27 @@ defmodule GamePrototype do
 
   @impl true
   def init(_) do
+    # Start the loop that prints "Ok bud" every one second
+    start_loop()
+
+    # Return initial state
     {:ok, {[], 0}}
+  end
+
+  # Function to start the loop
+  defp start_loop() do
+    Process.send_after(self(), :print_message, 1000)
+  end
+
+  # Function to handle the loop
+  def handle_info(:print_message, state) do
+    IO.puts("Ok bud")
+    IO.inspect(state)
+    # Restart the loop
+    start_loop()
+    Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "game_state:updates", {:state_updated, state})
+    {game_state, count} = state
+    {:noreply, {game_state, count + 1}}
   end
 
   @impl true
@@ -58,7 +78,7 @@ defmodule GamePrototype do
   end
 end
 
-# GamePrototype.start()
+# GamePrototype.start_link(nil)
 # GamePrototype.add(%{name: "Alice", value: "some_value"})
 # GamePrototype.get_users()
-# GamePrototype.update_user("Alice", "Potato")
+# GamePrototype.update_user("Alice", "Potato")s
