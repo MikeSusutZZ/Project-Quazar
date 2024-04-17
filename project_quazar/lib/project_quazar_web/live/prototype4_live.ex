@@ -91,6 +91,7 @@ defmodule ProjectQuazarWeb.Prototype4 do
     # Assign dummy data to socket
     socket =
       assign(socket,
+        player: player,
         players: @dummy_data["players"],
         projectiles: @dummy_data["projectiles"],
         game_board: fetch_game_board_data()
