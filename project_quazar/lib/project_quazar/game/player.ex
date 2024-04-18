@@ -9,11 +9,11 @@ defmodule Player do
 
   # Player name, `Ship`, & current score.
   @derive Jason.Encoder
-  defstruct [:name, :ship, :score]
+  defstruct [:name, :ship, :score, :inputs]
 
   @doc "Creates a new player with a given name and ship (created from `Ship` module)"
   def new_player(name, ship) do
-    %__MODULE__{name: name, ship: ship, score: 0}
+    %__MODULE__{name: name, ship: ship, score: 0, inputs: %{}}
   end
 
   @doc "Increments the score by an amount."
@@ -47,6 +47,18 @@ defmodule Player do
   def respawn(%__MODULE__{ship: ship} = player_data, px, py, angle) do
     respawned_ship = Ship.respawn(ship, px, py, angle)
     %__MODULE__{player_data | score: 0, ship: respawned_ship}
+  end
+
+  @doc "Updates the players input mapping values based on the passed value"
+  def update_player_inputs(%__MODULE__{} = player, action, pressed_or_released) do
+    # Convert pressed/release event into true/false values for input map
+    value = case pressed_or_released do
+      :pressed -> true
+      :released -> false
+    end
+    # Update the players input map
+    new_inputs = Map.put(player.inputs, action, value)
+    %Player{player | inputs: new_inputs} # Return the player with new inputs
   end
 
   defimpl Movable.Motion, for: __MODULE__ do
