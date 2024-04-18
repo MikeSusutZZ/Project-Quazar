@@ -112,7 +112,7 @@ defmodule GameServer do
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
-        IO.inspect(player)
+        # IO.inspect(player)
 
         if Player.alive?(player) do
           player

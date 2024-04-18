@@ -67,6 +67,7 @@ Hooks.GameBoardHook = {
     // Keydown event listener
     window.addEventListener("keydown", (e) => {
       if (!pressedKeys.has(e.key)) {
+        e.preventDefault();
         console.log(e.key);
         pressedKeys.add(e.key); // Add pressed key to the set
         this.pushEvent("key_down", { key: e.key });
@@ -93,10 +94,19 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
   // getting the data
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
   if (!data) return;
-  // console.log("Data", data);
+  console.log("Data", data);
 
-  // drawing the ships
-  const me = data.players[0];
+  // Get the player name from the route parameters
+  const playerName = window.location.pathname.split("/").pop();
+
+  // Find the player with the matching name
+  let me = null;
+  for (const player of data.players) {
+    if (player.name === playerName) {
+      me = player;
+      break; // Stop searching once we find a match
+    }
+  }
   drawShip(
     ctx,
     myShip,
@@ -136,9 +146,9 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
 
 function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
   ctx.save();
-  ctx.translate(px + 25, py + 75); // Adjust these values according to the sprite size
+  ctx.translate(px + 20, py + 30); // Adjust these values according to the sprite size
   ctx.rotate((angle - Math.PI / 2) * -1);
-  ctx.drawImage(ship, -125, -125, 250, 250); // Adjust the sprite size here
+  ctx.drawImage(ship, -20, -30, 40, 60); // Adjust the sprite size here
   ctx.restore();
 
   ctx.font = "20px";
