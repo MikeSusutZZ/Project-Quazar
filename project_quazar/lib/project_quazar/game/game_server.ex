@@ -40,10 +40,10 @@ defmodule GameServer do
   #   GenServer.cast({:global, __MODULE__}, {:accel, name})
   # end
 
-  @doc "Rotates the ship with the given name in the given direction."
-  def rotate_player(name, dir) do
-    GenServer.cast({:global, __MODULE__}, {:rotate, name, dir})
-  end
+  # @doc "Rotates the ship with the given name in the given direction."
+  # def rotate_player(name, dir) do
+  #   GenServer.cast({:global, __MODULE__}, {:rotate, name, dir})
+  # end
 
   @doc "Removes a player from the player list"
   def remove_player(name) do
@@ -54,38 +54,47 @@ defmodule GameServer do
     GenServer.cast({:global, __MODULE__}, {:remove_leftover_players, presence_list})
   end
 
-  def accelerate_pressed() do
-
+  @doc "Accelerates the Player with the given name."
+  def accelerate_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :accelerate_pressed, name})
   end
 
-  def accelerate_released() do
-
+  @doc "Stops accelerating the specfied player."
+  def accelerate_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :accelerate_released, name})
   end
 
-  def turn_right_pressed() do
-
+  @doc "Turns a specfied player right (clockwise)."
+  def turn_right_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_right_pressed, name})
   end
 
-  def turn_right_released() do
-
+  @doc "Stops a specfied player from turning right."
+  def turn_right_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_right_released, name})
   end
 
-  def turn_left_pressed() do
-
+  @doc "Turns a specfied player left (counter-clockwise)."
+  def turn_left_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_left_pressed, name})
   end
 
-  def turn_left_released() do
-
+  @doc "Stops a specfied player from turning left."
+  def turn_left_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_left_released, name})
   end
 
-  def fire_pressed() do
-
+  @doc "Fires bullets from a specfied player."
+  def fire_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :fire_pressed, name})
   end
 
-  def fire_released() do
-
+  @doc "Stops firing bullets from a specified player."
+  def fire_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :fire_released, name})
   end
 
+  @doc "Handles all idle ship movement/velocity. Should be called every tick."
   def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
 
   @doc "Given a player and player list, replaces players with the same name in the list and returns the new list."
@@ -201,14 +210,14 @@ defmodule GameServer do
   # Accelerate the Player with the given name.
   @impl true
   def handle_cast({:accel, name}, %{players: players} = state) do
-    player = Enum.find(players, fn player -> player.name == name end)
+    # player = Enum.find(players, fn player -> player.name == name end)
 
-    if player == :default do
-      {:noreply, state}
-    else
-      updated_players = update_players(players, Movable.Motion.accelerate(player, @accel_rate))
-      {:noreply, %{state | :players => updated_players}}
-    end
+    # if player == :default do
+    #   {:noreply, state}
+    # else
+    #   updated_players = update_players(players, Movable.Motion.accelerate(player, @accel_rate))
+    #   {:noreply, %{state | :players => updated_players}}
+    # end
   end
 
   @doc """
@@ -217,35 +226,35 @@ defmodule GameServer do
   @impl true
   def handle_cast({:fire, name}, %{players: players, projectiles: projectiles} = state) do
     # Find the player who is firing
-    player = Enum.find(players, fn player -> player.name == name end)
-    case Ship.fire(player.ship, player.name) do
-      {:ok, bullet} ->
-        # Add the new bullet to the projectile list
-        new_projectiles = [bullet | projectiles]
-        {:noreply, %{state | projectiles: new_projectiles}}
-      :error ->
-        {:noreply, state}
-    end
+    # player = Enum.find(players, fn player -> player.name == name end)
+    # case Ship.fire(player.ship, player.name) do
+    #   {:ok, bullet} ->
+    #     # Add the new bullet to the projectile list
+    #     new_projectiles = [bullet | projectiles]
+    #     {:noreply, %{state | projectiles: new_projectiles}}
+    #   :error ->
+    #     {:noreply, state}
+    # end
 
   end
 
   # Rotates the ship with the given name in the given direction
   @impl true
   def handle_cast({:rotate, name, dir}, %{players: players} = state) do
-    player = Enum.find(players, fn player -> player.name == name end)
+    # player = Enum.find(players, fn player -> player.name == name end)
 
-    if player == :default do
-      {:noreply, state}
-    else
-      if dir == :cw || dir == :ccw do
-        updated_players =
-          update_players(players, Movable.Rotation.rotate(player, @turn_rate, dir))
+    # if player == :default do
+    #   {:noreply, state}
+    # else
+    #   if dir == :cw || dir == :ccw do
+    #     updated_players =
+    #       update_players(players, Movable.Rotation.rotate(player, @turn_rate, dir))
 
-        {:noreply, %{state | :players => updated_players}}
-      else
-        {:noreply, state}
-      end
-    end
+    #     {:noreply, %{state | :players => updated_players}}
+    #   else
+    #     {:noreply, state}
+    #   end
+    # end
   end
 
   @doc "Removes a player from the game state."
