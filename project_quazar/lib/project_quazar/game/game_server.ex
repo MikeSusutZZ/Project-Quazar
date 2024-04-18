@@ -19,9 +19,11 @@ defmodule GameServer do
     damage_zone: 100
   }
 
+  @doc "Spawns a new player within the screen boundaries of a specific type and bullet style."
   def spawn_player(name, ship_type, bullet_type),
     do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
 
+  @doc "Adds a bullet that was fired from the player."
   def add_projectile(bullet), do: GenServer.cast({:global, __MODULE__}, {:add_projectile, bullet})
 
   @doc "Pings server for debugging."
