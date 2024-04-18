@@ -102,7 +102,7 @@ defmodule GameServer do
     Enum.map(players, fn p -> if p.name == updated_player.name, do: updated_player, else: p end)
   end
 
-  @doc "Used for testing how players can interact/move."
+  @doc "Used to update the players inputs, movement, and other features every tick."
   def modify_players(players) do
     if length(players) == 0 do
       [] # Return the empty list if no players.
