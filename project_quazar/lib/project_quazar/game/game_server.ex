@@ -121,6 +121,7 @@ defmodule GameServer do
           |> Movable.Drag.apply_drag(@drag_rate)    # This causes the ship to slow down over time
           |> Player.inc_health(@health_increment)   # This increments the health of the player over time
         else
+          Process.send_after(self(), {:check_player_health, player.name}, @dead_removal_interval_sec) # Check player health after a certain time, to decide if they should be removed
           player # Apply regular motion to dead/wrecked ships until removed.
           |> Movable.Motion.move()                  # This applies current velocity to players
           |> Movable.Drag.apply_drag(@drag_rate)    # This causes the ship to slow down over time
@@ -207,38 +208,6 @@ defmodule GameServer do
     player_ship = Ship.random_ship(type, bullet_type, @bounds)
     new_players = [Player.new_player(name, player_ship, @bounds) | players]
     {:noreply, %{gamestate | players: new_players}}
-  end
-
-  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
-
-  @doc "Used for testing how players can interact/move."
-  def modify_players(players) do
-    if length(players) == 0 do
-      # spawn_player("Bill", :destroyer, :light) # Spawns a player
-      # Return empty list, cast will update players
-      []
-    else
-      # Modify players as necessary by piping through state modification functions
-      Enum.map(players, fn player ->
-        IO.inspect(player)
-
-        if Player.alive?(player) do
-          player
-          # Player.take_damage(player, 10) |>
-          # IO.inspect(player)
-          |> Player.inc_score(@score_increment)
-          # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
-          |> Movable.Motion.move()
-          # causes the ship to slow down over time
-          |> Movable.Drag.apply_drag(@drag_rate)
-          # increments the health of the player
-          |> Player.inc_health(@health_increment)
-        else
-          Process.send_after(self(), {:check_player_health, player.name}, @dead_removal_interval_sec)
-          player
-        end
-      end)
-    end
   end
 
   @doc """
