@@ -50,6 +50,10 @@ defmodule GameServer do
     GenServer.cast({:global, __MODULE__}, {:remove_player, name})
   end
 
+  @doc """
+  Removes players that are not in the presence list. This is to ensure
+  that leftover players are removed from the game state.
+  """
   def remove_leftover_players(presence_list) do
     GenServer.cast({:global, __MODULE__}, {:remove_leftover_players, presence_list})
   end
@@ -239,23 +243,23 @@ defmodule GameServer do
   end
 
   # Rotates the ship with the given name in the given direction
-  @impl true
-  def handle_cast({:rotate, name, dir}, %{players: players} = state) do
-    # player = Enum.find(players, fn player -> player.name == name end)
+  # @impl true
+  # def handle_cast({:rotate, name, dir}, %{players: players} = state) do
+  #   player = Enum.find(players, fn player -> player.name == name end)
 
-    # if player == :default do
-    #   {:noreply, state}
-    # else
-    #   if dir == :cw || dir == :ccw do
-    #     updated_players =
-    #       update_players(players, Movable.Rotation.rotate(player, @turn_rate, dir))
+  #   if player == :default do
+  #     {:noreply, state}
+  #   else
+  #     if dir == :cw || dir == :ccw do
+  #       updated_players =
+  #         update_players(players, Movable.Rotation.rotate(player, @turn_rate, dir))
 
-    #     {:noreply, %{state | :players => updated_players}}
-    #   else
-    #     {:noreply, state}
-    #   end
-    # end
-  end
+  #       {:noreply, %{state | :players => updated_players}}
+  #     else
+  #       {:noreply, state}
+  #     end
+  #   end
+  # end
 
   @doc "Removes a player from the game state."
   @impl true
