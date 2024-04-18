@@ -97,7 +97,7 @@ defmodule GameServer do
         %__MODULE__{players: players} = gamestate
       ) do
     player_ship = Ship.random_ship(type, bullet_type, @bounds)
-    new_players = [Player.new_player(name, player_ship) | players]
+    new_players = [Player.new_player(name, player_ship, @bounds) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
 

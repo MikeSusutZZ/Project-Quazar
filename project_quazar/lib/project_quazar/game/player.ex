@@ -12,8 +12,8 @@ defmodule Player do
   defstruct [:name, :ship, :score]
 
   @doc "Creates a new player with a given name and ship (created from `Ship` module)"
-  def new_player(name, ship_type, bullet_type, bounds) do
-    case Ship.random_ship(ship_type, bullet_type, bounds) do
+  def new_player(name, ship, bounds) do
+    case Ship.random_ship(ship.type, ship.bullet_type, bounds) do
       {:error, err} -> {:error, err}
       ship ->  %__MODULE__{name: name, ship: ship, score: 0}
     end
