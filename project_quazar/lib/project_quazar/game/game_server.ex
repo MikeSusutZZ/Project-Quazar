@@ -63,9 +63,19 @@ defmodule GameServer do
     GenServer.cast({:global, __MODULE__}, {:input, :accelerate, :pressed, name})
   end
 
-  @doc "Stops accelerating the specfied player."
+  @doc "Stops accelerating the specified player."
   def accelerate_released(name) do
     GenServer.cast({:global, __MODULE__}, {:input, :accelerate, :released, name})
+  end
+
+  @doc "Starts braking the specified Player."
+  def brake_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :brake, :pressed, name})
+  end
+
+  @doc "Stops accelerating the specfied player."
+  def brake_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :brake, :released, name})
   end
 
   @doc "Turns a specfied player right (clockwise)."
