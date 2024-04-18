@@ -39,6 +39,11 @@ defmodule Bullet do
         {:error, "Invalid bullet type: #{type}"}
     end
   end
+  
+  @doc "Checks if the bullet is of a valid type"
+  def valid_type?(type) do
+    Map.has_key?(@bullet_types, type)
+  end
 
   # Implements the Movable.Motion protocol for the bullet
   defimpl Movable.Motion, for: __MODULE__ do
