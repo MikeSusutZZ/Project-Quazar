@@ -6,14 +6,15 @@ defmodule GameServer do
 
   @table GameState
   # Ticks/second
-  @tick_rate 20
+  @tick_rate 1
   # Ticks/second
-  @tick_rate 20
+  # @tick_rate 20
   @accel_rate 0.25
   @drag_rate 0.2
   @turn_rate :math.pi() / 3 * 0.1
   @health_increment 1
   @score_increment 100
+  @dead_time 2000
 
   # bounds for the screen (assumption at present, can be done programmatically later)
   @bounds %{
@@ -126,11 +127,34 @@ defmodule GameServer do
           # increments the health of the player
           |> Player.inc_health(@health_increment)
         else
-          Player.respawn(player, 0, 0, 0)
+          Process.send_after(self(), {:check_player_health, player.name}, @dead_time)
+          player
         end
       end)
     end
   end
+
+  @doc """
+  Checks the health of the player with the given name. If the player's health is below 0, the player is removed from the game state.
+  """
+  def handle_info({:check_player_health, player_name}, %__MODULE__{players: players} = gamestate) do
+    case Enum.find(players, fn player -> player.name == player_name end) do
+      nil ->
+        {:noreply, gamestate}  # Player might have been removed already
+
+      player ->
+        if Player.alive?(player) do
+          {:noreply, gamestate}  # Player recovered
+        else
+          # Player still has health below 0, remove them
+          new_players = Enum.reject(players, fn p -> p.name == player_name end)
+          new_gamestate = %{gamestate | players: new_players}
+          {:noreply, new_gamestate}
+        end
+    end
+  end
+
+
 
   # Debugging ping function.
   @impl true
