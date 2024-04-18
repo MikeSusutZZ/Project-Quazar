@@ -61,6 +61,28 @@ defmodule Player do
     %Player{player | inputs: new_inputs} # Return the player with new inputs
   end
 
+  @doc "Handles how each player/ship should update every game tick."
+  def handle_inputs(%__MODULE__{ship: ship, inputs: inputs} = initial_state, rotation_speed) do
+    enabled_inputs = Map.filter(inputs, fn {_, val} -> val == true end) |> Map.keys
+    IO.inspect(enabled_inputs)
+    Enum.reduce(enabled_inputs, initial_state, fn input, player ->
+      case input do
+        :accelerate -> Movable.Motion.accelerate(player, ship.acceleration)
+        :turn_left -> Movable.Rotation.rotate(player, rotation_speed, :ccw)
+        :turn_right -> Movable.Rotation.rotate(player, rotation_speed, :cw)
+        :fire ->
+          case Ship.fire(ship, player.name) do # Does not return player value, should add projectile to server
+            {:ok, bullet} -> GameServer.add_projectile(bullet) # This seems extremely janky but should add before next tick.
+          end
+          player # Return non-changed player state to preserve acc value
+        :brake ->
+          brake_speed = ship.acceleration * 0.80 # Use 80% of acceleration speed for brake speed
+          Movable.Drag.apply_drag(player, brake_speed)
+        _ -> player
+      end
+    end)
+  end
+
   defimpl Movable.Motion, for: __MODULE__ do
     @doc "Moves the players ship according to its kinematics"
     def move(%@for{ship: ship} = player_data) do
