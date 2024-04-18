@@ -10,13 +10,13 @@ defmodule Bullet do
 
   # Defines the complete struct for a bullet
   @derive Jason.Encoder
-  defstruct sender: nil, kinematics: %Movable{}, type: nil, damage: 0, tick_wait: 0, speed: 0, radius: 0
+  defstruct sender: nil, kinematics: %Movable{}, type: nil, damage: 0, frequency_ms: 0, speed: 0, radius: 0
 
   # Bullet type specifications
   @bullet_types %{
-    heavy: %{damage: 35, tick_wait: 30, speed: 1, radius: 2},
-    medium: %{damage: 20, tick_wait: 22, speed: 2, radius: 1},
-    light: %{damage: 10, tick_wait: 15, speed: 3, radius: 1}
+    heavy: %{damage: 35, frequency_ms: 2, speed: 1, radius: 2},
+    medium: %{damage: 20, frequency_ms: 1.5, speed: 2, radius: 1},
+    light: %{damage: 10, frequency_ms: 1, speed: 3, radius: 1}
   }
 
   @doc "Creates a new bullet with specified attributes."
@@ -32,7 +32,7 @@ defmodule Bullet do
           type: type,
           kinematics: kinematics,
           damage: attributes.damage,
-          tick_wait: attributes.tick_wait,
+          frequency_ms: attributes.frequency_ms,
           speed: attributes.speed,
           radius: attributes.radius
         }}

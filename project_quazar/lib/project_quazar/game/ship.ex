@@ -157,8 +157,16 @@ defmodule Ship do
   The bullet is accelerated by its predefined speed.
   Returns `{:ok, {updated_ship, bullet}}` if the bullet is successfully fired, or `{:error, reason}` otherwise.
   """
-  def fire(%__MODULE__{kinematics: kinematics, radius: radius, bullet_type: bullet_type, next_fire_at: next_fire_at} = ship, player_name, tick_rate) do
-    current_time = :erlang.system_time(:seconds)
+  def fire(
+        %__MODULE__{
+          kinematics: kinematics,
+          radius: radius,
+          bullet_type: bullet_type,
+          next_fire_at: next_fire_at
+        } = ship,
+        player_name
+      ) do
+    current_time = :erlang.system_time(:millisecond)
     # Check if the ship is allowed to fire based on `next_fire_at`
     if current_time >= next_fire_at do
       # Calculate new positions for bullet
@@ -166,8 +174,8 @@ defmodule Ship do
 
       case Bullet.new_bullet(player_name, px, py, vx, vy, radius, angle, bullet_type) do
         {:ok, bullet} ->
-          # Calculate when the next fire can occur based on `tick_wait` of the bullet
-          new_next_fire_at = current_time + bullet.tick_wait / tick_rate
+          # Calculate when the next fire can occur based on `frequency_ms` of the bullet
+          new_next_fire_at = current_time + bullet.frequency_ms
 
           # Update the ship's `next_fire_at` and return both the updated ship and the new bullet
           updated_ship = %__MODULE__{ship | next_fire_at: new_next_fire_at}
@@ -177,7 +185,7 @@ defmodule Ship do
           {:error, "Invalid bullet type: #{bullet_type}"}
       end
     else
-      {:error, "Ship cannot fire yet. Next fire at: #{next_fire_at}, current time: #{current_time}"}
+      {:error, "Ship cannot fire yet. Next fire attempt at #{next_fire_at}, current time is #{current_time}"}
     end
   end
 end
