@@ -50,7 +50,7 @@ defmodule Movable do
     # Increases the velocity of the ship in the direction it is facing
     def accelerate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, acl) do
       vxf = vx + cos(angle) * acl
-      vyf = vy + sin(angle) * acl
+      vyf = vy - sin(angle) * acl
       %Movable{px: px, py: py, vx: vxf, vy: vyf, angle: angle}
     end
 
