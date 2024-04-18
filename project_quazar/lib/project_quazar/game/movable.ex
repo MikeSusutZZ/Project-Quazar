@@ -9,18 +9,20 @@ defmodule Movable do
     @doc "Gets an object's x/y position and angle"
     def get_pos(data)
   end
-  
+
   defprotocol Rotation do
     @doc "Rotates an object clockwise in radians"
     def rotate(data, rad, cw_or_ccw)
   end
-  
+
   defprotocol Drag do
     @doc "Decelerates an object with constant drag in opposite direction of current velocity"
     def apply_drag(data, dcl)
   end
 
-  defstruct [:px, :py, :vx, :vy, :angle] # x-coordinate, y-coordinate, x-velocity, y-velocity, orientation in radians
+  @derive Jason.Encoder
+  # x-coordinate, y-coordinate, x-velocity, y-velocity, orientation in radians
+  defstruct [:px, :py, :vx, :vy, :angle]
 
   def new_movable(px, py, vx, vy, angle) do
     %__MODULE__{px: px, py: py, vx: vx, vy: vy, angle: angle}
@@ -29,6 +31,7 @@ defmodule Movable do
   # Converts angles into an equivalent angle such that 0 <= x <= 2 * PI
   def normalize_angle(angle) do
     upper = 2 * pi()
+
     cond do
       angle > upper -> angle - upper
       angle < 0 -> angle + upper
@@ -46,8 +49,8 @@ defmodule Movable do
     # Using the thrust (hitting W)
     # Increases the velocity of the ship in the direction it is facing
     def accelerate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, acl) do
-      vxf = vx + (cos(angle) * acl)
-      vyf = vy + (sin(angle) *  acl)
+      vxf = vx + cos(angle) * acl
+      vyf = vy + sin(angle) * acl
       %Movable{px: px, py: py, vx: vxf, vy: vyf, angle: angle}
     end
 
@@ -56,7 +59,7 @@ defmodule Movable do
       %{x: x, y: y, angle: angle}
     end
   end
-  
+
   defimpl Movable.Drag, for: __MODULE__ do
     # Function to apply constant deceleration to the velocity vector
     def apply_drag(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, dcl) do
@@ -91,17 +94,17 @@ defmodule Movable do
       {new_vx, new_vy}
     end
   end
-  
+
   defimpl Movable.Rotation, for: __MODULE__ do
     # Clockwise rotation
     def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :cw) do
-      new_angle = angle - rad |> Movable.normalize_angle()
+      new_angle = (angle - rad) |> Movable.normalize_angle()
       %Movable{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
     end
 
     # Counter-clockwise rotation
     def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :ccw) do
-      new_angle = angle + rad |> Movable.normalize_angle()
+      new_angle = (angle + rad) |> Movable.normalize_angle()
       %Movable{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
     end
   end

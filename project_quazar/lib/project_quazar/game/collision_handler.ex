@@ -13,7 +13,7 @@ defmodule CollisionHandler do
       Enum.filter(players, fn player ->
         %{x: bullet_x, y: bullet_y} = Movable.Motion.get_pos(bullet.kinematics)
         %{x: ship_x, y: ship_y} = Movable.Motion.get_pos(player.ship.kinematics)
-        collides?({bullet_x, bullet_y}, 1, {ship_x, ship_y}, player.ship.radius) # Assuming bullet radius as 1
+        collides?({bullet_x, bullet_y}, bullet.radius, {ship_x, ship_y}, player.ship.radius) # Assuming bullet radius as 1
       end)
       |> Enum.map(fn player ->
         # Log the collision
@@ -70,7 +70,8 @@ defmodule CollisionHandler do
         {[], new_players}
 
       {_ , _} ->
-        # Handle bullet-ship collisions and update both bullets and players accordingly
+        IO.puts("Checking for bullet-ship and ship-ship collisions...")
+        # Normal case: Handle both bullet-ship and ship-ship collisions
         bullet_ship_collisions = check_bullet_ship_collisions(bullets, players)
         {updated_bullets, intermediate_updated_players} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, players)
 

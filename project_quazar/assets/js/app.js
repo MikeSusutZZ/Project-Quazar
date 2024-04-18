@@ -29,6 +29,86 @@ import socket from "./game_socket.js";
 // Hooks initializer
 let Hooks = {};
 
+//Render game board hook
+Hooks.GameBoardHook = {
+  mounted() {
+    //assets
+    const canvas = document.getElementById("main");
+    gameBoard = new Image();
+    gameBoard.src = "/images/game_board_asset/Game_Background.png";
+    gameBoard.onload = function () {
+      drawGameBoard(canvas, gameBoard, myShip, enemyShip);
+    };
+    myShip = new Image();
+    myShip.src = "/images/ship_asset/blue_ship.png";
+    enemyShip = new Image();
+    enemyShip.src = "/images/ship_asset/red_ship.png";
+
+    // event handlers
+    this.handleEvent("update", (_) => {
+      drawGameBoard(canvas, gameBoard, myShip, enemyShip);
+    });
+  },
+};
+
+function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
+  // drawing the background
+  canvas.width = 800;
+  canvas.height = 800;
+  ctx = canvas.getContext("2d");
+  ctx.drawImage(gameBoard, 0, 0, 800, 800);
+
+  // getting the data
+  const data = JSON.parse(canvas.getAttribute("data-game-state"));
+  console.log("Data", data);
+
+  // drawing the ships
+  const me = data.players[0];
+  drawShip(
+    ctx,
+    myShip,
+    me.ship.kinematics.px,
+    me.ship.kinematics.py,
+    me.ship.kinematics.angle,
+    me.name,
+    me.ship.health,
+    me.ship.max_health
+  );
+
+  const enemies = data.players.slice(1);
+  enemies.forEach((enemy) => {
+    drawShip(
+      ctx,
+      enemyShip,
+      enemy.ship.kinematics.px,
+      enemy.ship.kinematics.py,
+      enemy.ship.kinematics.angle,
+      enemy.name,
+      enemy.ship.health,
+      enemy.ship.max_health
+    );
+  });
+}
+
+function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
+  ctx.save();
+  ctx.translate(px + 125, py + 125);
+  ctx.rotate(angle);
+  ctx.drawImage(ship, -125, -125, 250, 250);
+  ctx.restore();
+
+  ctx.font = "20px";
+  ctx.textAlign = "center";
+
+  ctx.fillStyle = "white";
+  ctx.fillText(name, px + 125, py + 125 - 20);
+
+  healthRatio = parseFloat(health) / maxHealth;
+  ctx.fillStyle =
+    healthRatio > 0.8 ? "green" : healthRatio > 0.4 ? "yellow" : "red";
+  ctx.fillText(health, px + 125, py + 125 - 5);
+}
+
 // Frontend Prototype 1
 Hooks.MoveCircle = {
   mounted() {
@@ -167,6 +247,7 @@ const drawGame3 = () => {
   let canvas = document.getElementById("circleCanvas");
   let myData = JSON.parse(canvas.getAttribute("data-pos"));
   console.log("My data", myData);
+
   // Start
   let ctx = canvas.getContext("2d");
 
@@ -283,9 +364,6 @@ const drawGame4 = () => {
   let canvas = document.getElementById("circleCanvas");
   let ctx = canvas.getContext("2d");
 
-  // Dummy data for player positions and attributes
-  const playerData = DummyPlayerList.players[0]; // Assuming single player for simplicity
-
   // Initialize canvas images
   let gameBoard = new Image();
   let player = new Image();
@@ -320,16 +398,27 @@ const drawGame4 = () => {
     bullet3_xy[0] += 20; // Example movement
   };
 
-  player.onload = function () {
-    // Using the kinematics property from JSON to set player position
-    ctx.drawImage(
-      player,
-      playerData.ship.kinematics.px,
-      playerData.ship.kinematics.py,
-      130,
-      100
-    );
-  };
+  // Draw the player
+  const playerData = DummyPlayerList.players[0]; // Assuming single player for simplicity
+  ctx.drawImage(
+    gameImages.player,
+    playerData.ship.kinematics.px,
+    playerData.ship.kinematics.py,
+    130,
+    100
+  );
+
+  // Draw bullets with simulated movement
+  let bullets = [bullet1_xy, bullet2_xy, bullet3_xy]; // Example bullet positions
+  let bulletImages = [
+    gameImages.bullet1,
+    gameImages.bullet2,
+    gameImages.bullet3,
+  ];
+  bullets.forEach((pos, index) => {
+    ctx.drawImage(bulletImages[index], pos[0], pos[1], 40, 40);
+    pos[0] += 20; // Move bullets
+  });
 };
 
 Hooks.Game4 = {
@@ -435,6 +524,30 @@ Hooks.ChannelHook = {
     // Listens to channel for broadcast logging
     channel.on("broadcast", () => {
       console.log("Interval broadcast detected");
+    });
+  },
+};
+
+const updateElements = () => {
+  let dataElement = document.getElementById("main");
+  console.log(dataElement);
+  let gameState = JSON.parse(dataElement.getAttribute("data-game-state"));
+  let frames = JSON.parse(dataElement.getAttribute("data-frames"));
+  console.log("My data", gameState);
+  console.log("My data", frames);
+
+  dataElement.innerHTML = `Frame: ${frames}, Data: ${JSON.stringify(
+    gameState
+  )}`;
+};
+
+Hooks.PubsubPrototype = {
+  mounted() {
+    console.log("Mounted");
+
+    this.handleEvent("update", (data) => {
+      console.log(data);
+      updateElements();
     });
   },
 };

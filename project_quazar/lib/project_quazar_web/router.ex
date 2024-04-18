@@ -39,6 +39,9 @@ defmodule ProjectQuazarWeb.Router do
 
     # Frontend Channel Prototype
     live("/channel-prototype/:name", ChannelPrototypeLive)
+
+    # Frontend PubSub Prototype
+    live("/pubsub-prototype/:name", PubSubPrototypeLive)
   end
 
   # Other scopes may use custom stacks.
