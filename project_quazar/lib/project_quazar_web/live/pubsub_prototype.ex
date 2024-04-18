@@ -47,6 +47,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
       "w" -> GameServer.accelerate_player(socket.assigns.name)
       "d" -> GameServer.rotate_player(socket.assigns.name, :ccw)
       "a" -> GameServer.rotate_player(socket.assigns.name, :cw)
+      "v" -> GameServer.fire(socket.assigns.name)
       _ -> :ok
     end
 

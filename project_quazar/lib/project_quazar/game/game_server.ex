@@ -7,10 +7,8 @@ defmodule GameServer do
   @table GameState
   # Ticks/second
   @tick_rate 20
-  # Ticks/second
-  @tick_rate 20
   @accel_rate 0.25
-  @drag_rate 0.2
+  @drag_rate 0.1
   @turn_rate :math.pi() / 3 * 0.1
   @health_increment 1
   @score_increment 100
@@ -29,7 +27,7 @@ defmodule GameServer do
 
   @impl true
   def init(_arg) do
-    IO.puts("Starting game server with #{inspect(self())}.")
+    #IO.puts("Starting game server with #{inspect(self())}.")
 
     gamestate =
       case :ets.lookup(@table, __MODULE__) do
@@ -112,7 +110,7 @@ defmodule GameServer do
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
-        IO.inspect(player)
+        #IO.inspect(player)
 
         if Player.alive?(player) do
           player
@@ -135,7 +133,7 @@ defmodule GameServer do
   # Debugging ping function.
   @impl true
   def handle_cast({:ping, pid}, state) do
-    IO.inspect(pid)
+    #IO.inspect(pid)
     {:noreply, state}
   end
 
@@ -163,14 +161,15 @@ defmodule GameServer do
   @impl true
   def handle_cast({:fire, name}, %{players: players, projectiles: projectiles} = state) do
     # Find the player who is firing
+    IO.puts("fire cast recieved")
     player = Enum.find(players, fn player -> player.name == name end)
 
     case Ship.fire(player.ship, player.name) do
       {:ok, bullet} ->
         # Add the new bullet to the projectile list
         new_projectiles = [bullet | projectiles]
+        IO.inspect(new_projectiles)
         {:noreply, %{state | projectiles: new_projectiles}}
-
       :error ->
         {:noreply, state}
     end
@@ -179,6 +178,7 @@ defmodule GameServer do
   @doc "Fire a bullet from the player with the given name."
   def fire(name) do
     GenServer.cast({:global, __MODULE__}, {:fire, name})
+    IO.puts("casting fire")
   end
 
   # Accelerate the Player with the given name.

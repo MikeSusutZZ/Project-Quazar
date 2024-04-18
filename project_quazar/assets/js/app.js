@@ -44,6 +44,8 @@ Hooks.GameBoardHook = {
     myShip.src = "/images/ship_asset/blue_ship.png";
     enemyShip = new Image();
     enemyShip.src = "/images/ship_asset/red_ship.png";
+    bulletImg = new Image();
+    bulletImg.src = "/images/red_bullet_asset/Red_Bullet.png";
 
     // event handlers
     this.handleEvent("update", (_) => {
@@ -107,6 +109,16 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
       enemy.ship.max_health
     );
   });
+
+  let bullets = data.projectiles;
+  bullets.forEach((bullet) => {
+    drawBullet(
+      ctx,
+      bulletImg, //this needs to be a switch that decides what color it should be
+      bullet.kinematics.px,
+      bullet.kinematics.py
+    )
+  })
 }
 
 function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
@@ -126,6 +138,14 @@ function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
   ctx.fillStyle =
     healthRatio > 0.8 ? "green" : healthRatio > 0.4 ? "yellow" : "red";
   ctx.fillText(health, px + 125, py + 125 - 5);
+}
+
+function drawBullet(ctx, bulletimg, px, py) {
+  const spriteSize = 50
+  ctx.save();
+  ctx.translate(px + (spriteSize/ 2), py + (spriteSize / 2)); // Adjust these values according to the sprite size
+  ctx.drawImage(bulletimg, (spriteSize / 2 * -1), (spriteSize / 2 * -1), spriteSize, spriteSize);
+  ctx.restore();
 }
 
 // Frontend Prototype 1
@@ -593,3 +613,5 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
+
+liveSocket.disableDebug();
