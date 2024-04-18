@@ -52,15 +52,22 @@
   <%# Lobby Screen %>
 
   <%# User entry form menu %>
-  <.live_component
-    module={ProjectQuazarWeb.UserForm}
-    id="user-form"
-    error_message={@error_message}
-  />
-  <.live_component
-    module={ProjectQuazarWeb.AllTimeHighScores}
-    id="all_time-high-scores-component"
-    top_scores={@top_scores}
-  />
+  <div class="flex">
+    <div class="w-1/2">
+      <.live_component
+        module={ProjectQuazarWeb.UserForm}
+        id="user-form"
+        error_message={@error_message}
+      />
+    </div>
+
+    <div class="w-1/2 flex flex-row justify-center">
+      <.live_component
+        module={ProjectQuazarWeb.AllTimeHighScores}
+        id="all_time-high-scores-component"
+        top_scores={@top_scores}
+      />
+    </div>
+  </div>
 <% end %>
 <% end %>

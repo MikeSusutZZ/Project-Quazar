@@ -41,7 +41,8 @@ defmodule GamePrototype do
     IO.inspect(state)
     # Restart the loop
     start_loop()
-    Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "game_state:updates", {:state_updated, state})
+
+    # Phoenix.PubSub.broadcast(ProjectQuazar.PubSub, "game_state:updates", {:state_updated, state})
     {game_state, count} = state
     {:noreply, {game_state, count + 1}}
   end
