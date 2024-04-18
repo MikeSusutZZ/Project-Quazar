@@ -53,7 +53,7 @@ defmodule Player do
   end
 
   @doc "Updates the players input mapping values based on the passed value"
-  def update_player_inputs(%__MODULE__{} = player, action, pressed_or_released) do
+  def update_inputs(%__MODULE__{} = player, action, pressed_or_released) do
     # Convert pressed/release event into true/false values for input map
     value = case pressed_or_released do
       :pressed -> true

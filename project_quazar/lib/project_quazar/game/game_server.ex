@@ -245,7 +245,7 @@ defmodule GameServer do
     # Update the passed players input mappings
     new_players = Enum.map(players, fn player ->
       if player.name == username do
-        Player.update_player_inputs(player, input_type, pressed_or_released)
+        Player.update_inputs(player, input_type, pressed_or_released)
       else
         player
       end
