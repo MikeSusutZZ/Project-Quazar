@@ -59,7 +59,7 @@ defmodule Ship do
     random_x = random_between(0 + damage_zone, bounding_width - damage_zone)
     random_y = random_between(0 + damage_zone, bounding_height - damage_zone)
     angle = random_angle()
-    Ship.new_ship(100, 100, angle, type, bullet_type)
+    Ship.new_ship(random_x, random_y, angle, type, bullet_type)
   end
 
   @doc "Generate coordinates within bounds"
