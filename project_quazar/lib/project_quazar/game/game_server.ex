@@ -8,7 +8,7 @@ defmodule GameServer do
   # Ticks/second
   @tick_rate 1
   @drag_rate 0.2
-  @turn_rate :math.pi() / 3
+  @turn_rate :math.pi() / 3 * 0.1
   @health_increment 1
 
   # bounds for the screen (assumption at present, can be done programmatically later)
@@ -19,7 +19,8 @@ defmodule GameServer do
     damage_zone: 100
   }
 
-  def spawn_player(name, ship_type, bullet_type), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
+  def spawn_player(name, ship_type, bullet_type),
+    do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
 
   def add_projectile(bullet), do: GenServer.cast({:global, __MODULE__}, {:add_projectile, bullet})
 
@@ -185,9 +186,12 @@ defmodule GameServer do
 
   # Spawns a new player within the screen boundaries of a specific type and bullet style.
   @impl true
-  def handle_cast({:spawn_player, name, type, bullet_type}, %__MODULE__{players: players} = gamestate) do
+  def handle_cast(
+        {:spawn_player, name, type, bullet_type},
+        %__MODULE__{players: players} = gamestate
+      ) do
     player_ship = Ship.random_ship(type, bullet_type, @bounds)
-    new_players = [Player.new_player(name, player_ship) | players]
+    new_players = [Player.new_player(name, player_ship, @bounds) | players]
     {:noreply, %{gamestate | players: new_players}}
   end
 

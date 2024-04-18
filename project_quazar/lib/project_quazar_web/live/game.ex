@@ -38,29 +38,38 @@ defmodule ProjectQuazarWeb.Game do
   end
 
   @doc """
-  Join event called by submit button. Check if username already exists, if not, start tracking them
+  Join event called by submit button. Check if username already exists or blank, if not, start tracking them
   with Presence and subscribe their socket to the Presence PubSub topic.
   """
-  @impl true
-  def handle_event("join", %{"username" => username}, socket) do
-    case Map.has_key?(Presence.list(@presence), username) do
-      true ->
-        {:reply, %{error: "Username already taken"},
-         assign(socket, :error_message, "Username already taken")}
-
-      false ->
-        GameServer.remove_leftover_players(Presence.list(@presence))
-        Presence.track(self(), @presence, username, %{})
-
-        Phoenix.PubSub.subscribe(PubSub, @presence)
-        Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
-        # default ship destroyer, change when implemented ship choice
-        GameServer.spawn_player(username, :destroyer)
-
-        {:noreply,
-         socket
-         |> assign(:joined, true)
-         |> assign(:current_user, username)}
+  def handle_event("join", %{"username" => username, "ship" => ship, "bullet" => bullet}, socket) do
+    IO.puts("------------------")
+    IO.inspect(username)
+    IO.inspect(ship)
+    IO.inspect(bullet)
+    # Turn string value gotten from radio button into atom to pass into spawn player
+    ship_type = String.to_atom(ship)
+    bullet_type = String.to_atom(bullet)
+    IO.inspect(ship_type)
+    IO.inspect(bullet_type)
+    # Check if username blank
+    if username == "" do
+      {:reply, %{error: "Username can't be blank"}, assign(socket, :error_message, "Username can't be blank")}
+    else
+      case Map.has_key?(Presence.list(@presence), username) do
+        true ->
+          {:reply, %{error: "Username already taken"}, assign(socket, :error_message, "Username already taken")}
+        false ->
+          GameServer.remove_leftover_players(Presence.list(@presence))
+          GameServer.spawn_player(username, ship_type, bullet_type) #where ship/bullet are atoms
+          Presence.track(self(), @presence, username, %{})
+          Phoenix.PubSub.subscribe(PubSub, @presence)
+          Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
+          # default ship destroyer, change when implemented ship choice
+          # GameServer.spawn_player(username, :destroyer)
+          {:noreply, socket
+            |> assign(:joined, true)
+            |> assign(:current_user, username)}
+      end
     end
   end
 
@@ -93,71 +102,6 @@ defmodule ProjectQuazarWeb.Game do
   @doc "Handle the state for hiding help component"
   def handle_event("hide_help", _value, socket) do
     {:noreply, assign(socket, :show_help, false)}
-  end
-
-
-  @doc "Handle the event for next page in how to play component"
-  def handle_event("next_page", _value, socket) do
-    current_page = Map.get(socket.assigns, :current_page, 1)
-    next_page = current_page + 1
-
-    {:noreply, assign(socket, current_page: next_page)}
-  end
-
-  @doc "Handle the event for previous page in how to play component"
-  def handle_event("previous_page", _value, socket) do
-    current_page = Map.get(socket.assigns, :current_page, 1)
-    previous_page = max(current_page - 1, 1)
-
-    {:noreply, assign(socket, current_page: previous_page)}
-  end
-
-  @doc "Handle the event for next page in how to play component"
-  def handle_event("next_page", _value, socket) do
-    current_page = Map.get(socket.assigns, :current_page, 1)
-    next_page = current_page + 1
-
-    {:noreply, assign(socket, current_page: next_page)}
-  end
-
-  @doc "Handle the event for previous page in how to play component"
-  def handle_event("previous_page", _value, socket) do
-    current_page = Map.get(socket.assigns, :current_page, 1)
-    previous_page = max(current_page - 1, 1)
-
-    {:noreply, assign(socket, current_page: previous_page)}
-  end
-
-  @doc "Handle the state for start component"
-  def handle_event("show_start_game", _value, socket) do
-    {:noreply, assign(socket, :start, false)}
-  end
-
-  @doc "Handle the state for displaying help component"
-  def handle_event("show_help", _value, socket) do
-    {:noreply, assign(socket, :show_help, true)}
-  end
-
-  @doc "Handle the state for hiding help component"
-  def handle_event("hide_help", _value, socket) do
-    {:noreply, assign(socket, :show_help, false)}
-  end
-
-
-  @doc "Handle the event for next page in how to play component"
-  def handle_event("next_page", _value, socket) do
-    current_page = Map.get(socket.assigns, :current_page, 1)
-    next_page = current_page + 1
-
-    {:noreply, assign(socket, current_page: next_page)}
-  end
-
-  @doc "Handle the event for previous page in how to play component"
-  def handle_event("previous_page", _value, socket) do
-    current_page = Map.get(socket.assigns, :current_page, 1)
-    previous_page = max(current_page - 1, 1)
-
-    {:noreply, assign(socket, current_page: previous_page)}
   end
 
   @doc "Handle Presence event whenever there is change to Presence."

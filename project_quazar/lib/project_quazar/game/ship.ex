@@ -29,21 +29,24 @@ defmodule Ship do
 
   @doc "Creates a new Ship at x,y. Health sets maximum and current health, and bullet_type sets type of bullet"
   def new_ship(px, py, angle, type, bullet_type) do
-    case Map.fetch(@ship_types, type) do
-      {:ok, attributes} ->
-        %__MODULE__{
-          kinematics: Movable.new_movable(px, py, 0, 0, angle),
-          max_health: attributes.health,
-          health: attributes.health,
-          type: type,
-          radius: attributes.radius,
-          acceleration: attributes.acceleration,
-          bullet_type: bullet_type
-        }
-
-      :error ->
-        {:error, "Invalid ship type: #{type}"}
-    end
+    if Bullet.valid_type?(bullet_type) do      
+      case Map.fetch(@ship_types, type) do
+        {:ok, attributes} ->
+          %__MODULE__{
+            kinematics: Movable.new_movable(px, py, 0, 0, angle),
+            max_health: attributes.health,
+            health: attributes.health,
+            type: type,
+            radius: attributes.radius,
+            acceleration: attributes.acceleration,
+            bullet_type: bullet_type
+          }
+          :error ->
+            {:error, "Invalid ship type: #{type}"}
+        end
+      else
+        {:error, "Invalid bullet type: #{bullet_type}"}
+      end
   end
 
   @doc "Creates a ship with randomized position within bounds (height and width), 0 intial velocity and 100hp, 10bulletDamage"
