@@ -55,7 +55,7 @@ defmodule ProjectQuazarWeb.Game do
         Phoenix.PubSub.subscribe(PubSub, @presence)
         Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
         # default ship destroyer, change when implemented ship choice
-        GameServer.spawn_player(username, :destroyer)
+        GameServer.spawn_player(username, :destroyer, :medium)
 
         {:noreply,
          socket
