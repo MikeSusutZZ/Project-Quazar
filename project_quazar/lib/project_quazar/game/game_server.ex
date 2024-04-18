@@ -6,9 +6,9 @@ defmodule GameServer do
 
   @table GameState
   # Ticks/second
-  @tick_rate 20
+  @tick_rate 0.5
   # Ticks/second
-  @tick_rate 20
+  @tick_rate 0.5
   @accel_rate 0.25
   @drag_rate 0.2
   @turn_rate :math.pi() / 3 * 0.1
@@ -165,13 +165,17 @@ defmodule GameServer do
     # Find the player who is firing
     player = Enum.find(players, fn player -> player.name == name end)
 
-    case Ship.fire(player.ship, player.name) do
-      {:ok, bullet} ->
-        # Add the new bullet to the projectile list
+    case Ship.fire(player.ship, player.name, @tick_rate) do
+      {:ok, {updated_ship, bullet}} ->
+        # Update the player's ship with new 'next_fire_at' value
+        updated_player = %{player | ship: updated_ship}
+        updated_players = update_players(players, updated_player)
         new_projectiles = [bullet | projectiles]
-        {:noreply, %{state | projectiles: new_projectiles}}
+        new_state = %{state | players: updated_players, projectiles: new_projectiles}
+        {:noreply, new_state}
 
-      :error ->
+      {:error, reason} ->
+          IO.puts("Failed to fire bullet: #{reason}")
         {:noreply, state}
     end
   end
