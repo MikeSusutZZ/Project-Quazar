@@ -41,7 +41,7 @@ Hooks.GameBoardHook = {
       drawGameBoard(canvas, gameBoard, myShip, enemyShip);
     };
     myShip = new Image();
-    myShip.src = "/images/ship_asset/blue_ship.png";
+    myShip.src = "/images/ship_asset/blue_ship_trimmed.png";
     enemyShip = new Image();
     enemyShip.src = "/images/ship_asset/red_ship.png";
 
@@ -107,12 +107,39 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
       enemy.ship.max_health
     );
   });
+
+  bulletImg = new Image();
+  bulletImg.src = "/images/red_bullet_asset/Red_Bullet.png";
+
+  const bullets = data.projectiles;
+  bullets.forEach((bullet) => {
+    drawBullet(
+      ctx,
+      bulletImg, //this needs to be a switch that decides what color it should be
+      bullet.kinematics.px,
+      bullet.kinematics.py
+    );
+  });
+}
+
+function drawBullet(ctx, bulletimg, px, py) {
+  const spriteSize = 50;
+  ctx.save();
+  ctx.translate(px + spriteSize / 2, py + spriteSize / 2); // Adjust these values according to the sprite size
+  ctx.drawImage(
+    bulletimg,
+    (spriteSize / 2) * -1,
+    (spriteSize / 2) * -1,
+    spriteSize,
+    spriteSize
+  );
+  ctx.restore();
 }
 
 function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
   ctx.save();
-  ctx.translate(px + 125, py + 125); // Adjust these values according to the sprite size
-  ctx.rotate(angle + Math.PI / 2);
+  ctx.translate(px + 25, py + 75); // Adjust these values according to the sprite size
+  ctx.rotate((angle - Math.PI / 2) * -1);
   ctx.drawImage(ship, -125, -125, 250, 250); // Adjust the sprite size here
   ctx.restore();
 
@@ -587,6 +614,7 @@ window.addEventListener("phx:page-loading-stop", (_info) => topbar.hide());
 
 // connect if there are any LiveViews on the page
 liveSocket.connect();
+liveSocket.disableDebug();
 
 // expose liveSocket on window for web console debug logs and latency simulation:
 // >> liveSocket.enableDebug()

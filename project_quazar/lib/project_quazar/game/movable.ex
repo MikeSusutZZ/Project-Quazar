@@ -97,13 +97,13 @@ defmodule Movable do
 
   defimpl Movable.Rotation, for: __MODULE__ do
     # Clockwise rotation
-    def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :ccw) do
+    def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :cw) do
       new_angle = (angle - rad) |> Movable.normalize_angle()
       %Movable{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
     end
 
     # Counter-clockwise rotation
-    def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :cw) do
+    def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :ccw) do
       new_angle = (angle + rad) |> Movable.normalize_angle()
       %Movable{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
     end
