@@ -29,11 +29,11 @@ defmodule Ship do
 
   @doc "Creates a new Ship at x,y. Health sets maximum and current health, and bullet_type sets type of bullet"
   def new_ship(px, py, angle, type, bullet_type) do
-    if Bullet.valid_type?(bullet_type) do      
+    if Bullet.valid_type?(bullet_type) do
       case Map.fetch(@ship_types, type) do
         {:ok, attributes} ->
           %__MODULE__{
-            kinematics: Movable.new_movable(px, py, 0, 0, angle),
+            kinematics: Movable.new_movable(900, 900, 0, 0, angle),
             max_health: attributes.health,
             health: attributes.health,
             type: type,
