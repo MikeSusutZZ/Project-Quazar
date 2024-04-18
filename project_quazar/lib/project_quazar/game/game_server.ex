@@ -5,10 +5,11 @@ defmodule GameServer do
   defstruct [:players, :projectiles]
 
   @table GameState
-  
+
   @accel_rate 0.25
   @score_increment 100
-  @dead_time 2000
+  # Time in seconds before a dead player is removed from the game state (2 seconds)
+  @dead_removal_interval_sec 2000
   @tick_rate 20
   @drag_rate 0.2
   @turn_rate :math.pi() / 3 * 0.1
@@ -225,7 +226,7 @@ defmodule GameServer do
           # increments the health of the player
           |> Player.inc_health(@health_increment)
         else
-          Process.send_after(self(), {:check_player_health, player.name}, @dead_time)
+          Process.send_after(self(), {:check_player_health, player.name}, @dead_removal_interval_sec)
           player
         end
       end)
