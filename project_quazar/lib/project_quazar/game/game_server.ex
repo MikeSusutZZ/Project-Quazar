@@ -10,7 +10,7 @@ defmodule GameServer do
   # Ticks/second
   @tick_rate 20
   @accel_rate 0.25
-  @drag_rate 0.2
+  @drag_rate 0.1
   @turn_rate :math.pi() / 3 * 0.1
   @health_increment 1
   @score_increment 100
