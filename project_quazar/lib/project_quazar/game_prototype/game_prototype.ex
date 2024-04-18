@@ -32,7 +32,7 @@ defmodule GamePrototype do
 
   # Function to start the loop
   defp start_loop() do
-    # Process.send_after(self(), :print_message, 1000)
+    Process.send_after(self(), :print_message, 1000)
   end
 
   # Function to handle the loop
