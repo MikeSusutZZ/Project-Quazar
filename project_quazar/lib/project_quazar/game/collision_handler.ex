@@ -17,7 +17,7 @@ defmodule CollisionHandler do
       end)
       |> Enum.map(fn player ->
         # Log the collision
-        IO.puts("Collision detected between bullet and ship")
+        IO.puts("Collision detected between bullet from #{bullet.sender} and ship: #{player.name}")
         {:bullet_ship_collision, bullet, player}
       end)
     end)
@@ -29,13 +29,12 @@ defmodule CollisionHandler do
   Returns tuples of collided players.
   """
   def check_ship_ship_collisions(players) do
-    for player1 <- players, player2 <- players,
-      player1 != player2 and not is_nil(player1) and not is_nil(player2) do
+    for player1 <- players, player2 <- players, player1 != player2, player1.name < player2.name do
 
       %{x: ship1_x, y: ship1_y} = Movable.Motion.get_pos(player1.ship.kinematics)
       %{x: ship2_x, y: ship2_y} = Movable.Motion.get_pos(player2.ship.kinematics)
       if collides?({ship1_x, ship1_y}, player1.ship.radius, {ship2_x, ship2_y}, player2.ship.radius) do
-        IO.puts("Collision detected between two ships:")
+        IO.puts("Collision detected between two ships: #{player1.name} and #{player2.name}")
         {:ship_ship_collision, player1, player2}
       end
     end
@@ -65,7 +64,6 @@ defmodule CollisionHandler do
 
       {[], _} ->
         IO.puts("Multiple ships but no bullets; checking for ship-ship collisions only.")
-        # {[], handle_ship_ship_collisions(players)}
         new_players = handle_ship_ship_collisions(check_ship_ship_collisions(players), players)
         {[], new_players}
 
@@ -163,16 +161,8 @@ defmodule CollisionHandler do
       _ ->
         false
     end)
-
-    # Sort and remove duplicate collision pairs
-    unique_collisions = valid_collisions
-    |> Enum.map(fn {:ship_ship_collision, player1, player2} ->
-      if player1.name < player2.name, do: {player1, player2}, else: {player2, player1}
-    end)
-    |> Enum.uniq()
-
     # Create a damage map for each player
-    damage_map = Enum.reduce(unique_collisions, %{}, fn {player1, player2}, acc ->
+    damage_map = Enum.reduce(collisions, %{}, fn {:ship_ship_collision, player1, player2}, acc ->
       acc
       |> Map.update(player1, player2.ship.health, &(&1 + player2.ship.health))
       |> Map.update(player2, player1.ship.health, &(&1 + player1.ship.health))
