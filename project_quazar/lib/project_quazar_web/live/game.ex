@@ -267,7 +267,7 @@ defmodule ProjectQuazarWeb.Game do
   ## Frontend Events
   def handle_event("start_move", %{"key" => key}, socket) do
     IO.inspect("#{key} pressed")
-    IO.inspect(socket.assigns.circle_pos)
+    #IO.inspect(socket.assigns.circle_pos)
 
     new_pos =
       case key do

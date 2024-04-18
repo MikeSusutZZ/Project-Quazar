@@ -3,9 +3,9 @@ defmodule ProjectQuazarWeb.RoomChannel do
 
   def join("room:lobby", message, socket) do
     # Store the name of the user
-    IO.inspect(message)
+    #IO.inspect(message)
     {_, name} = Map.fetch(message, "name")
-    IO.inspect(name)
+    #IO.inspect(name)
 
     GamePrototype.add(%{name: name, key: ""})
 

@@ -48,11 +48,11 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   # PubSub game state broadcast handler
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
-    IO.puts("Broadcast")
+    #IO.puts("Broadcast")
     # IO.inspect(socket.assigns)
     # IO.inspect(new_state)
     json = Jason.encode!(new_state)
-    IO.puts(json)
+    #IO.puts(json)
     # {game_state, count} = new_state
     name = socket.assigns.name
 
@@ -68,7 +68,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
 
   def handle_info(:update_client, socket) do
     # Handle the custom message received by the LiveView process
-    IO.puts("Received custom message")
+    #IO.puts("Received custom message")
     {:noreply, push_event(socket, "update", %{updated: "true"})}
   end
 

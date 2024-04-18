@@ -29,7 +29,7 @@ defmodule GameServer do
 
   @impl true
   def init(_arg) do
-    IO.puts("Starting game server with #{inspect(self())}.")
+    #IO.puts("Starting game server with #{inspect(self())}.")
 
     gamestate =
       case :ets.lookup(@table, __MODULE__) do
@@ -112,7 +112,7 @@ defmodule GameServer do
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
-        IO.inspect(player)
+        #IO.inspect(player)
 
         if Player.alive?(player) do
           player
@@ -135,7 +135,7 @@ defmodule GameServer do
   # Debugging ping function.
   @impl true
   def handle_cast({:ping, pid}, state) do
-    IO.inspect(pid)
+    #IO.inspect(pid)
     {:noreply, state}
   end
 

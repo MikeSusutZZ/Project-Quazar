@@ -17,7 +17,7 @@ defmodule CollisionHandler do
       end)
       |> Enum.map(fn player ->
         # Log the collision
-        IO.puts("Collision detected between bullet and ship")
+        #IO.puts("Collision detected between bullet and ship")
         {:bullet_ship_collision, bullet, player}
       end)
     end)
@@ -33,7 +33,7 @@ defmodule CollisionHandler do
       %{x: ship1_x, y: ship1_y} = Movable.Motion.get_pos(player1.ship.kinematics)
       %{x: ship2_x, y: ship2_y} = Movable.Motion.get_pos(player2.ship.kinematics)
       if collides?({ship1_x, ship1_y}, player1.ship.radius, {ship2_x, ship2_y}, player2.ship.radius) do
-        IO.puts("Collision detected between two ships:")
+        #IO.puts("Collision detected between two ships:")
         {:ship_ship_collision, player1, player2}
       end
     end
@@ -46,28 +46,28 @@ defmodule CollisionHandler do
   Returns a tuple of lists of updated bullets and ships
   """
   def handle_collisions(bullets, players) do
-    IO.puts("Checking for collisions...")
+    #IO.puts("Checking for collisions...")
     # Early exit if there are no entities to check for collisions
     case {bullets, players} do
       {[], []} ->
-        IO.puts("No bullets or ships to check for collisions.")
+        #IO.puts("No bullets or ships to check for collisions.")
         {[], []}
 
       {_, []} ->
-        IO.puts("No ships available to collide with bullets.")
+        #IO.puts("No ships available to collide with bullets.")
         {bullets, []}
 
       {[], _} when length(players) == 1 ->
-        IO.puts("Only one ship and no bullets; no ship-ship collisions possible.")
+        #IO.puts("Only one ship and no bullets; no ship-ship collisions possible.")
         {[], players}
 
       {[], _} ->
-        IO.puts("Multiple ships but no bullets; checking for ship-ship collisions only.")
+        #IO.puts("Multiple ships but no bullets; checking for ship-ship collisions only.")
         # {[], handle_ship_ship_collisions(players)}
         {[], handle_ship_ship_collisions()}
 
       {_ , _} ->
-        IO.puts("Checking for bullet-ship and ship-ship collisions...")
+        #IO.puts("Checking for bullet-ship and ship-ship collisions...")
         # Normal case: Handle both bullet-ship and ship-ship collisions
         bullet_ship_collisions = check_bullet_ship_collisions(bullets, players)
         # {updated_bullets, updated_updated_players} = handle_bullet_ship_collisions(bullet_ship_collisions, bullets, players)
@@ -95,12 +95,12 @@ defmodule CollisionHandler do
   # Returns the updated list of bullets after removing those that have collided with ships.
   defp handle_bullet_ship_collisions() do
     # should be provided by Michelle
-    IO.puts("Bullet-ship collisions not yet implemented.")
+    #IO.puts("Bullet-ship collisions not yet implemented.")
   end
 
   #  Handles ship-ship collisions
   defp handle_ship_ship_collisions() do
     # should be provided by Michelle
-    IO.puts("Ship-ship collisions not yet implemented.")
+    #IO.puts("Ship-ship collisions not yet implemented.")
   end
 end

@@ -37,7 +37,7 @@ defmodule GamePrototype do
 
   # Function to handle the loop
   def handle_info(:print_message, state) do
-    IO.puts("Ok bud")
+    #IO.puts("Ok bud")
     IO.inspect(state)
     # Restart the loop
     start_loop()
