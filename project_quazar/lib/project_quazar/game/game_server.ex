@@ -2,7 +2,6 @@ defmodule GameServer do
   use GenServer
 
   @derive Jason.Encoder
-  @derive Jason.Encoder
   defstruct [:players, :projectiles]
 
   @table GameState
@@ -13,6 +12,8 @@ defmodule GameServer do
   @accel_rate 1
   @drag_rate 0.2
   @turn_rate :math.pi() / 3
+  @health_increment 1
+  @score_increment 100
 
   # bounds for the screen (assumption at present, can be done programmatically later)
   @bounds %{
@@ -106,13 +107,18 @@ defmodule GameServer do
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
+        IO.inspect(player)
         if Player.alive?(player) do
+          player
           # Player.take_damage(player, 10) |>
-          Player.inc_score(player, 100)
+          # IO.inspect(player)
+          |> Player.inc_score(@score_increment)
           # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
           # causes the ship to slow down over time
           |> Movable.Drag.apply_drag(@drag_rate)
+          # increments the health of the player
+          |> Player.inc_health(@health_increment)
         else
           Player.respawn(player, 0, 0, 0)
         end
