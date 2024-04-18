@@ -4,15 +4,14 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
 
   def render(assigns) do
     ~H"""
-    <canvas id="main" phx-window-keydown="key_down" data-game-state={"#{Jason.encode!(@game_state)}"} phx-hook="GameBoardHook">Pubsub Prototype</canvas>
-    <span phx-window-keyup="key_up"></span>
+    <canvas id="main" data-game-state={"#{Jason.encode!(@game_state)}"} phx-hook="GameBoardHook">Pubsub Prototype</canvas>
     """
   end
 
   def mount(params, _session, socket) do
     {_, name} = Map.fetch(params, "name")
     IO.inspect(name)
-    GameServer.spawn_player(name, :destroyer)
+    GameServer.spawn_player(name, :destroyer, :light)
     Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
     updated_socket = assign(socket, name: name, game_state: "", count: "")
     {:ok, updated_socket}
@@ -20,7 +19,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
 
   @impl true
   def handle_event("key_up", %{"key" => key}, socket) when key in ["w", "a", "s", "d"] do
-    IO.puts("Live View: #{key}")
+    IO.puts("Key Up: #{key}")
     # Call GameServer like "GameServer.func()"
     {:noreply, socket}
   end
@@ -29,6 +28,15 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   @impl true
   def handle_event("key_down", %{"key" => key}, socket) do
     # GamePrototype.update_user(socket.assigns.name, key)
+    IO.puts("Key Down: #{key}")
+
+    case String.downcase(key) do
+      "w" -> GameServer.accelerate_player(socket.assigns.name)
+      "d" -> GameServer.rotate_player(socket.assigns.name, :ccw)
+      "a" -> GameServer.rotate_player(socket.assigns.name, :cw)
+      _ -> :ok
+    end
+
     {:noreply, socket}
   end
 
@@ -41,11 +49,11 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   # PubSub game state broadcast handler
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
-    IO.puts("Broadcast")
+    # IO.puts("Broadcast")
     # IO.inspect(socket.assigns)
     # IO.inspect(new_state)
     json = Jason.encode!(new_state)
-    IO.puts(json)
+    # IO.puts(json)
     # {game_state, count} = new_state
     name = socket.assigns.name
 
@@ -61,7 +69,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
 
   def handle_info(:update_client, socket) do
     # Handle the custom message received by the LiveView process
-    IO.puts("Received custom message")
+    # IO.puts("Received custom message")
     {:noreply, push_event(socket, "update", %{updated: "true"})}
   end
 

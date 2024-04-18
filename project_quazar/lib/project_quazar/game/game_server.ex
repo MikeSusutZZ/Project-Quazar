@@ -6,12 +6,12 @@ defmodule GameServer do
 
   @table GameState
   # Ticks/second
-  @tick_rate 1
+  @tick_rate 20
   # Ticks/second
-  @tick_rate 1
-  @accel_rate 1
+  @tick_rate 20
+  @accel_rate 0.25
   @drag_rate 0.2
-  @turn_rate :math.pi() / 3
+  @turn_rate :math.pi() / 3 * 0.1
   @health_increment 1
   @score_increment 100
 
@@ -88,14 +88,17 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  def spawn_player(name, ship_type, bullet_type), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
+  def spawn_player(name, ship_type, bullet_type),
+    do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
 
   @impl true
-  def handle_cast({:spawn_player, name, type, bullet_type}, %__MODULE__{players: players} = gamestate) do
-    case Player.new_player(name, type, bullet_type, @bounds) do
-      {:ok, player} -> {:noreply, %{gamestate | players: [player | players]}}
-      {:error, _} -> {:noreply, gamestate} # Error creating player, do not create.
-    end
+  def handle_cast(
+        {:spawn_player, name, type, bullet_type},
+        %__MODULE__{players: players} = gamestate
+      ) do
+    player_ship = Ship.random_ship(type, bullet_type, @bounds)
+    new_players = [Player.new_player(name, player_ship, @bounds) | players]
+    {:noreply, %{gamestate | players: new_players}}
   end
 
   def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
@@ -104,11 +107,13 @@ defmodule GameServer do
   def modify_players(players) do
     if length(players) == 0 do
       # spawn_player("Bill", :destroyer, :light) # Spawns a player
-      [] # Return empty list, cast will update players
+      # Return empty list, cast will update players
+      []
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
         IO.inspect(player)
+
         if Player.alive?(player) do
           player
           # Player.take_damage(player, 10) |>
@@ -159,15 +164,16 @@ defmodule GameServer do
   def handle_cast({:fire, name}, %{players: players, projectiles: projectiles} = state) do
     # Find the player who is firing
     player = Enum.find(players, fn player -> player.name == name end)
+
     case Ship.fire(player.ship, player.name) do
       {:ok, bullet} ->
         # Add the new bullet to the projectile list
         new_projectiles = [bullet | projectiles]
         {:noreply, %{state | projectiles: new_projectiles}}
+
       :error ->
         {:noreply, state}
     end
-
   end
 
   @doc "Fire a bullet from the player with the given name."
