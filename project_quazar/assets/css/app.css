@@ -74,3 +74,78 @@
 .button-tertiary {
   @apply bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded;
 }
+
+.user_and_scoreboard_container{
+  @apply flex
+}
+
+.alltime_scoreboard_container{
+  @apply w-1/2 flex justify-center
+}
+.user_form_container{
+  @apply w-1/2
+}
+
+/* ***************** */ 
+  /* User details form */
+  /* ***************** */ 
+  .outer-user-form-container{
+    @apply rounded bg-gray-900 mb-4 p-3
+  }
+  .inner--user-form-container{
+    @apply w-full flex justify-center items-center
+  }
+  
+  .heading{
+    @apply text-white font-bold text-lg
+  }
+
+  .sub_heading{
+    @apply text-white  text-lg
+  }
+
+  .username_form_label{
+    @apply mb-2 block
+  }
+
+  .username_form_inputbox{
+    @apply mb-2
+  }
+
+  .error_message{
+    @apply  text-red-500
+  }
+
+  .radio-btn-options-container-row{
+    @apply flex flex-row w-full justify-between  mt-3 mr-3
+  }
+
+  .radio-button-option-col{
+    @apply flex flex-col items-center mr-3 transition duration-0 ease-in-out transform hover:scale-105
+  }
+
+  .option_label{
+    @apply mr-2
+  }
+
+  .bullet_selection_heading{
+    @apply mt-2
+  }
+
+  .health_text{
+    @apply text-green-600
+  }
+  .damage_text{
+    @apply text-red-600
+  }
+  .speed_text{
+    @apply text-yellow-600
+  }
+
+  .submit_btn{
+    @apply mt-4 bg-green-600 p-2 rounded cursor-pointer hover:text-white 
+  }
+
+  /* ***************** */ 
+  /*End of User details form */
+  /* ***************** */ 
