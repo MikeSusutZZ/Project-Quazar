@@ -43,7 +43,7 @@ Hooks.GameBoardHook = {
     myShip = new Image();
     myShip.src = "/images/ship_asset/blue_ship_trimmed.png";
     enemyShip = new Image();
-    enemyShip.src = "/images/ship_asset/red_ship.png";
+    enemyShip.src = "/images/ship_asset/red_ship_trimmed.png";
 
     //bullet types
     let lightBullet = new Image();
@@ -99,14 +99,18 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
   // Get the player name from the route parameters
   const playerName = window.location.pathname.split("/").pop();
 
-  // Find the player with the matching name
+  // Find the player with the matching name and remove from the list
   let me = null;
-  for (const player of data.players) {
+  for (let i = 0; i < data.players.length; i++) {
+    const player = data.players[i];
     if (player.name === playerName) {
       me = player;
+      // Remove the player from the players list
+      data.players.splice(i, 1);
       break; // Stop searching once we find a match
     }
   }
+
   drawShip(
     ctx,
     myShip,
@@ -118,7 +122,7 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
     me.ship.max_health
   );
 
-  const enemies = data.players.slice(1);
+  const enemies = data.players;
   enemies.forEach((enemy) => {
     drawShip(
       ctx,
