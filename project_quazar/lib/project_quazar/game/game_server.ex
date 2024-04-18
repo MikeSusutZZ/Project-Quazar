@@ -183,9 +183,7 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  """
-  Spawns a new player within the screen boundaries of a specific type and bullet style.
-  """
+  # Spawns a new player within the screen boundaries of a specific type and bullet style.
   @impl true
   def handle_cast({:spawn_player, name, type, bullet_type}, %__MODULE__{players: players} = gamestate) do
     player_ship = Ship.random_ship(type, bullet_type, @bounds)
@@ -201,9 +199,7 @@ defmodule GameServer do
   end
 
 
-  """
-  Adds a bullet that was fired from the player.
-  """
+  # Adds a bullet that was fired from the player.
   @impl true
   def handle_cast({:add_projectile, bullet}, %{projectiles: projectiles} = state) do
     # Add the new bullet to the projectile list
@@ -211,9 +207,7 @@ defmodule GameServer do
     {:noreply, %{state | projectiles: new_projectiles}}
   end
 
-  """
-  Removes a player from the game state.
-  """
+  # Removes a player from the game state.
   @impl true
   def handle_cast({:remove_player, name}, %{players: players} = state) do
     new_players = Enum.reject(players, fn player -> player.name == name end)
@@ -221,13 +215,11 @@ defmodule GameServer do
     {:noreply, new_state}
   end
 
-  """
-  Removes players that are not in the presence list. This is to ensure
-  that leftover players are removed from the game state.
-  """
+  # Removes players that are not in the presence list. This is to ensure
+  # that leftover players are removed from the game state.
   @impl true
   def handle_cast({:remove_leftover_players, presence_list}, %{players: players} = state) do
-    state.players
+    players
     |> Enum.map(& &1.name)
     |> Enum.each(fn player ->
       if !Map.has_key?(presence_list, player) do
@@ -238,9 +230,7 @@ defmodule GameServer do
     {:noreply, state}
   end
 
-  """
-  This handles any user input events and updates the associated player with the inputs.
-  """
+  # This handles any user input events and updates the associated player with the inputs.
   @impl true
   def handle_cast({:input, input_type, pressed_or_released, username}, %{players: players} = state) do
     if pressed_or_released != :pressed && pressed_or_released != :released do
