@@ -158,15 +158,23 @@ defmodule GameServer do
         projectiles: move_all(projectiles)
     }
 
-    # Collision detection and handling to be used by Michelle
-    CollisionHandler.handle_collisions(projectiles, players)
+    {updated_projectiles, updated_players} = CollisionHandler.handle_collisions(new_gamestate.projectiles, new_gamestate.players)
+
+    # Update the game state with the new lists of players and projectiles
+    updated_gamestate = %{new_gamestate | players: updated_players, projectiles: updated_projectiles}
 
     # Remove dead ships
-    # Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
+    Enum.each(updated_projectiles, fn updated_projectile ->
+      IO.inspect(updated_projectile)
+    end)
+    Enum.each(updated_players, fn updated_player ->
+      nil
+      # IO.inspect(updated_player)
+      # Game can call boundary checks like so and damage players accordingly
+      # IO.inspect(Boundary.outside?(player, @bounds))
+      # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
+    end)
 
-    # TODO: Game can call boundary checks like so and damage players accordingly
-    # IO.inspect(Boundary.outside?(player, @bounds))
-    # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
 
     # IO.puts("tick")
 
@@ -176,9 +184,9 @@ defmodule GameServer do
       "game_state:updates",
       {:state_updated, new_gamestate}
     )
-    # Update the ETS table with the latest state
-    :ets.insert(@table, {__MODULE__, new_gamestate})
-    {:noreply, new_gamestate}
+
+    :ets.insert(@table, {__MODULE__, updated_gamestate})
+    {:noreply, updated_gamestate}
   end
 
   @impl true
@@ -195,6 +203,38 @@ defmodule GameServer do
     player_ship = Ship.random_ship(type, bullet_type, @bounds)
     new_players = [Player.new_player(name, player_ship, @bounds) | players]
     {:noreply, %{gamestate | players: new_players}}
+  end
+
+  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
+
+  @doc "Used for testing how players can interact/move."
+  def modify_players(players) do
+    if length(players) == 0 do
+      # spawn_player("Bill", :destroyer, :light) # Spawns a player
+      # Return empty list, cast will update players
+      []
+    else
+      # Modify players as necessary by piping through state modification functions
+      Enum.map(players, fn player ->
+        IO.inspect(player)
+
+        if Player.alive?(player) do
+          player
+          # Player.take_damage(player, 10) |>
+          # IO.inspect(player)
+          |> Player.inc_score(@score_increment)
+          # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
+          |> Movable.Motion.move()
+          # causes the ship to slow down over time
+          |> Movable.Drag.apply_drag(@drag_rate)
+          # increments the health of the player
+          |> Player.inc_health(@health_increment)
+        else
+          player
+          # Player.respawn(player, 0, 0, 0)
+        end
+      end)
+    end
   end
 
   # Debugging ping function.
