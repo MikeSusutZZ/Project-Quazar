@@ -171,7 +171,7 @@ defmodule Ship do
 
           # Update the ship's `next_fire_at` and return both the updated ship and the new bullet
           updated_ship = %__MODULE__{ship | next_fire_at: new_next_fire_at}
-          {:ok, {updated_ship, bullet}}
+          {:ok, {updated_ship, Movable.Motion.accelerate(bullet, bullet.speed)}}
 
         :error ->
           {:error, "Invalid bullet type: #{bullet_type}"}
