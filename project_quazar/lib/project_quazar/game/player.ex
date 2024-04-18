@@ -1,4 +1,6 @@
 defmodule Player do
+  require Protocol
+
   @moduledoc """
   Stores all player-related functionality.
   A player is composed of:
@@ -9,13 +11,15 @@ defmodule Player do
 
   # Player name, `Ship`, & current score.
   @derive Jason.Encoder
-  defstruct [:name, :ship, :score]
+  defstruct [:name, :ship, :score, :inputs]
+
+  Protocol.derive(Jason.Encoder, MapSet)
 
   @doc "Creates a new player with a given name and ship (created from `Ship` module)"
   def new_player(name, ship, bounds) do
     case Ship.random_ship(ship.type, ship.bullet_type, bounds) do
       {:error, err} -> {:error, err}
-      ship ->  %__MODULE__{name: name, ship: ship, score: 0}
+      ship -> %__MODULE__{name: name, ship: ship, score: 0, inputs: MapSet.new()}
     end
   end
 
@@ -27,7 +31,7 @@ defmodule Player do
 
   @doc "Increments the players ship health by a specified amount."
   def inc_health(%__MODULE__{} = player_data, amount) do
-    %__MODULE__{ player_data | ship: Ship.inc_health(player_data.ship, amount) }
+    %__MODULE__{player_data | ship: Ship.inc_health(player_data.ship, amount)}
   end
 
   @doc "Resets the players current score."
@@ -50,6 +54,64 @@ defmodule Player do
   def respawn(%__MODULE__{ship: ship} = player_data, px, py, angle) do
     respawned_ship = Ship.respawn(ship, px, py, angle)
     %__MODULE__{player_data | score: 0, ship: respawned_ship}
+  end
+
+  @doc "Updates the players input mapping values based on the passed value"
+  def update_inputs(%__MODULE__{} = player, action, value) do
+    # Update the players input map
+    new_inputs =
+      case value do
+        true -> MapSet.put(player.inputs, action)
+        false -> MapSet.delete(player.inputs, action)
+      end
+
+    # Return the player with new inputs
+    %Player{player | inputs: new_inputs}
+  end
+
+  defp handle_fire_action(%__MODULE__{ship: ship, name: player_name} = player) do
+    case Ship.fire(ship, player_name) do
+      {:ok, {updated_ship, bullet}} ->
+        GameServer.add_projectile(bullet)
+        {:ok, %Player{player | ship: updated_ship}}
+
+      {:error, error_msg} ->
+        IO.puts("Error firing: #{inspect(error_msg)}")
+        :error
+    end
+  end
+
+  @doc "Handles how each player/ship should update every game tick."
+  def handle_inputs(%__MODULE__{ship: ship, inputs: inputs} = initial_state, rotation_speed) do
+    enabled_inputs = MapSet.to_list(inputs)
+
+    Enum.reduce(enabled_inputs, initial_state, fn input, player ->
+      case input do
+        :accelerate ->
+          Movable.Motion.accelerate(player, ship.acceleration)
+
+        :turn_left ->
+          Movable.Rotation.rotate(player, rotation_speed, :ccw)
+
+        :turn_right ->
+          Movable.Rotation.rotate(player, rotation_speed, :cw)
+
+        :fire ->
+          case handle_fire_action(player) do
+            {:ok, updated_player} -> updated_player
+            # Keep original player if firing failed
+            :error -> player
+          end
+
+        :brake ->
+          # Use 80% of acceleration speed for brake speed
+          brake_speed = ship.acceleration * 0.80
+          Movable.Drag.apply_drag(player, brake_speed)
+
+        _ ->
+          player
+      end
+    end)
   end
 
   defimpl Movable.Motion, for: __MODULE__ do

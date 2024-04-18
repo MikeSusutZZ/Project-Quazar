@@ -7,13 +7,9 @@ defmodule GameServer do
   @table GameState
   # Ticks/second
   @tick_rate 20
-  # Ticks/second
-  @tick_rate 20
-  @accel_rate 0.25
   @drag_rate 0.2
   @turn_rate :math.pi() / 3 * 0.1
   @health_increment 1
-  @score_increment 100
 
   # bounds for the screen (assumption at present, can be done programmatically later)
   @bounds %{
@@ -22,6 +18,112 @@ defmodule GameServer do
     # Creates a damage zone around the map. E.g. A 100px border.
     damage_zone: 100
   }
+
+  @doc "Spawns a new player within the screen boundaries of a specific type and bullet style."
+  def spawn_player(name, ship_type, bullet_type),
+    do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
+
+  @doc "Adds a bullet that was fired from the player."
+  def add_projectile(bullet), do: GenServer.cast({:global, __MODULE__}, {:add_projectile, bullet})
+
+  @doc "Pings server for debugging."
+  def ping(socket) do
+    GenServer.cast({:global, __MODULE__}, {:ping, socket})
+  end
+
+  @doc "Removes a player from the player list"
+  def remove_player(name) do
+    GenServer.cast({:global, __MODULE__}, {:remove_player, name})
+  end
+
+  @doc """
+  Removes players that are not in the presence list. This is to ensure
+  that leftover players are removed from the game state.
+  """
+  def remove_leftover_players(presence_list) do
+    GenServer.cast({:global, __MODULE__}, {:remove_leftover_players, presence_list})
+  end
+
+  @doc "Accelerates the Player with the given name."
+  def accelerate_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :accelerate, true, name})
+  end
+
+  @doc "Stops accelerating the specified player."
+  def accelerate_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :accelerate, false, name})
+  end
+
+  @doc "Starts braking the specified Player."
+  def brake_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :brake, true, name})
+  end
+
+  @doc "Stops accelerating the specfied player."
+  def brake_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :brake, false, name})
+  end
+
+  @doc "Turns a specfied player right (clockwise)."
+  def turn_right_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_right, true, name})
+  end
+
+  @doc "Stops a specfied player from turning right."
+  def turn_right_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_right, false, name})
+  end
+
+  @doc "Turns a specfied player left (counter-clockwise)."
+  def turn_left_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_left, true, name})
+  end
+
+  @doc "Stops a specfied player from turning left."
+  def turn_left_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_left, false, name})
+  end
+
+  @doc "Fires bullets from a specfied player."
+  def fire_pressed(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :fire, true, name})
+  end
+
+  @doc "Stops firing bullets from a specified player."
+  def fire_released(name) do
+    GenServer.cast({:global, __MODULE__}, {:input, :fire, false, name})
+  end
+
+  @doc "Handles any and all idle movement/velocity. Should be called every tick for any movable entity."
+  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
+
+  @doc "Given a player and player list, replaces players with the same name in the list and returns the new list."
+  def update_players(players, updated_player) do
+    Enum.map(players, fn p -> if p.name == updated_player.name, do: updated_player, else: p end)
+  end
+
+  @doc "Used to update the players inputs, movement, and other features every tick."
+  def modify_players(players) do
+    if length(players) == 0 do
+      [] # Return the empty list if no players.
+    else
+      # Modify players as necessary by piping through state modification functions
+      Enum.map(players, fn player ->
+        IO.inspect(player)
+        if Player.alive?(player) do
+          player
+          |> Player.handle_inputs(@turn_rate)       # This handles all player-based inputs
+          |> Movable.Motion.move()                  # This applies current velocity to players
+          |> Movable.Drag.apply_drag(@drag_rate)    # This causes the ship to slow down over time
+          |> Player.inc_health(@health_increment)   # This increments the health of the player over time
+        else
+          player # Apply regular motion to dead/wrecked ships until removed.
+          |> Movable.Motion.move()                  # This applies current velocity to players
+          |> Movable.Drag.apply_drag(@drag_rate)    # This causes the ship to slow down over time
+        end
+      end)
+    end
+  end
 
   def start_link(_arg) do
     GenServer.start_link(__MODULE__, nil, name: {:global, __MODULE__})
@@ -62,13 +164,9 @@ defmodule GameServer do
     # Remove dead ships
     # Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
 
-    Enum.each(players, fn player ->
-      nil
-      # IO.inspect(player)
-      # Game can call boundary checks like so and damage players accordingly
-      # IO.inspect(Boundary.outside?(player, @bounds))
-      # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
-    end)
+    # TODO: Game can call boundary checks like so and damage players accordingly
+    # IO.inspect(Boundary.outside?(player, @bounds))
+    # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
 
     # IO.puts("tick")
 
@@ -78,7 +176,7 @@ defmodule GameServer do
       "game_state:updates",
       {:state_updated, new_gamestate}
     )
-
+    # Update the ETS table with the latest state
     :ets.insert(@table, {__MODULE__, new_gamestate})
     {:noreply, new_gamestate}
   end
@@ -88,9 +186,7 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  def spawn_player(name, ship_type, bullet_type),
-    do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
-
+  # Spawns a new player within the screen boundaries of a specific type and bullet style.
   @impl true
   def handle_cast(
         {:spawn_player, name, type, bullet_type},
@@ -101,37 +197,6 @@ defmodule GameServer do
     {:noreply, %{gamestate | players: new_players}}
   end
 
-  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
-
-  @doc "Used for testing how players can interact/move."
-  def modify_players(players) do
-    if length(players) == 0 do
-      # spawn_player("Bill", :destroyer, :light) # Spawns a player
-      # Return empty list, cast will update players
-      []
-    else
-      # Modify players as necessary by piping through state modification functions
-      Enum.map(players, fn player ->
-        IO.inspect(player)
-
-        if Player.alive?(player) do
-          player
-          # Player.take_damage(player, 10) |>
-          # IO.inspect(player)
-          |> Player.inc_score(@score_increment)
-          |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
-          |> Movable.Motion.move()
-          # causes the ship to slow down over time
-          |> Movable.Drag.apply_drag(@drag_rate)
-          # increments the health of the player
-          |> Player.inc_health(@health_increment)
-        else
-          Player.respawn(player, 0, 0, 0)
-        end
-      end)
-    end
-  end
-
   # Debugging ping function.
   @impl true
   def handle_cast({:ping, pid}, state) do
@@ -139,87 +204,16 @@ defmodule GameServer do
     {:noreply, state}
   end
 
-  # Pings server for debugging.
-  def ping(socket) do
-    GenServer.cast({:global, __MODULE__}, {:ping, socket})
-  end
 
-  # Accelerate the Player with the given name.
+  # Adds a bullet that was fired from the player.
   @impl true
-  def handle_cast({:accel, name}, %{players: players} = state) do
-    player = Enum.find(players, fn player -> player.name == name end)
-
-    if player == :default do
-      {:noreply, state}
-    else
-      updated_players = update_players(players, Movable.Motion.accelerate(player, @accel_rate))
-      {:noreply, %{state | :players => updated_players}}
-    end
+  def handle_cast({:add_projectile, bullet}, %{projectiles: projectiles} = state) do
+    # Add the new bullet to the projectile list
+    new_projectiles = [bullet | projectiles]
+    {:noreply, %{state | projectiles: new_projectiles}}
   end
 
-  @doc """
-  Fires a bullet from the player with the given name.
-  """
-  @impl true
-  def handle_cast({:fire, name}, %{players: players, projectiles: projectiles} = state) do
-    # Find the player who is firing
-    player = Enum.find(players, fn player -> player.name == name end)
-
-    case Ship.fire(player.ship, player.name, @tick_rate) do
-      {:ok, {updated_ship, bullet}} ->
-        # Update the player's ship with new 'next_fire_at' value
-        updated_player = %{player | ship: updated_ship}
-        updated_players = update_players(players, updated_player)
-        new_projectiles = [bullet | projectiles]
-        new_state = %{state | players: updated_players, projectiles: new_projectiles}
-        {:noreply, new_state}
-
-      {:error, reason} ->
-          IO.puts("Failed to fire bullet: #{reason}")
-        {:noreply, state}
-    end
-  end
-
-  @doc "Fire a bullet from the player with the given name."
-  def fire(name) do
-    GenServer.cast({:global, __MODULE__}, {:fire, name})
-  end
-
-  # Accelerate the Player with the given name.
-  def accelerate_player(name) do
-    GenServer.cast({:global, __MODULE__}, {:accel, name})
-  end
-
-  # Given a player and player list, replaces players with the same name in the list and returns the new list.
-  def update_players(players, updated_player) do
-    Enum.map(players, fn p -> if p.name == updated_player.name, do: updated_player, else: p end)
-  end
-
-  # Rotates the ship with the given name in the given direction.
-  def rotate_player(name, dir) do
-    GenServer.cast({:global, __MODULE__}, {:rotate, name, dir})
-  end
-
-  # Rotates the ship with the given name in the given direction
-  @impl true
-  def handle_cast({:rotate, name, dir}, %{players: players} = state) do
-    player = Enum.find(players, fn player -> player.name == name end)
-
-    if player == :default do
-      {:noreply, state}
-    else
-      if dir == :cw || dir == :ccw do
-        updated_players =
-          update_players(players, Movable.Rotation.rotate(player, @turn_rate, dir))
-
-        {:noreply, %{state | :players => updated_players}}
-      else
-        {:noreply, state}
-      end
-    end
-  end
-
-  @doc "Removes a player from the game state."
+  # Removes a player from the game state.
   @impl true
   def handle_cast({:remove_player, name}, %{players: players} = state) do
     new_players = Enum.reject(players, fn player -> player.name == name end)
@@ -227,17 +221,11 @@ defmodule GameServer do
     {:noreply, new_state}
   end
 
-  def remove_player(name) do
-    GenServer.cast({:global, __MODULE__}, {:remove_player, name})
-  end
-
-  @doc """
-  Removes players that are not in the presence list. This is to ensure
-  that leftover players are removed from the game state.
-  """
+  # Removes players that are not in the presence list. This is to ensure
+  # that leftover players are removed from the game state.
   @impl true
   def handle_cast({:remove_leftover_players, presence_list}, %{players: players} = state) do
-    state.players
+    players
     |> Enum.map(& &1.name)
     |> Enum.each(fn player ->
       if !Map.has_key?(presence_list, player) do
@@ -248,7 +236,20 @@ defmodule GameServer do
     {:noreply, state}
   end
 
-  def remove_leftover_players(presence_list) do
-    GenServer.cast({:global, __MODULE__}, {:remove_leftover_players, presence_list})
+  # This handles any user input events and updates the associated player with the inputs.
+  @impl true
+  def handle_cast({:input, input_type, pressed_or_released, username}, %{players: players} = state) do
+    # Update the passed players input mappings
+    new_players = Enum.map(players, fn player ->
+      if player.name == username do
+        Player.update_inputs(player, input_type, pressed_or_released)
+      else
+        player
+      end
+    end)
+    # Return updated input state
+    new_state = %{state | players: new_players}
+    {:noreply, new_state}
   end
+
 end
