@@ -83,8 +83,7 @@ defmodule ProjectQuazarWeb.UserForm do
 
         </form>
 
-        <span phx-window-keydown="ping_server"></span>
-        <span phx-window-keydown="control"></span>
+
       </div>
     </div>
     """

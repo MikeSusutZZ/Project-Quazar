@@ -34,6 +34,7 @@ defmodule ProjectQuazarWeb.Game do
       |> assign(:start, true)
       |> assign(:show_help, false)
       |> assign(:current_page, 1) # handles pagination for how to play
+      |> assign(:game_over, false)
     }
   end
 
@@ -123,11 +124,22 @@ defmodule ProjectQuazarWeb.Game do
   """
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
+    game_over =
+      Enum.find(socket.assigns.players, fn player ->
+        socket.assigns.current_user == player.name && player.ship.health == 0
+      end)
+      |> case do
+        nil -> false
+        _ -> true
+      end
+
     {:noreply,
     socket
     |> assign(:players, new_state.players)
     |> sort_players_by_score()
-    |> assign(:projectiles, new_state.projectiles)}
+    |> assign(:projectiles, new_state.projectiles)
+    |> assign(:game_over, game_over)}
+
   end
 
   @doc """
@@ -242,8 +254,10 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, socket}
   end
 
-  def handle_event("game_over", %{"score" => score}, socket) do
-    {:noreply, push_redirect(socket, to: "/game-over?score=#{score}")}
+  def handle_event("game_over_to_lobby", _value, socket) do
+    new_socket = assign(socket, :start, false)
+    |> assign(:joined, false)
+    {:noreply, new_socket}
   end
 
 end
