@@ -170,7 +170,8 @@ defmodule GameServer do
           # Kill the player's ship if outside the boundary
           Player.kill_ship(player)
         Boundary.inside_damage_zone?(player, @bounds) ->
-          Player.damage_zone_effect(player)
+          # Damage the player if inside the damage zone
+          Player.take_damage(player, 2)
         true ->
           player
       end

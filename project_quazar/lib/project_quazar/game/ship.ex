@@ -33,7 +33,7 @@ defmodule Ship do
       case Map.fetch(@ship_types, type) do
         {:ok, attributes} ->
           %__MODULE__{
-            kinematics: Movable.new_movable(0, 4, 0, 0, angle),
+            kinematics: Movable.new_movable(px, py, 0, 0, angle),
             max_health: attributes.health,
             health: attributes.health,
             type: type,
