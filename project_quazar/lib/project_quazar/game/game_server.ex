@@ -7,7 +7,9 @@ defmodule GameServer do
   @table GameState
   # Ticks/second
   @tick_rate 20
-  @drag_rate 0.2
+  # Time in seconds before a dead player is removed from the game state (2 seconds)
+  @dead_removal_interval_sec 2000
+  @drag_rate 0.1
   @turn_rate :math.pi() / 3 * 0.1
   @health_increment 1
 
@@ -105,21 +107,36 @@ defmodule GameServer do
   @doc "Used to update the players inputs, movement, and other features every tick."
   def modify_players(players) do
     if length(players) == 0 do
-      [] # Return the empty list if no players.
+      # Return the empty list if no players.
+      []
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
-        IO.inspect(player)
+        #IO.inspect(player)
         if Player.alive?(player) do
           player
-          |> Player.handle_inputs(@turn_rate)       # This handles all player-based inputs
-          |> Movable.Motion.move()                  # This applies current velocity to players
-          |> Movable.Drag.apply_drag(@drag_rate)    # This causes the ship to slow down over time
-          |> Player.inc_health(@health_increment)   # This increments the health of the player over time
+          # This handles all player-based inputs
+          |> Player.handle_inputs(@turn_rate)
+          # This applies current velocity to players
+          |> Movable.Motion.move()
+          # This causes the ship to slow down over time
+          |> Movable.Drag.apply_drag(@drag_rate)
+          # This increments the health of the player over time
+          |> Player.inc_health(@health_increment)
         else
-          player # Apply regular motion to dead/wrecked ships until removed.
-          |> Movable.Motion.move()                  # This applies current velocity to players
-          |> Movable.Drag.apply_drag(@drag_rate)    # This causes the ship to slow down over time
+          # Check player health after a certain time, to decide if they should be removed
+          Process.send_after(
+            self(),
+            {:check_player_health, player.name},
+            @dead_removal_interval_sec
+          )
+
+          # Apply regular motion to dead/wrecked ships until removed.
+          player
+          # This applies current velocity to players
+          |> Movable.Motion.move()
+          # This causes the ship to slow down over time
+          |> Movable.Drag.apply_drag(@drag_rate)
         end
       end)
     end
@@ -158,11 +175,28 @@ defmodule GameServer do
         projectiles: move_all(projectiles)
     }
 
-    # Collision detection and handling to be used by Michelle
-    CollisionHandler.handle_collisions(projectiles, players)
+    {updated_projectiles, updated_players} =
+      CollisionHandler.handle_collisions(new_gamestate.projectiles, new_gamestate.players)
+
+    # Update the game state with the new lists of players and projectiles
+    updated_gamestate = %{
+      new_gamestate
+      | players: updated_players,
+        projectiles: updated_projectiles
+    }
 
     # Remove dead ships
-    # Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
+    Enum.each(updated_projectiles, fn updated_projectile ->
+      #IO.inspect(updated_projectile)
+    end)
+
+    Enum.each(updated_players, fn updated_player ->
+      nil
+      # IO.inspect(updated_player)
+      # Game can call boundary checks like so and damage players accordingly
+      # IO.inspect(Boundary.outside?(player, @bounds))
+      # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
+    end)
 
     # TODO: Game can call boundary checks like so and damage players accordingly
     # IO.inspect(Boundary.outside?(player, @bounds))
@@ -176,9 +210,9 @@ defmodule GameServer do
       "game_state:updates",
       {:state_updated, new_gamestate}
     )
-    # Update the ETS table with the latest state
-    :ets.insert(@table, {__MODULE__, new_gamestate})
-    {:noreply, new_gamestate}
+
+    :ets.insert(@table, {__MODULE__, updated_gamestate})
+    {:noreply, updated_gamestate}
   end
 
   @impl true
@@ -197,13 +231,34 @@ defmodule GameServer do
     {:noreply, %{gamestate | players: new_players}}
   end
 
+  @doc """
+  Checks the health of the player with the given name. If the player's health is below 0, the player is removed from the game state.
+  """
+  def handle_info({:check_player_health, player_name}, %__MODULE__{players: players} = gamestate) do
+    case Enum.find(players, fn player -> player.name == player_name end) do
+      nil ->
+        # Player might have been removed already
+        {:noreply, gamestate}
+
+      player ->
+        if Player.alive?(player) do
+          # Player recovered
+          {:noreply, gamestate}
+        else
+          # Player still has health below 0, remove them
+          new_players = Enum.reject(players, fn p -> p.name == player_name end)
+          new_gamestate = %{gamestate | players: new_players}
+          {:noreply, new_gamestate}
+        end
+    end
+  end
+
   # Debugging ping function.
   @impl true
   def handle_cast({:ping, pid}, state) do
     IO.inspect(pid)
     {:noreply, state}
   end
-
 
   # Adds a bullet that was fired from the player.
   @impl true
@@ -238,15 +293,20 @@ defmodule GameServer do
 
   # This handles any user input events and updates the associated player with the inputs.
   @impl true
-  def handle_cast({:input, input_type, pressed_or_released, username}, %{players: players} = state) do
+  def handle_cast(
+        {:input, input_type, pressed_or_released, username},
+        %{players: players} = state
+      ) do
     # Update the passed players input mappings
-    new_players = Enum.map(players, fn player ->
-      if player.name == username do
-        Player.update_inputs(player, input_type, pressed_or_released)
-      else
-        player
-      end
-    end)
+    new_players =
+      Enum.map(players, fn player ->
+        if player.name == username do
+          Player.update_inputs(player, input_type, pressed_or_released)
+        else
+          player
+        end
+      end)
+
     # Return updated input state
     new_state = %{state | players: new_players}
     {:noreply, new_state}
