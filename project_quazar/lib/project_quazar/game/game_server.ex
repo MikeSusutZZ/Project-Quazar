@@ -205,38 +205,6 @@ defmodule GameServer do
     {:noreply, %{gamestate | players: new_players}}
   end
 
-  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
-
-  @doc "Used for testing how players can interact/move."
-  def modify_players(players) do
-    if length(players) == 0 do
-      # spawn_player("Bill", :destroyer, :light) # Spawns a player
-      # Return empty list, cast will update players
-      []
-    else
-      # Modify players as necessary by piping through state modification functions
-      Enum.map(players, fn player ->
-        IO.inspect(player)
-
-        if Player.alive?(player) do
-          player
-          # Player.take_damage(player, 10) |>
-          # IO.inspect(player)
-          |> Player.inc_score(@score_increment)
-          # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
-          |> Movable.Motion.move()
-          # causes the ship to slow down over time
-          |> Movable.Drag.apply_drag(@drag_rate)
-          # increments the health of the player
-          |> Player.inc_health(@health_increment)
-        else
-          player
-          # Player.respawn(player, 0, 0, 0)
-        end
-      end)
-    end
-  end
-
   # Debugging ping function.
   @impl true
   def handle_cast({:ping, pid}, state) do
