@@ -9,7 +9,7 @@ defmodule GameServer do
   @tick_rate 20
   # Time in seconds before a dead player is removed from the game state (2 seconds)
   @dead_removal_interval_sec 2000
-  @drag_rate 0.2
+  @drag_rate 0.1
   @turn_rate :math.pi() / 3 * 0.1
   @health_increment 1
 
