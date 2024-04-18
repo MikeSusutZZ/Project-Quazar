@@ -41,9 +41,9 @@ Hooks.GameBoardHook = {
       drawGameBoard(canvas, gameBoard, myShip, enemyShip);
     };
     myShip = new Image();
-    myShip.src = "/images/ship_asset/blue_ship.png";
+    myShip.src = "/images/ship_asset/blue_ship_trimmed.png";
     enemyShip = new Image();
-    enemyShip.src = "/images/ship_asset/red_ship.png";
+    enemyShip.src = "/images/ship_asset/red_ship_trimmed.png";
 
     //bullet types
     let lightBullet = new Image();
@@ -52,9 +52,11 @@ Hooks.GameBoardHook = {
     heavyBullet.src = "/images/red_bullet_asset/Red_Bullet.png";
     lightBullet.src = "/images/green_bullet_asset/Green_Bullet.png";
     mediumBullet.src = "/images/purple_bullet_asset/Purple_Bullet.png";
-    let bulletTypes = {"light": lightBullet, "medium": mediumBullet, "heavy": heavyBullet}
-
-
+    let bulletTypes = {
+      light: lightBullet,
+      medium: mediumBullet,
+      heavy: heavyBullet,
+    };
 
     // event handlers
     this.handleEvent("update", (_) => {
@@ -65,6 +67,7 @@ Hooks.GameBoardHook = {
     // Keydown event listener
     window.addEventListener("keydown", (e) => {
       if (!pressedKeys.has(e.key)) {
+        e.preventDefault();
         console.log(e.key);
         pressedKeys.add(e.key); // Add pressed key to the set
         this.pushEvent("key_down", { key: e.key });
@@ -90,53 +93,72 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
 
   // getting the data
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
-  if (!data) return;
-  // console.log("Data", data);
+  console.log("Data", data);
 
-  // drawing the ships
-  const me = data.players[0];
-  drawShip(
-    ctx,
-    myShip,
-    me.ship.kinematics.px,
-    me.ship.kinematics.py,
-    me.ship.kinematics.angle,
-    me.name,
-    me.ship.health,
-    me.ship.max_health
-  );
+  // Get the player name from the route parameters
+  const playerName = window.location.pathname.split("/").pop();
 
-  const enemies = data.players.slice(1);
-  enemies.forEach((enemy) => {
+  // Find the player with the matching name and remove from the list
+  let me = null;
+  for (let i = 0; i < data.players.length; i++) {
+    const player = data.players[i];
+    if (player.name === playerName) {
+      me = player;
+      // Remove the player from the players list
+      data.players.splice(i, 1);
+      break; // Stop searching once we find a match
+    }
+  }
+  try {
     drawShip(
       ctx,
-      enemyShip,
-      enemy.ship.kinematics.px,
-      enemy.ship.kinematics.py,
-      enemy.ship.kinematics.angle,
-      enemy.name,
-      enemy.ship.health,
-      enemy.ship.max_health
+      myShip,
+      me.ship.kinematics.px,
+      me.ship.kinematics.py,
+      me.ship.kinematics.angle,
+      me.name,
+      me.ship.health,
+      me.ship.max_health
     );
+  } catch {
+    console.log("frame skip");
+  }
+
+  const enemies = data.players;
+  enemies.forEach((enemy) => {
+    try {
+      drawShip(
+        ctx,
+        enemyShip,
+        enemy.ship.kinematics.px,
+        enemy.ship.kinematics.py,
+        enemy.ship.kinematics.angle,
+        enemy.name,
+        enemy.ship.health,
+        enemy.ship.max_health
+      );
+    } catch {
+      console.log("frame skip");
+    }
   });
 
   const bullets = data.projectiles;
-  
+
   bullets.forEach((bullet) => {
     drawBullet(
       ctx,
       bulletTypes[bullet.type],
       bullet.kinematics.px,
       bullet.kinematics.py
-    )
-  })
+    );
+  });
 }
 
 function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
   ctx.save();
-  ctx.translate(px + 125, py + 125); // Adjust these values according to the sprite size
-  ctx.rotate(angle + Math.PI / 2);
-  ctx.drawImage(ship, -125, -125, 250, 250); // Adjust the sprite size here
+  ctx.translate(px + 20, py + 30); // Adjust these values according to the sprite size
+  ctx.rotate((angle - Math.PI / 2) * -1);
+  ctx.drawImage(ship, -20, -30, 40, 60); // Adjust the sprite size here
   ctx.restore();
 
   ctx.font = "20px";
@@ -152,10 +174,16 @@ function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
 }
 
 function drawBullet(ctx, bulletimg, px, py) {
-  const spriteSize = 50
+  const spriteSize = 50;
   ctx.save();
-  ctx.translate(px + (spriteSize/ 2), py + (spriteSize / 2));
-  ctx.drawImage(bulletimg, (spriteSize / 2 * -1), (spriteSize / 2 * -1), spriteSize, spriteSize);
+  ctx.translate(px + spriteSize / 2, py + spriteSize / 2);
+  ctx.drawImage(
+    bulletimg,
+    (spriteSize / 2) * -1,
+    (spriteSize / 2) * -1,
+    spriteSize,
+    spriteSize
+  );
   ctx.restore();
 }
 
@@ -618,6 +646,7 @@ window.addEventListener("phx:page-loading-stop", (_info) => topbar.hide());
 
 // connect if there are any LiveViews on the page
 liveSocket.connect();
+liveSocket.disableDebug();
 
 // expose liveSocket on window for web console debug logs and latency simulation:
 // >> liveSocket.enableDebug()
