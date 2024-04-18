@@ -92,9 +92,10 @@ defmodule GameServer do
 
   @impl true
   def handle_cast({:spawn_player, name, type, bullet_type}, %__MODULE__{players: players} = gamestate) do
-    player_ship = Ship.random_ship(type, bullet_type, @bounds)
-    new_players = [Player.new_player(name, player_ship) | players]
-    {:noreply, %{gamestate | players: new_players}}
+    case Player.new_player(name, type, bullet_type, @bounds) do
+      {:ok, player} -> {:noreply, %{gamestate | players: [player | players]}}
+      {:error, _} -> {:noreply, gamestate} # Error creating player, do not create.
+    end
   end
 
   def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
