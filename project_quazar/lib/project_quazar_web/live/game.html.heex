@@ -52,8 +52,8 @@
   <%# Lobby Screen %>
 
   <%# User entry form menu %>
-  <div class="flex">
-    <div class="w-1/2">
+  <div class="user_and_scoreboard_container">
+    <div class="user_form_container">
       <.live_component
         module={ProjectQuazarWeb.UserForm}
         id="user-form"
@@ -61,7 +61,7 @@
       />
     </div>
 
-    <div class="w-1/2 flex justify-center">
+    <div class="alltime_scoreboard_container">
       <div>
         <.live_component
         module={ProjectQuazarWeb.AllTimeHighScores}
