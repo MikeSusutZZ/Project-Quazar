@@ -55,7 +55,7 @@ defmodule GameServer do
       | players: modify_players(players),
         projectiles: move_all(projectiles)
     }
-
+    IO.inspect(projectiles)
     # Collision detection and handling to be used by Michelle
     CollisionHandler.handle_collisions(projectiles, players)
 
@@ -119,7 +119,7 @@ defmodule GameServer do
           # Player.take_damage(player, 10) |>
           # IO.inspect(player)
           |> Player.inc_score(@score_increment)
-          # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
+          |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
           |> Movable.Motion.move()
           # causes the ship to slow down over time
           |> Movable.Drag.apply_drag(@drag_rate)
@@ -165,13 +165,17 @@ defmodule GameServer do
     # Find the player who is firing
     player = Enum.find(players, fn player -> player.name == name end)
 
-    case Ship.fire(player.ship, player.name) do
-      {:ok, bullet} ->
-        # Add the new bullet to the projectile list
+    case Ship.fire(player.ship, player.name, @tick_rate) do
+      {:ok, {updated_ship, bullet}} ->
+        # Update the player's ship with new 'next_fire_at' value
+        updated_player = %{player | ship: updated_ship}
+        updated_players = update_players(players, updated_player)
         new_projectiles = [bullet | projectiles]
-        {:noreply, %{state | projectiles: new_projectiles}}
+        new_state = %{state | players: updated_players, projectiles: new_projectiles}
+        {:noreply, new_state}
 
-      :error ->
+      {:error, reason} ->
+          IO.puts("Failed to fire bullet: #{reason}")
         {:noreply, state}
     end
   end
