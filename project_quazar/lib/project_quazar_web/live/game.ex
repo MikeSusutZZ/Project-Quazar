@@ -232,7 +232,8 @@ defmodule ProjectQuazarWeb.Game do
 
   # Spawn a test ship
   def handle_event("control", %{"key" => "r"}, socket) do
-    GameServer.spawn_player("default")
+    IO.puts("Spawning test ship")
+    GameServer.spawn_player("default", :destroyer, :light)
     {:noreply, socket}
   end
 
@@ -251,6 +252,21 @@ defmodule ProjectQuazarWeb.Game do
   # Rotate the test ship counter-clockwise
   def handle_event("control", %{"key" => "a"}, socket) do
     GameServer.rotate_player("default", :ccw)
+    {:noreply, socket}
+  end
+
+  # Fire the bullet
+  def handle_event("control", %{"key" => " "}, socket) do
+    current_user = Map.get(socket.assigns, :current_user)
+
+    # Check if `current_user` is present
+    if current_user do
+      GameServer.fire(current_user)
+    else
+      IO.puts("No current user set. Cannot fire.")
+      # GameServer.fire("default")  # test test ship firing
+    end
+
     {:noreply, socket}
   end
 
