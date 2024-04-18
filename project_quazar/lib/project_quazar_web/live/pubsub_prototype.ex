@@ -2,12 +2,24 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   use ProjectQuazarWeb, :live_view
   alias ProjectQuazar.PubSub
 
+  @moduledoc """
+  Manages the live interactive view.
+
+  Features:
+  - Real-time game state updates using WebSocket (via Phoenix LiveView).
+  - Player input handling for movement (keyboard events for 'w', 'a', 's', 'd' keys).
+  - Dynamic rendering of game states on an HTML canvas.
+  - Subscription to game state updates through Phoenix PubSub.
+  """
+
+  @doc "Renders the game canvas and encodes the game state into JSON format."
   def render(assigns) do
     ~H"""
     <canvas id="main" data-game-state={"#{Jason.encode!(@game_state)}"} phx-hook="GameBoardHook">Pubsub Prototype</canvas>
     """
   end
 
+  @doc "Initializes the LiveView, spawns a player, subscribes to PubSub updates, and sets initial socket assignments."
   def mount(params, _session, socket) do
     {_, name} = Map.fetch(params, "name")
     IO.inspect(name)
@@ -17,6 +29,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
     {:ok, updated_socket}
   end
 
+  @doc "Handles key release events for movement keys ('w', 'a', 's', 'd')."
   @impl true
   def handle_event("key_up", %{"key" => key}, socket) when key in ["w", "a", "s", "d"] do
     IO.puts("Key Up: #{key}")
@@ -67,12 +80,14 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
     {:noreply, updated_socket}
   end
 
+  @doc "Handles custom messages intended for client-side updates."
   def handle_info(:update_client, socket) do
     # Handle the custom message received by the LiveView process
     # IO.puts("Received custom message")
     {:noreply, push_event(socket, "update", %{updated: "true"})}
   end
 
+  @doc "Cleans up after the socket connection is terminated, either by removing the user or logging their departure."
   def terminate(_reason, socket) do
     case socket.assigns.name do
       nil ->
