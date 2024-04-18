@@ -29,33 +29,52 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
     {:ok, updated_socket}
   end
 
-  @doc "Handles key release events for movement keys ('w', 'a', 's', 'd')."
-  @impl true
-  def handle_event("key_up", %{"key" => key}, socket) when key in ["w", "a", "s", "d"] do
-    IO.puts("Key Up: #{key}")
-    # Call GameServer like "GameServer.func()"
-    {:noreply, socket}
-  end
-
-  # Ignore other keys
+  # Key Down event from Browser
   @impl true
   def handle_event("key_down", %{"key" => key}, socket) do
-    # GamePrototype.update_user(socket.assigns.name, key)
     IO.puts("Key Down: #{key}")
+    player_name = socket.assigns.name
 
     case String.downcase(key) do
-      "w" -> GameServer.accelerate_player(socket.assigns.name)
-      "d" -> GameServer.rotate_player(socket.assigns.name, :ccw)
-      "a" -> GameServer.rotate_player(socket.assigns.name, :cw)
+      "w" -> GameServer.accelerate_pressed(player_name)
+      "s" -> GameServer.brake_pressed(player_name)
+      "d" -> GameServer.turn_right_pressed(player_name)
+      "a" -> GameServer.turn_left_pressed(player_name)
+      " " -> GameServer.fire_pressed(player_name)
       _ -> :ok
     end
 
     {:noreply, socket}
   end
 
-  # Ignore other keys
+  # Key Up event from Browser
   @impl true
-  def handle_event("key_up", _payload, socket) do
+  def handle_event("key_up", %{"key" => key}, socket) do
+    player_name = socket.assigns.name
+    key = String.downcase(key)
+    IO.puts("Key Up: #{key}")
+    IO.inspect(key)
+
+    case key do
+      "w" ->
+        GameServer.accelerate_released(player_name)
+
+      "s" ->
+        GameServer.brake_released(player_name)
+
+      "d" ->
+        GameServer.turn_right_released(player_name)
+
+      "a" ->
+        GameServer.turn_left_released(player_name)
+
+      " " ->
+        GameServer.fire_released(player_name)
+
+      _ ->
+        :ok
+    end
+
     {:noreply, socket}
   end
 
@@ -91,11 +110,11 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   def terminate(_reason, socket) do
     case socket.assigns.name do
       nil ->
-        IO.puts("User left the channel")
+        IO.puts("User left the game")
 
       name ->
-        IO.puts("#{name} left the channel")
-        GamePrototype.remove_user(name)
+        IO.puts("#{name} left the game")
+        GameServer.remove_player(name)
     end
 
     :ok
