@@ -93,7 +93,6 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
 
   // getting the data
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
-  if (!data) return;
   console.log("Data", data);
 
   // Get the player name from the route parameters
@@ -110,30 +109,37 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
       break; // Stop searching once we find a match
     }
   }
-
-  drawShip(
-    ctx,
-    myShip,
-    me.ship.kinematics.px,
-    me.ship.kinematics.py,
-    me.ship.kinematics.angle,
-    me.name,
-    me.ship.health,
-    me.ship.max_health
-  );
+  try {
+    drawShip(
+      ctx,
+      myShip,
+      me.ship.kinematics.px,
+      me.ship.kinematics.py,
+      me.ship.kinematics.angle,
+      me.name,
+      me.ship.health,
+      me.ship.max_health
+    );
+  } catch {
+    console.log("frame skip");
+  }
 
   const enemies = data.players;
   enemies.forEach((enemy) => {
-    drawShip(
-      ctx,
-      enemyShip,
-      enemy.ship.kinematics.px,
-      enemy.ship.kinematics.py,
-      enemy.ship.kinematics.angle,
-      enemy.name,
-      enemy.ship.health,
-      enemy.ship.max_health
-    );
+    try {
+      drawShip(
+        ctx,
+        enemyShip,
+        enemy.ship.kinematics.px,
+        enemy.ship.kinematics.py,
+        enemy.ship.kinematics.angle,
+        enemy.name,
+        enemy.ship.health,
+        enemy.ship.max_health
+      );
+    } catch {
+      console.log("frame skip");
+    }
   });
 
   const bullets = data.projectiles;

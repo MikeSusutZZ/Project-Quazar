@@ -6,7 +6,7 @@ defmodule GameServer do
 
   @table GameState
   # Ticks/second
-  @tick_rate 5
+  @tick_rate 20
   # Time in seconds before a dead player is removed from the game state (2 seconds)
   @dead_removal_interval_sec 2000
   @drag_rate 0.1
@@ -112,8 +112,7 @@ defmodule GameServer do
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
-        # IO.inspect(player)
-
+        #IO.inspect(player)
         if Player.alive?(player) do
           player
           # This handles all player-based inputs
@@ -188,7 +187,7 @@ defmodule GameServer do
 
     # Remove dead ships
     Enum.each(updated_projectiles, fn updated_projectile ->
-      IO.inspect(updated_projectile)
+      #IO.inspect(updated_projectile)
     end)
 
     Enum.each(updated_players, fn updated_player ->
