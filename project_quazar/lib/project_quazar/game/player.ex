@@ -15,7 +15,7 @@ defmodule Player do
   def new_player(name, ship, bounds) do
     case Ship.random_ship(ship.type, ship.bullet_type, bounds) do
       {:error, err} -> {:error, err}
-      ship ->  %__MODULE__{name: name, ship: ship, score: 0, inputs: %{}}
+      ship ->  %__MODULE__{name: name, ship: ship, score: 0, inputs: MapSet.new()}
     end
   end
 
@@ -53,21 +53,18 @@ defmodule Player do
   end
 
   @doc "Updates the players input mapping values based on the passed value"
-  def update_inputs(%__MODULE__{} = player, action, pressed_or_released) do
-    # Convert pressed/release event into true/false values for input map
-    value = case pressed_or_released do
-      :pressed -> true
-      :released -> false
-    end
+  def update_inputs(%__MODULE__{} = player, action, value) do
     # Update the players input map
-    new_inputs = Map.put(player.inputs, action, value)
+    new_inputs = case value do
+      true -> MapSet.put(player.inputs, action)
+      false -> MapSet.delete(player.inputs, action)
+    end
     %Player{player | inputs: new_inputs} # Return the player with new inputs
   end
 
   @doc "Handles how each player/ship should update every game tick."
   def handle_inputs(%__MODULE__{ship: ship, inputs: inputs} = initial_state, rotation_speed) do
-    enabled_inputs = Map.filter(inputs, fn {_, val} -> val == true end) |> Map.keys
-    IO.inspect(enabled_inputs)
+    enabled_inputs = MapSet.to_list(inputs)
     Enum.reduce(enabled_inputs, initial_state, fn input, player ->
       case input do
         :accelerate -> Movable.Motion.accelerate(player, ship.acceleration)
