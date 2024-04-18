@@ -162,15 +162,23 @@ defmodule GameServer do
         projectiles: move_all(projectiles)
     }
 
-    # Collision detection and handling to be used by Michelle
-    CollisionHandler.handle_collisions(projectiles, players)
+    {updated_projectiles, updated_players} = CollisionHandler.handle_collisions(new_gamestate.projectiles, new_gamestate.players)
+
+    # Update the game state with the new lists of players and projectiles
+    updated_gamestate = %{new_gamestate | players: updated_players, projectiles: updated_projectiles}
 
     # Remove dead ships
-    # Enum.each(projectiles, fn projectile -> IO.inspect(projectile) end)
+    Enum.each(updated_projectiles, fn updated_projectile ->
+      IO.inspect(updated_projectile)
+    end)
+    Enum.each(updated_players, fn updated_player ->
+      nil
+      # IO.inspect(updated_player)
+      # Game can call boundary checks like so and damage players accordingly
+      # IO.inspect(Boundary.outside?(player, @bounds))
+      # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
+    end)
 
-    # TODO: Game can call boundary checks like so and damage players accordingly
-    # IO.inspect(Boundary.outside?(player, @bounds))
-    # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
 
     # IO.puts("tick")
 
@@ -180,9 +188,9 @@ defmodule GameServer do
       "game_state:updates",
       {:state_updated, new_gamestate}
     )
-    # Update the ETS table with the latest state
-    :ets.insert(@table, {__MODULE__, new_gamestate})
-    {:noreply, new_gamestate}
+
+    :ets.insert(@table, {__MODULE__, updated_gamestate})
+    {:noreply, updated_gamestate}
   end
 
   @impl true
