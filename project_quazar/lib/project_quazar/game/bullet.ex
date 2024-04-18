@@ -20,11 +20,12 @@ defmodule Bullet do
   }
 
   @doc "Creates a new bullet with specified attributes."
-  def new_bullet(sender, px, py, vx, vy, angle, type) do
+  def new_bullet(sender, px, py, vx, vy, radius, angle, type) do
     case Map.fetch(@bullet_types, type) do
     {:ok, attributes} ->
-        bullet_px = px + attributes.radius
-        bullet_py = py + attributes.radius
+        # Bullet will start at the edge of the ship, in the direction the ship is facing.
+        bullet_px = px + (attributes.radius + radius) * :math.cos(angle)
+        bullet_py = py + (attributes.radius + radius) * :math.sin(angle)
         kinematics = Movable.new_movable(bullet_px, bullet_py, vx, vy, angle)
         {:ok, %__MODULE__{
           sender: sender,
@@ -39,7 +40,7 @@ defmodule Bullet do
         {:error, "Invalid bullet type: #{type}"}
     end
   end
-  
+
   @doc "Checks if the bullet is of a valid type"
   def valid_type?(type) do
     Map.has_key?(@bullet_types, type)
