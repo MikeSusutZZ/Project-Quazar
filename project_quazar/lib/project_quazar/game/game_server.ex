@@ -94,7 +94,7 @@ defmodule GameServer do
     GenServer.cast({:global, __MODULE__}, {:input, :fire, :released, name})
   end
 
-  @doc "Handles all idle ship movement/velocity. Should be called every tick."
+  @doc "Handles any and all idle movement/velocity. Should be called every tick for any movable entity."
   def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
 
   @doc "Given a player and player list, replaces players with the same name in the list and returns the new list."
