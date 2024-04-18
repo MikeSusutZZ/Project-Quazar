@@ -51,6 +51,13 @@ defmodule Player do
     Map.put(player, :ship, updated_ship)
   end
 
+  @doc "Applies a damage effect to the player's ship when in damage zone."
+  def damage_zone_effect(player) do
+    ship = player.ship
+    updated_ship = Map.put(ship, :health, ship.health - 2)
+    Map.put(player, :ship, updated_ship)
+  end
+
   @doc "Applies an amount of damage to the ships health."
   def take_damage(%__MODULE__{ship: ship} = player_data, amount) do
     damaged_ship = Ship.take_damage(ship, amount)
