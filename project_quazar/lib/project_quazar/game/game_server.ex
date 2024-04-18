@@ -311,4 +311,5 @@ defmodule GameServer do
     new_state = %{state | players: new_players}
     {:noreply, new_state}
   end
+
 end
