@@ -25,7 +25,7 @@ defmodule Bullet do
     {:ok, attributes} ->
         # Bullet will start at the edge of the ship, in the direction the ship is facing.
         bullet_px = px + (attributes.radius + radius) * :math.cos(angle)
-        bullet_py = py + (attributes.radius + radius) * :math.sin(angle)
+        bullet_py = py - (attributes.radius + radius) * :math.sin(angle)
         kinematics = Movable.new_movable(bullet_px, bullet_py, vx, vy, angle)
         {:ok, %__MODULE__{
           sender: sender,
