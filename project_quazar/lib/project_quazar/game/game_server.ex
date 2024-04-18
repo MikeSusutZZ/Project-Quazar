@@ -5,12 +5,10 @@ defmodule GameServer do
   defstruct [:players, :projectiles]
 
   @table GameState
-
-  @accel_rate 0.25
-  @score_increment 100
+  # Ticks/second
+  @tick_rate 20
   # Time in seconds before a dead player is removed from the game state (2 seconds)
   @dead_removal_interval_sec 2000
-  @tick_rate 20
   @drag_rate 0.2
   @turn_rate :math.pi() / 3 * 0.1
   @health_increment 1
