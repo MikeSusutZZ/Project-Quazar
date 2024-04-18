@@ -6,7 +6,7 @@ defmodule ProjectQuazarWeb.AllTimeHighScores do
     ~H"""
     <div class="base-container">
 
-      <h1 class="title">All-Time Score Leaderboard</h1>
+      <h1 class="title">Score Leaderboard</h1>
 
       <div id="user-list-container">
         <%= if Enum.empty?(@top_scores) do %>
@@ -14,7 +14,7 @@ defmodule ProjectQuazarWeb.AllTimeHighScores do
 
         <% else %>
 
-            <%= for score <- @top_scores do %>
+            <%= for score <- Enum.take(@top_scores, 5) do %>
               <div class="user-item-base mt-4">
                 <span class="user-id"><%= score.player %></span>
                 <span class="user-points"><%= score.score %></span>
