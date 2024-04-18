@@ -22,7 +22,8 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   @doc "Initializes the LiveView, spawns a player, subscribes to PubSub updates, and sets initial socket assignments."
   def mount(params, _session, socket) do
     {_, name} = Map.fetch(params, "name")
-    IO.inspect(name)
+    # IO.inspect(name)
+    GameServer.remove_player(name)
     GameServer.spawn_player(name, :destroyer, :light)
     Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
     updated_socket = assign(socket, name: name, game_state: "", count: "")
@@ -108,15 +109,9 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
 
   @doc "Cleans up after the socket connection is terminated, either by removing the user or logging their departure."
   def terminate(_reason, socket) do
-    case socket.assigns.name do
-      nil ->
-        IO.puts("User left the game")
-
-      name ->
-        IO.puts("#{name} left the game")
-        GameServer.remove_player(name)
-    end
-
+    name = socket.assigns.name
+    IO.puts("#{name} left the game.")
+    GameServer.remove_player(name)
     :ok
   end
 end
