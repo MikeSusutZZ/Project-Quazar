@@ -61,12 +61,14 @@
       />
     </div>
 
-    <div class="w-1/2 flex flex-row justify-center">
-      <.live_component
+    <div class="w-1/2 flex justify-center">
+      <div>
+        <.live_component
         module={ProjectQuazarWeb.AllTimeHighScores}
         id="all_time-high-scores-component"
         top_scores={@top_scores}
       />
+      </div>
     </div>
   </div>
 <% end %>

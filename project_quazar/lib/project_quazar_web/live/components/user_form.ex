@@ -20,7 +20,7 @@ defmodule ProjectQuazarWeb.UserForm do
               <h1 class="health_text">Health: 250</h1>
               <h1 class="speed_text">Speed: Slow</h1>
               <div>
-                <input type='radio' name='ship' value='tank' checked>
+                <input type='radio' name='ship' value='tank'>
               </div>
             </div>
 
@@ -38,7 +38,7 @@ defmodule ProjectQuazarWeb.UserForm do
               <h1 class="health_text">Health: 100</h1>
               <h1 class="speed_text">Speed: fast</h1>
               <div>
-                <input type='radio' name='ship' value='scout' checked>
+                <input type='radio' name='ship' value='scout'>
               </div>
             </div>
           </div>
@@ -53,7 +53,7 @@ defmodule ProjectQuazarWeb.UserForm do
               <h1 class="damage_text" >Damage: 35</h1>
               <h1 class="speed_text" >Speed: Slow</h1>
               <div>
-                <input type='radio' name='bullet' value='heavy' checked>
+                <input type='radio' name='bullet' value='heavy'>
               </div>
             </div>
 
@@ -73,7 +73,7 @@ defmodule ProjectQuazarWeb.UserForm do
               <h1 class="damage_text">Damage: 10</h1>
               <h1 class="speed_text">Speed: fast</h1>
               <div>
-                <input type='radio' name='bullet' value='light' checked>
+                <input type='radio' name='bullet' value='light'>
               </div>
             </div>
 

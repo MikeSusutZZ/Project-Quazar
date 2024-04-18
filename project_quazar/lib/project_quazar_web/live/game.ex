@@ -60,12 +60,12 @@ defmodule ProjectQuazarWeb.Game do
           {:reply, %{error: "Username already taken"}, assign(socket, :error_message, "Username already taken")}
         false ->
           GameServer.remove_leftover_players(Presence.list(@presence))
-          GameServer.spawn_player(username, ship_type) #where ship/bullet are atoms
+          GameServer.spawn_player(username, ship_type, bullet_type) #where ship/bullet are atoms
           Presence.track(self(), @presence, username, %{})
           Phoenix.PubSub.subscribe(PubSub, @presence)
           Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
           # default ship destroyer, change when implemented ship choice
-          GameServer.spawn_player(username, :destroyer)
+          # GameServer.spawn_player(username, :destroyer)
           {:noreply, socket
             |> assign(:joined, true)
             |> assign(:current_user, username)}
@@ -103,71 +103,6 @@ defmodule ProjectQuazarWeb.Game do
   def handle_event("hide_help", _value, socket) do
     {:noreply, assign(socket, :show_help, false)}
   end
-
-
-  # @doc "Handle the event for next page in how to play component"
-  # def handle_event("next_page", _value, socket) do
-  #   current_page = Map.get(socket.assigns, :current_page, 1)
-  #   next_page = current_page + 1
-
-  #   {:noreply, assign(socket, current_page: next_page)}
-  # end
-
-  # @doc "Handle the event for previous page in how to play component"
-  # def handle_event("previous_page", _value, socket) do
-  #   current_page = Map.get(socket.assigns, :current_page, 1)
-  #   previous_page = max(current_page - 1, 1)
-
-  #   {:noreply, assign(socket, current_page: previous_page)}
-  # end
-
-  # @doc "Handle the event for next page in how to play component"
-  # def handle_event("next_page", _value, socket) do
-  #   current_page = Map.get(socket.assigns, :current_page, 1)
-  #   next_page = current_page + 1
-
-  #   {:noreply, assign(socket, current_page: next_page)}
-  # end
-
-  # @doc "Handle the event for previous page in how to play component"
-  # def handle_event("previous_page", _value, socket) do
-  #   current_page = Map.get(socket.assigns, :current_page, 1)
-  #   previous_page = max(current_page - 1, 1)
-
-  #   {:noreply, assign(socket, current_page: previous_page)}
-  # end
-
-  # @doc "Handle the state for start component"
-  # def handle_event("show_start_game", _value, socket) do
-  #   {:noreply, assign(socket, :start, false)}
-  # end
-
-  # @doc "Handle the state for displaying help component"
-  # def handle_event("show_help", _value, socket) do
-  #   {:noreply, assign(socket, :show_help, true)}
-  # end
-
-  # @doc "Handle the state for hiding help component"
-  # def handle_event("hide_help", _value, socket) do
-  #   {:noreply, assign(socket, :show_help, false)}
-  # end
-
-
-  # @doc "Handle the event for next page in how to play component"
-  # def handle_event("next_page", _value, socket) do
-  #   current_page = Map.get(socket.assigns, :current_page, 1)
-  #   next_page = current_page + 1
-
-  #   {:noreply, assign(socket, current_page: next_page)}
-  # end
-
-  # @doc "Handle the event for previous page in how to play component"
-  # def handle_event("previous_page", _value, socket) do
-  #   current_page = Map.get(socket.assigns, :current_page, 1)
-  #   previous_page = max(current_page - 1, 1)
-
-  #   {:noreply, assign(socket, current_page: previous_page)}
-  # end
 
   @doc "Handle Presence event whenever there is change to Presence."
   @impl true
