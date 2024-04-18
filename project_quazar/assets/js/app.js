@@ -69,7 +69,10 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
     myShip,
     me.ship.kinematics.px,
     me.ship.kinematics.py,
-    me.ship.kinematics.angle
+    me.ship.kinematics.angle,
+    me.name,
+    me.ship.health,
+    me.ship.max_health
   );
 
   const enemies = data.players.slice(1);
@@ -79,17 +82,31 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
       enemyShip,
       enemy.ship.kinematics.px,
       enemy.ship.kinematics.py,
-      enemy.ship.kinematics.angle
+      enemy.ship.kinematics.angle,
+      enemy.name,
+      enemy.ship.health,
+      enemy.ship.max_health
     );
   });
 }
 
-function drawShip(ctx, ship, px, py, angle) {
+function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
   ctx.save();
   ctx.translate(px + 125, py + 125);
   ctx.rotate(angle);
   ctx.drawImage(ship, -125, -125, 250, 250);
   ctx.restore();
+
+  ctx.font = "20px";
+  ctx.textAlign = "center";
+
+  ctx.fillStyle = "white";
+  ctx.fillText(name, px + 125, py + 125 - 20);
+
+  healthRatio = parseFloat(health) / maxHealth;
+  ctx.fillStyle =
+    healthRatio > 0.8 ? "green" : healthRatio > 0.4 ? "yellow" : "red";
+  ctx.fillText(health, px + 125, py + 125 - 5);
 }
 
 // Frontend Prototype 1
