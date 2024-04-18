@@ -23,6 +23,102 @@ defmodule GameServer do
     damage_zone: 100
   }
 
+  def spawn_player(name, ship_type, bullet_type), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
+
+  # Pings server for debugging.
+  def ping(socket) do
+    GenServer.cast({:global, __MODULE__}, {:ping, socket})
+  end
+
+  # @doc "Fires a bullet from the player with the given name."
+  # def fire(name) do
+  #   GenServer.cast({:global, __MODULE__}, {:fire, name})
+  # end
+
+  # @doc "Accelerates the Player with the given name."
+  # def accelerate_player(name) do
+  #   GenServer.cast({:global, __MODULE__}, {:accel, name})
+  # end
+
+  @doc "Rotates the ship with the given name in the given direction."
+  def rotate_player(name, dir) do
+    GenServer.cast({:global, __MODULE__}, {:rotate, name, dir})
+  end
+
+  @doc "Removes a player from the player list"
+  def remove_player(name) do
+    GenServer.cast({:global, __MODULE__}, {:remove_player, name})
+  end
+
+  def remove_leftover_players(presence_list) do
+    GenServer.cast({:global, __MODULE__}, {:remove_leftover_players, presence_list})
+  end
+
+  def accelerate_pressed() do
+
+  end
+
+  def accelerate_released() do
+
+  end
+
+  def turn_right_pressed() do
+
+  end
+
+  def turn_right_released() do
+
+  end
+
+  def turn_left_pressed() do
+
+  end
+
+  def turn_left_released() do
+
+  end
+
+  def fire_pressed() do
+
+  end
+
+  def fire_released() do
+
+  end
+
+  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
+
+  @doc "Given a player and player list, replaces players with the same name in the list and returns the new list."
+  def update_players(players, updated_player) do
+    Enum.map(players, fn p -> if p.name == updated_player.name, do: updated_player, else: p end)
+  end
+
+  @doc "Used for testing how players can interact/move."
+  def modify_players(players) do
+    if length(players) == 0 do
+      [] # Return empty list, cast will update players
+    else
+      # Modify players as necessary by piping through state modification functions
+      Enum.map(players, fn player ->
+        IO.inspect(player)
+        if Player.alive?(player) do
+          player
+          # Player.take_damage(player, 10) |>
+          # IO.inspect(player)
+          |> Player.inc_score(@score_increment)
+          # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
+          |> Movable.Motion.move()
+          # causes the ship to slow down over time
+          |> Movable.Drag.apply_drag(@drag_rate)
+          # increments the health of the player
+          |> Player.inc_health(@health_increment)
+        else
+          Player.respawn(player, 0, 0, 0)
+        end
+      end)
+    end
+  end
+
   def start_link(_arg) do
     GenServer.start_link(__MODULE__, nil, name: {:global, __MODULE__})
   end
@@ -88,8 +184,6 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  def spawn_player(name, ship_type, bullet_type), do: GenServer.cast({:global, __MODULE__}, {:spawn_player, name, ship_type, bullet_type})
-
   @impl true
   def handle_cast({:spawn_player, name, type, bullet_type}, %__MODULE__{players: players} = gamestate) do
     player_ship = Ship.random_ship(type, bullet_type, @bounds)
@@ -97,45 +191,11 @@ defmodule GameServer do
     {:noreply, %{gamestate | players: new_players}}
   end
 
-  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
-
-  @doc "Used for testing how players can interact/move."
-  def modify_players(players) do
-    if length(players) == 0 do
-      # spawn_player("Bill", :destroyer, :light) # Spawns a player
-      [] # Return empty list, cast will update players
-    else
-      # Modify players as necessary by piping through state modification functions
-      Enum.map(players, fn player ->
-        IO.inspect(player)
-        if Player.alive?(player) do
-          player
-          # Player.take_damage(player, 10) |>
-          # IO.inspect(player)
-          |> Player.inc_score(@score_increment)
-          # |> Movable.Motion.accelerate(1) # To call protocol impl use Movable.Motion functions
-          |> Movable.Motion.move()
-          # causes the ship to slow down over time
-          |> Movable.Drag.apply_drag(@drag_rate)
-          # increments the health of the player
-          |> Player.inc_health(@health_increment)
-        else
-          Player.respawn(player, 0, 0, 0)
-        end
-      end)
-    end
-  end
-
   # Debugging ping function.
   @impl true
   def handle_cast({:ping, pid}, state) do
     IO.inspect(pid)
     {:noreply, state}
-  end
-
-  # Pings server for debugging.
-  def ping(socket) do
-    GenServer.cast({:global, __MODULE__}, {:ping, socket})
   end
 
   # Accelerate the Player with the given name.
@@ -169,26 +229,6 @@ defmodule GameServer do
 
   end
 
-  @doc "Fire a bullet from the player with the given name."
-  def fire(name) do
-    GenServer.cast({:global, __MODULE__}, {:fire, name})
-  end
-
-  # Accelerate the Player with the given name.
-  def accelerate_player(name) do
-    GenServer.cast({:global, __MODULE__}, {:accel, name})
-  end
-
-  # Given a player and player list, replaces players with the same name in the list and returns the new list.
-  def update_players(players, updated_player) do
-    Enum.map(players, fn p -> if p.name == updated_player.name, do: updated_player, else: p end)
-  end
-
-  # Rotates the ship with the given name in the given direction.
-  def rotate_player(name, dir) do
-    GenServer.cast({:global, __MODULE__}, {:rotate, name, dir})
-  end
-
   # Rotates the ship with the given name in the given direction
   @impl true
   def handle_cast({:rotate, name, dir}, %{players: players} = state) do
@@ -216,10 +256,6 @@ defmodule GameServer do
     {:noreply, new_state}
   end
 
-  def remove_player(name) do
-    GenServer.cast({:global, __MODULE__}, {:remove_player, name})
-  end
-
   @doc """
   Removes players that are not in the presence list. This is to ensure
   that leftover players are removed from the game state.
@@ -235,9 +271,5 @@ defmodule GameServer do
     end)
 
     {:noreply, state}
-  end
-
-  def remove_leftover_players(presence_list) do
-    GenServer.cast({:global, __MODULE__}, {:remove_leftover_players, presence_list})
   end
 end
