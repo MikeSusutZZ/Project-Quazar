@@ -175,6 +175,9 @@ defmodule GameServer do
       # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
     end)
 
+    # TODO: Game can call boundary checks like so and damage players accordingly
+    # IO.inspect(Boundary.outside?(player, @bounds))
+    # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
 
     # IO.puts("tick")
 
