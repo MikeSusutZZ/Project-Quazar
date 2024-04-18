@@ -32,6 +32,7 @@ let Hooks = {};
 //Render game board hook
 Hooks.GameBoardHook = {
   mounted() {
+    let pressedKeys = new Set();
     //assets
     const canvas = document.getElementById("main");
     gameBoard = new Image();
@@ -48,6 +49,24 @@ Hooks.GameBoardHook = {
     this.handleEvent("update", (_) => {
       drawGameBoard(canvas, gameBoard, myShip, enemyShip);
     });
+
+    // push events
+    // Keydown event listener
+    window.addEventListener("keydown", (e) => {
+      if (!pressedKeys.has(e.key)) {
+        console.log(e.key);
+        pressedKeys.add(e.key); // Add pressed key to the set
+        this.pushEvent("key_down", { key: e.key });
+      }
+    });
+
+    // Key Up event listener
+    window.addEventListener("keyup", (e) => {
+      if (pressedKeys.has(e.key)) {
+        pressedKeys.delete(e.key); // Remove released key from the set
+        this.pushEvent("key_up", { key: e.key });
+      }
+    });
   },
 };
 
@@ -60,7 +79,7 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
 
   // getting the data
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
-  console.log("Data", data);
+  // console.log("Data", data);
 
   // drawing the ships
   const me = data.players[0];
