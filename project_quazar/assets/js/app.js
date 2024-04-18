@@ -45,9 +45,20 @@ Hooks.GameBoardHook = {
     enemyShip = new Image();
     enemyShip.src = "/images/ship_asset/red_ship.png";
 
+    //bullet types
+    let lightBullet = new Image();
+    let mediumBullet = new Image();
+    let heavyBullet = new Image();
+    heavyBullet.src = "/images/red_bullet_asset/Red_Bullet.png";
+    lightBullet.src = "/images/green_bullet_asset/Green_Bullet.png";
+    mediumBullet.src = "/images/purple_bullet_asset/Purple_Bullet.png";
+    let bulletTypes = {"light": lightBullet, "medium": mediumBullet, "heavy": heavyBullet}
+
+
+
     // event handlers
     this.handleEvent("update", (_) => {
-      drawGameBoard(canvas, gameBoard, myShip, enemyShip);
+      drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes);
     });
 
     // push events
@@ -70,7 +81,7 @@ Hooks.GameBoardHook = {
   },
 };
 
-function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
+function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
   // drawing the background
   canvas.width = 800;
   canvas.height = 800;
@@ -107,6 +118,17 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
       enemy.ship.max_health
     );
   });
+
+  const bullets = data.projectiles;
+  
+  bullets.forEach((bullet) => {
+    drawBullet(
+      ctx,
+      bulletTypes[bullet.type],
+      bullet.kinematics.px,
+      bullet.kinematics.py
+    )
+  })
 }
 
 function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
@@ -126,6 +148,14 @@ function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
   ctx.fillStyle =
     healthRatio > 0.8 ? "green" : healthRatio > 0.4 ? "yellow" : "red";
   ctx.fillText(health, px + 125, py + 125 - 5);
+}
+
+function drawBullet(ctx, bulletimg, px, py) {
+  const spriteSize = 50
+  ctx.save();
+  ctx.translate(px + (spriteSize/ 2), py + (spriteSize / 2));
+  ctx.drawImage(bulletimg, (spriteSize / 2 * -1), (spriteSize / 2 * -1), spriteSize, spriteSize);
+  ctx.restore();
 }
 
 // Frontend Prototype 1
