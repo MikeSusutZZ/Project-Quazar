@@ -41,7 +41,7 @@ Hooks.GameBoardHook = {
       drawGameBoard(canvas, gameBoard, myShip, enemyShip);
     };
     myShip = new Image();
-    myShip.src = "/images/ship_asset/blue_ship.png";
+    myShip.src = "/images/ship_asset/blue_ship_trimmed.png";
     enemyShip = new Image();
     enemyShip.src = "/images/ship_asset/red_ship.png";
 
@@ -52,9 +52,11 @@ Hooks.GameBoardHook = {
     heavyBullet.src = "/images/red_bullet_asset/Red_Bullet.png";
     lightBullet.src = "/images/green_bullet_asset/Green_Bullet.png";
     mediumBullet.src = "/images/purple_bullet_asset/Purple_Bullet.png";
-    let bulletTypes = {"light": lightBullet, "medium": mediumBullet, "heavy": heavyBullet}
-
-
+    let bulletTypes = {
+      light: lightBullet,
+      medium: mediumBullet,
+      heavy: heavyBullet,
+    };
 
     // event handlers
     this.handleEvent("update", (_) => {
@@ -65,6 +67,7 @@ Hooks.GameBoardHook = {
     // Keydown event listener
     window.addEventListener("keydown", (e) => {
       if (!pressedKeys.has(e.key)) {
+        e.preventDefault();
         console.log(e.key);
         pressedKeys.add(e.key); // Add pressed key to the set
         this.pushEvent("key_down", { key: e.key });
@@ -92,8 +95,17 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
   console.log("Data", data);
 
-  // drawing the ships
-  const me = data.players[0];
+  // Get the player name from the route parameters
+  const playerName = window.location.pathname.split("/").pop();
+
+  // Find the player with the matching name
+  let me = null;
+  for (const player of data.players) {
+    if (player.name === playerName) {
+      me = player;
+      break; // Stop searching once we find a match
+    }
+  }
   try {
   drawShip(
     ctx,
@@ -125,22 +137,22 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
 });
 
   const bullets = data.projectiles;
-  
+
   bullets.forEach((bullet) => {
     drawBullet(
       ctx,
       bulletTypes[bullet.type],
       bullet.kinematics.px,
       bullet.kinematics.py
-    )
-  })
+    );
+  });
 }
 
 function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
   ctx.save();
-  ctx.translate(px + 125, py + 125); // Adjust these values according to the sprite size
-  ctx.rotate(angle + Math.PI / 2);
-  ctx.drawImage(ship, -125, -125, 250, 250); // Adjust the sprite size here
+  ctx.translate(px + 20, py + 30); // Adjust these values according to the sprite size
+  ctx.rotate((angle - Math.PI / 2) * -1);
+  ctx.drawImage(ship, -20, -30, 40, 60); // Adjust the sprite size here
   ctx.restore();
 
   ctx.font = "20px";
@@ -156,10 +168,16 @@ function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
 }
 
 function drawBullet(ctx, bulletimg, px, py) {
-  const spriteSize = 50
+  const spriteSize = 50;
   ctx.save();
-  ctx.translate(px + (spriteSize/ 2), py + (spriteSize / 2));
-  ctx.drawImage(bulletimg, (spriteSize / 2 * -1), (spriteSize / 2 * -1), spriteSize, spriteSize);
+  ctx.translate(px + spriteSize / 2, py + spriteSize / 2);
+  ctx.drawImage(
+    bulletimg,
+    (spriteSize / 2) * -1,
+    (spriteSize / 2) * -1,
+    spriteSize,
+    spriteSize
+  );
   ctx.restore();
 }
 
@@ -622,6 +640,7 @@ window.addEventListener("phx:page-loading-stop", (_info) => topbar.hide());
 
 // connect if there are any LiveViews on the page
 liveSocket.connect();
+liveSocket.disableDebug();
 
 // expose liveSocket on window for web console debug logs and latency simulation:
 // >> liveSocket.enableDebug()
