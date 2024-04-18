@@ -12,7 +12,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   def mount(params, _session, socket) do
     {_, name} = Map.fetch(params, "name")
     IO.inspect(name)
-    GameServer.spawn_player(name, :destroyer)
+    GameServer.spawn_player(name, :destroyer, :light)
     Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
     updated_socket = assign(socket, name: name, game_state: "", count: "")
     {:ok, updated_socket}
@@ -29,6 +29,13 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   @impl true
   def handle_event("key_down", %{"key" => key}, socket) do
     # GamePrototype.update_user(socket.assigns.name, key)
+    case key do
+      "w" -> GameServer.accelerate_player(socket.assigns.name)
+      "d" -> GameServer.rotate_player(socket.assigns.name, :ccw)
+      "a" -> GameServer.rotate_player(socket.assigns.name, :cw)
+      _ -> :ok
+    end
+
     {:noreply, socket}
   end
 

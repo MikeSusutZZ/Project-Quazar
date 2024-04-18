@@ -92,9 +92,9 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
 
 function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
   ctx.save();
-  ctx.translate(px + 125, py + 125);
-  ctx.rotate(angle);
-  ctx.drawImage(ship, -125, -125, 250, 250);
+  ctx.translate(px + 125, py + 125); // Adjust these values according to the sprite size
+  ctx.rotate(angle + Math.PI / 2);
+  ctx.drawImage(ship, -125, -125, 250, 250); // Adjust the sprite size here
   ctx.restore();
 
   ctx.font = "20px";
