@@ -56,42 +56,42 @@ defmodule GameServer do
 
   @doc "Accelerates the Player with the given name."
   def accelerate_pressed(name) do
-    GenServer.cast({:global, __MODULE__}, {:input, :accelerate_pressed, name})
+    GenServer.cast({:global, __MODULE__}, {:input, :accelerate, :pressed, name})
   end
 
   @doc "Stops accelerating the specfied player."
   def accelerate_released(name) do
-    GenServer.cast({:global, __MODULE__}, {:input, :accelerate_released, name})
+    GenServer.cast({:global, __MODULE__}, {:input, :accelerate, :released, name})
   end
 
   @doc "Turns a specfied player right (clockwise)."
   def turn_right_pressed(name) do
-    GenServer.cast({:global, __MODULE__}, {:input, :turn_right_pressed, name})
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_right, :pressed, name})
   end
 
   @doc "Stops a specfied player from turning right."
   def turn_right_released(name) do
-    GenServer.cast({:global, __MODULE__}, {:input, :turn_right_released, name})
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_right, :released, name})
   end
 
   @doc "Turns a specfied player left (counter-clockwise)."
   def turn_left_pressed(name) do
-    GenServer.cast({:global, __MODULE__}, {:input, :turn_left_pressed, name})
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_left, :pressed, name})
   end
 
   @doc "Stops a specfied player from turning left."
   def turn_left_released(name) do
-    GenServer.cast({:global, __MODULE__}, {:input, :turn_left_released, name})
+    GenServer.cast({:global, __MODULE__}, {:input, :turn_left, :released, name})
   end
 
   @doc "Fires bullets from a specfied player."
   def fire_pressed(name) do
-    GenServer.cast({:global, __MODULE__}, {:input, :fire_pressed, name})
+    GenServer.cast({:global, __MODULE__}, {:input, :fire, :pressed, name})
   end
 
   @doc "Stops firing bullets from a specified player."
   def fire_released(name) do
-    GenServer.cast({:global, __MODULE__}, {:input, :fire_released, name})
+    GenServer.cast({:global, __MODULE__}, {:input, :fire, :released, name})
   end
 
   @doc "Handles all idle ship movement/velocity. Should be called every tick."
@@ -280,5 +280,26 @@ defmodule GameServer do
     end)
 
     {:noreply, state}
+  end
+
+  @doc """
+  This handles any user input events and updates the associated player with the inputs.
+  """
+  @impl true
+  def handle_cast({:input, input_type, pressed_or_released, username}, %{players: players} = state) do
+    if pressed_or_released != :pressed && pressed_or_released != :released do
+      raise "Invalid button state passed, expected pressed or released got #{pressed_or_released}"
+    end
+    # Update the passed players input mappings
+    new_players = Enum.map(players, fn player ->
+      if player.name == username do
+        Player.update_player_inputs(player, input_type, pressed_or_released)
+      else
+        player
+      end
+    end)
+    # Return updated input state
+    new_state = %{state | players: new_players}
+    {:noreply, new_state}
   end
 end
