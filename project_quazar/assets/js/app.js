@@ -90,11 +90,11 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
 
   // getting the data
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
-  if (!data) return;
-  // console.log("Data", data);
+  console.log("Data", data);
 
   // drawing the ships
   const me = data.players[0];
+  try {
   drawShip(
     ctx,
     myShip,
@@ -104,10 +104,13 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
     me.name,
     me.ship.health,
     me.ship.max_health
-  );
+  );}
+
+  catch {console.log("frame skip")}
 
   const enemies = data.players.slice(1);
   enemies.forEach((enemy) => {
+    try{
     drawShip(
       ctx,
       enemyShip,
@@ -117,8 +120,9 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
       enemy.name,
       enemy.ship.health,
       enemy.ship.max_health
-    );
-  });
+    );}
+    catch {console.log("frame skip")}
+});
 
   const bullets = data.projectiles;
   

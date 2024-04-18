@@ -111,7 +111,7 @@ defmodule GameServer do
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
-        IO.inspect(player)
+        #IO.inspect(player)
         if Player.alive?(player) do
           player
           |> Player.handle_inputs(@turn_rate)       # This handles all player-based inputs
@@ -168,7 +168,7 @@ defmodule GameServer do
 
     # Remove dead ships
     Enum.each(updated_projectiles, fn updated_projectile ->
-      IO.inspect(updated_projectile)
+      #IO.inspect(updated_projectile)
     end)
     Enum.each(updated_players, fn updated_player ->
       nil
