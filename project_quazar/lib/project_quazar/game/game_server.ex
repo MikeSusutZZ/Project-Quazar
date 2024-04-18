@@ -156,4 +156,16 @@ defmodule GameServer do
       end
     end
   end
+
+    # Public function to spawn a bullet
+    def spawn_bullet(bullet) do
+      GenServer.cast({:global, __MODULE__}, {:spawn_bullet, bullet})
+    end
+
+    @impl true
+    def handle_cast({:spawn_bullet, bullet}, %__MODULE__{projectiles: projectiles} = state) do
+      new_projectiles = [bullet | projectiles]
+      {:noreply, %{state | projectiles: new_projectiles}}
+    end
+
 end

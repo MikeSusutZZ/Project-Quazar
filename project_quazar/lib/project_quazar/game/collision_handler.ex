@@ -83,7 +83,6 @@ defmodule CollisionHandler do
     end
   end
 
-
   # Checks for collision between two circles given their positions and radius
   # Accepts positions in the format `{x, y}` and radius
   # Returns true if there is a collision
@@ -98,49 +97,64 @@ defmodule CollisionHandler do
 
   # Handles bullet-ship collisions.
   # Accepts a list of collision tuples, identifies bullets that have hit ships, and applies the corresponding damage.
-  # It also updates the score of the shooter in the high scores table.
   # Returns the updated lists of bullets and players after removing those that have collided with ships.
   defp handle_bullet_ship_collisions(collisions, bullets, players) do
-    # Collect IDs of bullets that have collided using a Set for faster checks
+    # Identify collided bullets and remove them from the active list
     collided_bullets = MapSet.new(Enum.map(collisions, fn {_, bullet, _} -> bullet end))
-    updated_bullets = Enum.reject(bullets, fn bullet -> MapSet.member?(collided_bullets, bullet) end)
+    updated_bullets = Enum.reject(bullets, &MapSet.member?(collided_bullets, &1))
 
-    # Apply damage to ships and update players
-    updated_players = Enum.reduce(players, [], fn player, acc ->
-      # Find all collisions for this particular player
-      player_collisions = Enum.filter(collisions, fn {_, _, collided_player} -> collided_player == player end)
+    # Process collisions to apply damage and update scores
+    {final_players, score_updates} = Enum.reduce(collisions, {players, %{}}, &process_collision/2)
 
-      # Check if this player had any collisions
-      if Enum.any?(player_collisions) do
-        # Process each collision to apply damage
-        updated_player = Enum.reduce(player_collisions, player, fn {_, bullet, _}, acc_player ->
-          damaged_player = Player.take_damage(acc_player, bullet.damage)
-
-          # Update the score for the player who fired the bullet
-          ProjectQuazar.HighScores.add_entry(bullet.sender, bullet.damage)
-
-          # Return the updated player
-          damaged_player
-        end)
-
-        # Only keep the player if their ship is still alive
-        if Player.alive?(updated_player) do
-          [updated_player | acc]
-        else
-          acc
-        end
-      else
-        [player | acc] # No collisions for this player, add them back to the list unchanged
-      end
-    end)
+    # Update players with new scores
+    updated_players = apply_score_updates(final_players, score_updates)
 
     {updated_bullets, updated_players}
-end
+  end
+
+  # Processes individual collisions and updates player health and score records.
+  # Accepts a tuple containing the collision details and a tuple of the current player list and score updates.
+  # Returns updated players list and score updates after processing the collision.
+  defp process_collision({_, bullet, collided_player}, {players, score_updates}) do
+    # Apply damage to the collided player
+    damaged_player = Player.take_damage(collided_player, bullet.damage)
+
+    # IO.puts("Damaged #{collided_player.name}: New health = #{damaged_player.ship.health}")
+
+    # Update the player list
+    updated_players = update_player_in_list(players, damaged_player)
+
+    new_score_updates = Map.update(score_updates, bullet.sender, bullet.damage, &(&1 + bullet.damage))
+
+    {updated_players, new_score_updates}
+  end
+
+  # Applies accumulated score updates to players.
+  # Accepts a current list of players and a map containing score updates for each player.
+  # Returns the list of players with updated scores.
+  defp apply_score_updates(players, score_updates) do
+    Enum.map(players, fn player ->
+      if Map.has_key?(score_updates, player.name) do
+        Player.inc_score(player, Map.fetch!(score_updates, player.name))
+      else
+        player
+      end
+    end)
+  end
+
+  # Updates a player in the list with a new version of that player.
+  # Takes a list of players and the player who has been updated.
+  # Returns a new list of players with the updated player replaced.
+  defp update_player_in_list(players, updated_player) do
+    Enum.map(players, fn player ->
+      if player.name == updated_player.name, do: updated_player, else: player
+    end)
+  end
 
   # Processes collisions between ships, each ship's health is reduced by the amount of health the opposing ship has.
   # Accepts a list of collisions and the current list of players, updates the health of each ship involved in collision.
   # Returns an updated list of `Player` structs after applying the collision effects.
-  def handle_ship_ship_collisions(collisions, players) do
+  defp handle_ship_ship_collisions(collisions, players) do
     # Filter only valid collisions and ensure both players in the collision are not nil
     valid_collisions = Enum.filter(collisions, fn
       {:ship_ship_collision, %Player{} = player1, %Player{} = player2} ->
