@@ -23,22 +23,7 @@ defmodule ProjectQuazarWeb.Router do
     live("/start", StartScreenLive, :show)
     live("/create-ship", CreateShipLive, :show)
 
-    # Frontend Prototype 1
-    live("/test", TestLive)
-
-    # Frontend Prototype 2
-    live("/prototype-2", Prototype2)
-
-    # Frontend prototype 3
-    live("/prototype-3", Prototype3)
-
     live("/game-over", GameOver)
-
-    # Frontend prototype 4
-    live("/prototype-4", Prototype4)
-
-    # Frontend Channel Prototype
-    live("/channel-prototype/:name", ChannelPrototypeLive)
 
     # Frontend PubSub Prototype
     live("/pubsub-prototype/:name", PubSubPrototypeLive)

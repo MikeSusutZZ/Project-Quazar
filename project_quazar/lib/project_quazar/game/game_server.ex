@@ -99,17 +99,22 @@ defmodule GameServer do
   @doc "Handles any and all idle movement/velocity. Should be called every tick for any movable entity."
   def move_all(movables) do
     # Filter movables based on in_bounds
-    in_bounds_movables = Enum.filter(movables, fn movable ->
-      %{px: px, py: py} = movable.kinematics
-      Boundary.outside?(%{x: px, y: py}, %{x: @bounds.x, y: @bounds.y}) == false
-    end)
-    # Move the filtered movables
-    new_moved_movables = Enum.map(in_bounds_movables, fn movable ->
-      Movable.Motion.move(movable)
-    end)
+    in_bounds_movables =
+      Enum.filter(movables, fn movable ->
+        %{px: px, py: py} = movable.kinematics
+        Boundary.outside?(%{x: px, y: py}, %{x: @bounds.x, y: @bounds.y}) == false
+      end)
 
-    new_moved_movables  # Return the new list of movables after filtering and moving
+    # Move the filtered movables
+    new_moved_movables =
+      Enum.map(in_bounds_movables, fn movable ->
+        Movable.Motion.move(movable)
+      end)
+
+    # Return the new list of movables after filtering and moving
+    new_moved_movables
   end
+
   @doc "Given a player and player list, replaces players with the same name in the list and returns the new list."
   def update_players(players, updated_player) do
     Enum.map(players, fn p -> if p.name == updated_player.name, do: updated_player, else: p end)
@@ -123,7 +128,7 @@ defmodule GameServer do
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
-        #IO.inspect(player)
+        # IO.inspect(player)
         if Player.alive?(player) do
           player
           # This handles all player-based inputs
@@ -199,7 +204,7 @@ defmodule GameServer do
     # Remove dead ships
     Enum.each(updated_projectiles, fn updated_projectile ->
       nil
-      #IO.inspect(updated_projectile)
+      # IO.inspect(updated_projectile)
     end)
 
     Enum.each(updated_players, fn updated_player ->
@@ -323,5 +328,4 @@ defmodule GameServer do
     new_state = %{state | players: new_players}
     {:noreply, new_state}
   end
-
 end
