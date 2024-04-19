@@ -293,6 +293,19 @@ let liveSocket = new LiveSocket("/live", Socket, {
   params: { _csrf_token: csrfToken },
 });
 
+//Styling Hooks for gameover screen
+Hooks.FadeIn = {
+  mounted() {
+    console.log("FadeIn mounted, applying styles...");
+    this.el.style.opacity = 0;
+    setTimeout(() => {
+      this.el.style.transition = "opacity 5s ease-in-out";
+      this.el.style.opacity = 1;
+      console.log("Styles applied, opacity should be 1 now.");
+    }, 100);
+  },
+};
+
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" });
 window.addEventListener("phx:page-loading-start", (_info) => topbar.show(300));
