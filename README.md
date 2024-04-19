@@ -10,15 +10,19 @@ Programming Paradigms
 - [Backend Team](#backend-team)
 - [Front Team](#front-team)
 
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
 ## About the Project
 
 Project Quazar is a multiplayer space shooter game developed by students at BCIT in the Programming Paradigms Option. The game is built using the Phoenix Framework, Elixir, and JavaScript. The game features a variety of ships and bullets, as well as high scores and multiplayer capabilities.
 
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
 ## Overview
 
-<br>
-
 The goal of the game is to engage in multiplayer battles, where players try to destroy enemy ships in and earn points. Players can choose from a variety of ships and bullet types. The game features a high score system that displays the top scores of all players in the current game, as well as the all-time top scores.
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ## Menus Team
 
@@ -38,7 +42,7 @@ The Menus team is responsible for creating the following:
 - Ediljohn Joson
 - Rhys Mahannah
 
-<br>
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ## Backend Team
 
@@ -68,7 +72,7 @@ The Backend team is responsible for creating the following:
 - Mikko Sio
 - Michelle Kwok
 
-<br>
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ## Front Team
 
@@ -119,6 +123,8 @@ The Frontend team is responsible for creating the following:
 - Shuyi Liu
 - Emily Tran
 - Daniel Okonov
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ### Setting Up Your Environment
 
