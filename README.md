@@ -244,7 +244,7 @@ The Frontend team was responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="bugs"> 🪳 Known Bugs</h2>
+<h2 id="bugs"> 🐛 Known Bugs</h2>
 
 ### Don't AutoFill
 If you allow google to autofill your username, you will get kicked back to the home screen and be repeatedly kicked back whenever you try to type. Do not use autofill. If you have, solve the bug with a hard cache reload (ctrl + F5).
