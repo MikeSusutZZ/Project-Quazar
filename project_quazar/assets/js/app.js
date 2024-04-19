@@ -56,7 +56,7 @@ Hooks.GameBoardHook = {
     let lightBullet = new Image();
     let mediumBullet = new Image();
     let heavyBullet = new Image();
-    lightBullet.src = "/images/blue_bullet_asset/Blue_Bullet.png";
+    lightBullet.src = "/images/purple_bullet_asset/Purple_Bullet.png";
     mediumBullet.src = "/images/green_bullet_asset/Green_Bullet.png";
     heavyBullet.src = "/images/red_bullet_asset/Red_Bullet.png";
 
@@ -271,6 +271,7 @@ function drawShip(
 
 function drawBullet(ctx, bulletimg, px, py, radius) {
   const spriteSize = radius * 2;
+  console.log("bullet", bulletimg);
   ctx.save();
   ctx.translate(px + spriteSize / 2, py + spriteSize / 2);
   ctx.drawImage(
