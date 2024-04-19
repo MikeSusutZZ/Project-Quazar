@@ -102,11 +102,11 @@ Ready your thrusters and prepare for your first match in **Project Quazar**!
 
 For the development of Project Quazar, we organized our efforts into three specialized teams, each focusing on a distinct aspect of the game to ensure an engaging player experience and keeping a large group project managable and organized.
 
-**Menus Team**: Tasked with crafting the first impressions, this team designed the intuitive start screen and user interfaces that players interact with throughout the game. They were also tasked with tracking the users score and displaying it in the score boards.
+- **Menus Team**: Tasked with crafting the first impressions, this team designed the intuitive start screen and user interfaces that players interact with throughout the game. They were also tasked with tracking the users score and displaying it in the score boards.
 
-**Backend Team**: The backbone of our game operations, this team handled the physics, collisions, tracking ships, their projectiles, responding to inputs, and all other functions of game logic. All that data is then shipped off to the front end to render.
+- **Backend Team**: The backbone of our game operations, this team handled the physics, collisions, tracking ships, their projectiles, responding to inputs, and all other functions of game logic. All that data is then shipped off to the front end to render.
 
-**Frontend Team**: Bringing the visual magic, this team was responsible for taking the raw data from the back end and rendering all the game elements on the screen accordingly.
+- **Frontend Team**: Bringing the visual magic, this team was responsible for taking the raw data from the back end and rendering all the game elements on the screen accordingly.
 
 Each team's dedicated efforts were seamlessly integrated into the final product, creating a cohesive and captivating gaming experience that we are proud to present to the world.
 
