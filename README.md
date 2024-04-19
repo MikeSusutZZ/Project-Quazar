@@ -11,7 +11,13 @@ Project Quazar is a multiplayer space shooter game developed by students at BCIT
   <ol>
     <li><a href="#about-the-project"> ➤ About The Project</a></li>
     <li><a href="#instructions"> ➤ Instructions</a></li>
-    <li><a href="#references"> ➤ References</a></li>
+    <li><a href="#overview"> ➤ Overview</a></li>
+    <li><a href="#menu"> ➤ Menus Team</a></li>
+    <li><a href="#backend"> ➤ Backend Team</a></li>
+    <li><a href="#frontend"> ➤ Frontend Team</a></li>
+    <li><a href="#setting-up-your-environments"> ➤ Setting Up Your Environment</a></li>
+    <li><a href="#making-changes"> ➤ Making Changes</a></li>
+    <li><a href="#submitting-for-review"> ➤ Submitting for Review</a></li>
     <li><a href="#credits"> ➤ Credits</a></li>
   </ol>
 </details>
@@ -28,13 +34,13 @@ Project Quazar's goal of the game is to engage in multiplayer battles, where pla
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :cloud: Overview</h2>
+<h2 id="overview"> :cloud: Overview</h2>
 
 The game is divided into three main teams: Menus, Backend, and Frontend. Each team is responsible for different aspects of the game, such as creating the start screen, handling game logic, and rendering game elements on the screen.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :page_with_curl: Menus Team</h2>
+<h2 id="menu"> :page_with_curl: Menus Team</h2>
 
 The Menus team is responsible for creating the following:
 
@@ -54,7 +60,7 @@ The Menus team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :fax: Backend Team</h2>
+<h2 id="backend"> :fax: Backend Team</h2>
 
 The Backend team is responsible for creating the following:
 
@@ -84,7 +90,7 @@ The Backend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :tv: Front Team</h2>
+<h2 id="frontend"> :tv: Frontend Team</h2>
 
 The Frontend team is responsible for creating the following:
 
@@ -136,7 +142,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :wrench: Setting Up Your Environment</h2>
+<h2 id="setting-up-your-environments"> :wrench: Setting Up Your Environment</h2>
 
 ### (1) Clone the Repository
 
@@ -158,7 +164,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :clipboard: Making Changes</h2>
+<h2 id="making-changes"> :clipboard: Making Changes</h2>
 
 ### (1) Create a New Branch
 
@@ -175,7 +181,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :mailbox: Submitting for Review</h2>
+<h2 id="submitting-for-review"> :mailbox: Submitting for Review</h2>
 
 ### (1) Commit Latest Changes
 
@@ -192,3 +198,11 @@ The Frontend team is responsible for creating the following:
 - Wait for feedback. Make any necessary changes and push them to your branch.
 - Click the green `Merge pull request` button to merge your changes into the main branch.
 - Click the `Delete branch` button to remove your feature branch.
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+<h2 id="credits"> :pray: Credits</h2>
+
+We would like to thank everyone in our class that contributed to this project. It was a great learning experience and we appreciate all the hard work that went into making this game a reality.
+
+To Albert, our instructor, thank you for making us work on a 19-person project. It was a challenge, but we learned a lot and had fun along the way.
