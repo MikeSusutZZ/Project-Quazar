@@ -16,13 +16,14 @@ Dive into the galactic world of **Project Quazar**! In this action-packed multip
     <li><a href="#about-the-project"> ➤ About The Project</a></li>
     <li><a href="#instructions"> ➤ Instructions</a></li>
     <li><a href="#overview"> ➤ Overview</a></li>
+    <li><a href="#architecture"> ➤ Architecture Diagram</a></li>
     <li><a href="#management"> ➤ Management Team</a></li>
     <li><a href="#menu"> ➤ Menus Team</a></li>
     <li><a href="#backend"> ➤ Backend Team</a></li>
     <li><a href="#frontend"> ➤ Frontend Team</a></li>
     <li><a href="#setting-up-your-environments"> ➤ Setting Up Your Environment</a></li>
-    <li><a href="#making-changes"> ➤ Making Changes</a></li>
-    <li><a href="#submitting-for-review"> ➤ Submitting for Review</a></li>
+    <li><a href= "#future"> ➤ Future Development </a></li>
+    <li><a href="#bugs"> ➤ Known Bugs</a></li>
     <li><a href="#credits"> ➤ Credits</a></li>
   </ol>
 </details>
@@ -109,6 +110,14 @@ For the development of Project Quazar, we organized our efforts into three speci
 - **Frontend Team**: Bringing the visual magic, this team was responsible for taking the raw data from the back end and rendering all the game elements on the screen accordingly.
 
 Each team's dedicated efforts were seamlessly integrated into the final product, creating a cohesive and captivating gaming experience that we are proud to present to the world.
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+<h2 id="architecture"> :house_with_garden: Architecture Diagram </h2>
+
+<p align="center">
+  <img src="./readme_assets/arch_diagram.png" alt="">
+</p>
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -243,42 +252,43 @@ The Frontend team was responsible for creating the following:
 - In the integrated terminal, start your server with: `mix phx.server`
 - Visit `localhost:4000` in your browser to see the application.
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+- ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="making-changes"> :clipboard: Making Changes</h2>
+<h2 id="future"> 🎆 Future Development </h2>
+BCIT is very busy, and even with 19 students working together, there's only much we can get done. So that begs the question, what would have we been able to complete with more time to focus on Project Quazar?
 
-### (1) Create a New Branch
+### User Login, Accounts, Authenication
+Use Phoenix's built in ecto system to have users log into profiles where they can have a username unique to them, track their score history, and save their favorite ship builds
 
-- In VS Code, open the Source Control sidebar by clicking the branch icon on the left or pressing `Ctrl+Shift+G`.
-- Click on the branch name in the bottom left corner to bring up the branch menu.
-- Select `Create new branch...` and enter the name for your branch, such as `feature/add-scoreboard`, then hit `Enter`.
-- Click `Publish Branch` in the left sidebar, to push your branch to GitHub.
-- Check the bottom-left corner to ensure you're on your new branch.
+### Bigger Scrren, Camera Following, and Obstacles
+We've only got 19 people, so we were content with an 800x800 screen to prototype on and a top down view of the whole map, but given the time we would have the camera focused in on the player, keeping them in the center of the screen and moving everything else around it. Having the camera work this way would mean we can have a larger overall board, allowing for more players, and allowing for the possibility of obstacles such as asteroids and black holes.
 
-### (2) Writing Code
-
-- Write code associated with the feature.
-- Save files and regularly commit changes to your branch.
+### More Customization
+The 3 ship types and 3 weapon types allows for 9 different combinations for players to find their optimal play style, but in the future there could be more stats and more options to tune the way you want to play. Extra weapon types such as homing missles and mines would be some of the first on the list
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="submitting-for-review"> :mailbox: Submitting for Review</h2>
+<h2 id="bugs"> 🐛 Known Bugs</h2>
 
-### (1) Commit Latest Changes
+### Don't AutoFill
 
-- Ensure your latest changes are committed to your branch.
-- Resolve any errors or conflicts before proceeding.
+If you allow google to autofill your username, you will get kicked back to the home screen and be repeatedly kicked back whenever you try to type. Do not use autofill. If you have, solve the bug with a hard cache reload (ctrl + F5).
 
-### (2) Create a Pull Request
+### Browser Support
 
-- Open GitHub in your browser and navigate to the repository.
-- You should see, in a yellow banner, the prompt `Compare & pull request`. Click this.
-- Add a title and brief description.
-- On the right-hand side, click the gear icon to assign reviewers. Assign `rhysmah`.
-- Click the green `Create pull request` button.
-- Wait for feedback. Make any necessary changes and push them to your branch.
-- Click the green `Merge pull request` button to merge your changes into the main branch.
-- Click the `Delete branch` button to remove your feature branch.
+Use Chrome for best results, Safari has been particularly inconsistent.
+
+### All-Time High Score not updating
+
+Hopefully done before handin.
+
+### Long asset load time and heavy data load
+
+This project sends a LOT of information very quickly. Do not use a metered connection. Players may join the game before having all assets load, allowing them to be killed before they finish loading.
+
+### Game Over Screen Missing Animation
+
+Text should be fading in, but we think the animation is happening before the user is shown the screen, once the animation has already finished. Tailwind is being particular about it.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
