@@ -2,10 +2,6 @@
 
 ## Menus Team
 
-### IMPORTANT
-
-Menus Team, the 'menus' folder is now deprecated. Please work on, and create branches for, the `project_quazar` folder.
-
 The Menus team is responsible for creating the following:
 
 - **Start Screen**: includes the Play and High Scores buttons
@@ -58,18 +54,52 @@ The Backend team is responsible for creating the following:
 
 The Frontend team is responsible for creating the following:
 
-- **Assets**: Handles all bullet-related operations
-- **Components**: Handles collision detection between game entities (bullet/player/ship)
+### Design Elements
+
+- **Design Bullets**
+
+  - Create bullet assets.
+  - Render bullets on screen.
+  - Handle bullet movement dynamics.
+
+- **Design Player**
+
+  - Create player ship asset.
+  - Render player ship and health bar on screen.
+  - Display player's name.
+  - Manage player ship movement.
+
+- **Design Game Board**
+  - Create assets for the game board.
+  - Set up boundaries for the game board.
+  - Render the game board.
+
+### Multiplayer Features
+
+- **Multiplayer**
+  - Implement rendering processes for multiplayer interactions.
+
+### Core Components
+
+- **Components**: Define and manage interactive components essential for gameplay.
+
+- **Render Canvas**: Set up and manage the canvas where the game elements are rendered.
+
+- **PubSub System**: Implement a Publish-Subscribe system to handle event-driven interactions within the game.
 
 <br>
 
-![Frontend Team Screenshot](backend.png "Frontend Team Diagram")
+![Frontend Team Screenshot](frontend_and_menu.png "Frontend Team Diagram")
 
 ## Team Members
 
 - Sean Sollestre
 - Aditya Agrawai
-- Josh Chuaua
+- Josh Chuah
+- Jason Shi
+- Shuyi Liu
+- Emily Tran
+- Daniel Okonov
 
 ### Setting Up Your Environment
 
