@@ -274,6 +274,10 @@ The 3 ship types and 3 weapon types allows for 9 different combinations for play
 
 If you allow google to autofill your username, you will get kicked back to the home screen and be repeatedly kicked back whenever you try to type. Do not use autofill. If you have, solve the bug with a hard cache reload (ctrl + F5).
 
+### Ungraceful Exits Hogging Usernames
+
+If a player leaves the game page any way other than dying, they remain in the ets table and so their username cannot be used until server reload
+
 ### Browser Support
 
 Use Chrome for best results, Safari has been particularly inconsistent.
@@ -285,10 +289,6 @@ While labelled as "All Time High Scores" it only saves since the last time the s
 ### Long asset load time and heavy data load
 
 This project sends a LOT of information very quickly. Do not use a metered connection. Players may join the game before having all assets load, allowing them to be killed before they finish loading.
-
-### Game Over Screen Missing Animation
-
-Text should be fading in, but we think the animation is happening before the user is shown the screen, once the animation has already finished. Tailwind is being particular about it.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
