@@ -93,7 +93,6 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
 
   // getting the data
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
-  console.log("Data", data);
 
   // Get the player name from the route parameters
   const playerName = window.location.pathname.split("/").pop();
@@ -165,12 +164,12 @@ function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
   ctx.textAlign = "center";
 
   ctx.fillStyle = "white";
-  ctx.fillText(name, px + 125, py + 125 - 20);
+  ctx.fillText(name, px + 20, py + 30 - 40);
 
   healthRatio = parseFloat(health) / maxHealth;
   ctx.fillStyle =
     healthRatio > 0.8 ? "green" : healthRatio > 0.4 ? "yellow" : "red";
-  ctx.fillText(health, px + 125, py + 125 - 5);
+  ctx.fillText(health, px + 20, py + 30 - 30);
 }
 
 function drawBullet(ctx, bulletimg, px, py) {
