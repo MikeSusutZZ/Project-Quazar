@@ -16,6 +16,7 @@ Dive into the galactic world of **Project Quazar**! In this action-packed multip
     <li><a href="#about-the-project"> ➤ About The Project</a></li>
     <li><a href="#instructions"> ➤ Instructions</a></li>
     <li><a href="#overview"> ➤ Overview</a></li>
+    <li><a href="#architecture"> ➤ Architecture Diagram</a></li>
     <li><a href="#management"> ➤ Management Team</a></li>
     <li><a href="#menu"> ➤ Menus Team</a></li>
     <li><a href="#backend"> ➤ Backend Team</a></li>
@@ -108,6 +109,14 @@ For the development of Project Quazar, we organized our efforts into three speci
 - **Frontend Team**: Bringing the visual magic, this team was responsible for taking the raw data from the back end and rendering all the game elements on the screen accordingly.
 
 Each team's dedicated efforts were seamlessly integrated into the final product, creating a cohesive and captivating gaming experience that we are proud to present to the world.
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+<h2 id="architecture"> :house_with_garden: Architecture Diagram </h2>
+
+<p align="center">
+  <img src="./readme_assets/arch_diagram.png" alt="">
+</p>
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -247,21 +256,24 @@ The Frontend team was responsible for creating the following:
 <h2 id="bugs"> 🐛 Known Bugs</h2>
 
 ### Don't AutoFill
+
 If you allow google to autofill your username, you will get kicked back to the home screen and be repeatedly kicked back whenever you try to type. Do not use autofill. If you have, solve the bug with a hard cache reload (ctrl + F5).
 
 ### Browser Support
+
 Use Chrome for best results, Safari has been particularly inconsistent.
 
 ### All-Time High Score not updating
+
 Hopefully done before handin.
 
 ### Long asset load time and heavy data load
+
 This project sends a LOT of information very quickly. Do not use a metered connection. Players may join the game before having all assets load, allowing them to be killed before they finish loading.
 
 ### Game Over Screen Missing Animation
+
 Text should be fading in, but we think the animation is happening before the user is shown the screen, once the animation has already finished. Tailwind is being particular about it.
-
-
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
