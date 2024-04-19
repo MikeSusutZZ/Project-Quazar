@@ -3,7 +3,7 @@
 Dive into the galactic world of **Project Quazar**! In this action-packed multiplayer space shooter, players face off in intense skirmishes, aiming to obliterate enemy ships and rack up points. Choose your arsenal from a variety of unique space ships and devastating bullet types that fit your combat style. Thrive in the chaos of current games and etch your name onto the leaderboards. Are you ready to claim your place among the stars in Project Quazar? Join the fray and dominate the galaxy!
 
 <p align="center">
-  <img src="Quazar.gif" alt="" height="200px" width="200">
+  <img src="./readme_assets/Quazar.gif" alt="" height="200px" width="200">
 </p>
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
@@ -60,7 +60,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
      - _Light_ - Low damage, high speed.
 
 <p align="center">
-  <img src="./project_quazar/user_creation.png" alt="" height="300px" width="225">
+  <img src="./readme_assets/user_creation.png" alt="" height="300px" width="225">
 </p>
 
 3. Hit **Submit** to lock in your choices.
@@ -132,7 +132,7 @@ The Menus team was responsible for creating the following:
 - **In-Game High Scores Screen** : Displays the scores of all players in the current game, from highest to lowest
 - **All-Time High Scores Screen** : Displays the scores of all players who have ever played the game, from highest to lowest
 
-![Menus Team Screenshot](./project_quazar/image.png "Menus Team Screenshot")
+![Menus Team Screenshot](./readme_assets//image.png "Menus Team Screenshot")
 
 ## Team Members
 
