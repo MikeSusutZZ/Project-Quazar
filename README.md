@@ -28,13 +28,13 @@ Project Quazar's goal of the game is to engage in multiplayer battles, where pla
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## :cloud: Overview
+<h2 id="instructions"> :cloud: Overview</h2>
 
 The game is divided into three main teams: Menus, Backend, and Frontend. Each team is responsible for different aspects of the game, such as creating the start screen, handling game logic, and rendering game elements on the screen.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## :page_with_curl: Menus Team
+<h2 id="instructions"> :page_with_curl: Menus Team</h2>
 
 The Menus team is responsible for creating the following:
 
@@ -54,7 +54,7 @@ The Menus team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## :fax: Backend Team
+<h2 id="instructions"> :fax: Backend Team</h2>
 
 The Backend team is responsible for creating the following:
 
@@ -84,7 +84,7 @@ The Backend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## :tv: Front Team
+<h2 id="instructions"> :tv: Front Team</h2>
 
 The Frontend team is responsible for creating the following:
 
@@ -136,7 +136,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## :wrench: Setting Up Your Environment
+<h2 id="instructions"> :wrench: Setting Up Your Environment</h2>
 
 ### (1) Clone the Repository
 
@@ -158,7 +158,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## :clipboard: Making Changes
+<h2 id="instructions"> :clipboard: Making Changes</h2>
 
 ### (1) Create a New Branch
 
@@ -175,7 +175,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## :mailbox: Submitting for Review
+<h2 id="instructions"> :mailbox: Submitting for Review</h2>
 
 ### (1) Commit Latest Changes
 
