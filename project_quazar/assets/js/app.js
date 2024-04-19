@@ -56,9 +56,10 @@ Hooks.GameBoardHook = {
     let lightBullet = new Image();
     let mediumBullet = new Image();
     let heavyBullet = new Image();
+    lightBullet.src = "/images/blue_bullet_asset/Blue_Bullet.png";
+    mediumBullet.src = "/images/green_bullet_asset/Green_Bullet.png";
     heavyBullet.src = "/images/red_bullet_asset/Red_Bullet.png";
-    lightBullet.src = "/images/green_bullet_asset/Green_Bullet.png";
-    mediumBullet.src = "/images/purple_bullet_asset/Purple_Bullet.png";
+
     let bulletTypes = {
       light: lightBullet,
       medium: mediumBullet,
@@ -206,23 +207,26 @@ function drawShip(
   health,
   maxHealth,
   radius,
-  playerName
+  playerName,
+  srcType
 ) {
   const spriteSize = radius * 2;
   const xOffset = 10;
   const yOffset = 60;
   const textSize = 10;
 
+  let shipSrc = {
+    tank: "/images/ship_asset/red_ship_trimmed.png",
+    destroyer: "/images/ship_asset/purple_ship_trimmed.png",
+    scout: "/images/ship_asset/blue_ship_trimmed.png",
+  };
+
   console.log("ship", ship);
 
   if (health <= 0) {
     ship.src = "/images/ship_asset/boom1.png";
   } else {
-    if (name === playerName) {
-      ship.src = "/images/ship_asset/blue_ship_trimmed.png";
-    } else {
-      ship.src = "/images/ship_asset/red_ship_trimmed.png";
-    }
+    ship.src = shipSrc[srcType];
   }
 
   ctx.save();
