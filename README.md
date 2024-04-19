@@ -270,9 +270,9 @@ The 3 ship types and 3 weapon types allows for 9 different combinations for play
 
 <h2 id="bugs"> 🐛 Known Bugs</h2>
 
-### Don't AutoFill
+### Don't AutoFill or Enter Blank Name
 
-If you allow google to autofill your username, you will get kicked back to the home screen and be repeatedly kicked back whenever you try to type. Do not use autofill. If you have, solve the bug with a hard cache reload (ctrl + F5).
+If you allow google to autofill your username or enter a blank name, you will get kicked back to the home screen and be repeatedly kicked back whenever you try to type. Do not use autofill. If you have, solve the bug with a hard cache reload (F5). Your ship will still join the game and be controllable from the menu screen, you just wont see it.
 
 ### Ungraceful Exits Hogging Usernames
 
