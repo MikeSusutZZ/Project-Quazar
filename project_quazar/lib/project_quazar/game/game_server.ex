@@ -164,7 +164,7 @@ defmodule GameServer do
     {collision_updated_projectiles, collision_updated_players} = CollisionHandler.handle_collisions(new_gamestate.projectiles, new_gamestate.players)
 
     # Check each player for boundary conditions
-    checked_players = Enum.map(collision_updated_players, fn player ->
+    live_players = Enum.map(collision_updated_players, fn player ->
       cond do
         Boundary.outside?(player, @bounds) ->
           # Kill the player's ship if outside the boundary
@@ -180,7 +180,7 @@ defmodule GameServer do
     # Update the game state with the new lists of players and projectiles
     updated_gamestate = %{
       new_gamestate
-      | players: checked_players,
+      | players: live_players,
         projectiles: collision_updated_projectiles
     }
 
