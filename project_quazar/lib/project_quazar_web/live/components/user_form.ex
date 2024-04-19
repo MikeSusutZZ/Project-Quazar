@@ -17,7 +17,7 @@ defmodule ProjectQuazarWeb.UserForm do
           <div class="radio-btn-options-container-row">
             <div class='radio-button-option-col'>
               <label class='option_label sub_heading'>Tank</label>
-              <img src={~p"/images/ship_asset/blue_ship_trimmed.png"} alt="Example Image" style="width: 20px; height: auto;">
+              <img src={~p"/images/ship_asset/blue_ship_trimmed.png"} alt="Example Image" style="width: 40px; height: 40px;">
               <h1 class="health_text">Health: 250</h1>
               <h1 class="speed_text">Speed: Slow</h1>
               <div>
@@ -27,7 +27,7 @@ defmodule ProjectQuazarWeb.UserForm do
 
             <div class='radio-button-option-col'>
               <label class='option_label sub_heading'>Destroyer</label>
-              <img src={~p"/images/ship_asset/purple_ship_trimmed.png"} alt="Example Image" style="width: 20px; height: auto; image-rendering: pixelated">
+              <img src={~p"/images/ship_asset/purple_ship_trimmed.png"} alt="Example Image" style="width: 40px; height: 40px;">
               <h1 class="health_text">Health: 150</h1>
               <h1 class="speed_text">Speed: normal</h1>
               <div>
@@ -37,7 +37,7 @@ defmodule ProjectQuazarWeb.UserForm do
 
             <div class='radio-button-option-col'>
               <label class='sub_heading'>Scout</label>
-              <img src={~p"/images/ship_asset/red_ship_trimmed.png"} alt="Example Image" style="width: 20px; height: auto; image-rendering: pixelated">
+              <img src={~p"/images/ship_asset/red_ship_trimmed.png"} alt="Example Image" style="width: 40px; height: 40px;">
               <h1 class="health_text">Health: 100</h1>
               <h1 class="speed_text">Speed: fast</h1>
               <div>
@@ -52,7 +52,7 @@ defmodule ProjectQuazarWeb.UserForm do
             <div class='radio-button-option-col '>
               <label class='option_label sub_heading'>Heavy</label>
 
-              <img src={~p"/images/red_bullet_asset/Red_Bullet.png"} alt="Example Image" style="width: 30px; height: auto; image-rendering: pixelated">
+              <img src={~p"/images/red_bullet_asset/Red_Bullet.png"} alt="Example Image" style="width: 30px; height:  30px;">
               <h1 class="damage_text" >Damage: 35</h1>
               <h1 class="speed_text" >Speed: Slow</h1>
               <div>
@@ -62,7 +62,7 @@ defmodule ProjectQuazarWeb.UserForm do
 
             <div class='radio-button-option-col'>
               <label class='option_label sub_heading'>Medium</label>
-              <img src={~p"/images/green_bullet_asset/Green_Bullet.png"} alt="Example Image" style="width: 30px; height: auto;">
+              <img src={~p"/images/green_bullet_asset/Green_Bullet.png"} alt="Example Image" style="width: 30px; height:  30px;">
               <h1 class="damage_text">Damage: 20</h1>
               <h1 class="speed_text">Speed: normal</h1>
               <div>
@@ -72,7 +72,7 @@ defmodule ProjectQuazarWeb.UserForm do
 
             <div class='radio-button-option-col'>
               <label class="sub_heading">Light</label>
-              <img src={~p"/images/purple_bullet_asset/Purple_Bullet.png"} alt="Example Image" style="width: 30px; height: auto;">
+              <img src={~p"/images/purple_bullet_asset/Purple_Bullet.png"} alt="Example Image" style="width: 30px; height: 30px;">
               <h1 class="damage_text">Damage: 10</h1>
               <h1 class="speed_text">Speed: fast</h1>
               <div>
