@@ -21,8 +21,7 @@ Dive into the galactic world of **Project Quazar**! In this action-packed multip
     <li><a href="#backend"> ➤ Backend Team</a></li>
     <li><a href="#frontend"> ➤ Frontend Team</a></li>
     <li><a href="#setting-up-your-environments"> ➤ Setting Up Your Environment</a></li>
-    <li><a href="#making-changes"> ➤ Making Changes</a></li>
-    <li><a href="#submitting-for-review"> ➤ Submitting for Review</a></li>
+    <li><a href="#bugs"> ➤ Known Bugs</a></li>
     <li><a href="#credits"> ➤ Credits</a></li>
   </ol>
 </details>
@@ -245,40 +244,24 @@ The Frontend team was responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="making-changes"> :clipboard: Making Changes</h2>
+<h2 id="bugs"> 🪳 Known Bugs</h2>
 
-### (1) Create a New Branch
+### Don't AutoFill
+If you allow google to autofill your username, you will get kicked back to the home screen and be repeatedly kicked back whenever you try to type. Do not use autofill. If you have, solve the bug with a hard cache reload (ctrl + F5).
 
-- In VS Code, open the Source Control sidebar by clicking the branch icon on the left or pressing `Ctrl+Shift+G`.
-- Click on the branch name in the bottom left corner to bring up the branch menu.
-- Select `Create new branch...` and enter the name for your branch, such as `feature/add-scoreboard`, then hit `Enter`.
-- Click `Publish Branch` in the left sidebar, to push your branch to GitHub.
-- Check the bottom-left corner to ensure you're on your new branch.
+### Browser Support
+Use Chrome for best results, Safari has been particularly inconsistent.
 
-### (2) Writing Code
+### All-Time High Score not updating
+Hopefully done before handin.
 
-- Write code associated with the feature.
-- Save files and regularly commit changes to your branch.
+### Long asset load time and heavy data load
+This project sends a LOT of information very quickly. Do not use a metered connection. Players may join the game before having all assets load, allowing them to be killed before they finish loading.
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+### Game Over Screen Missing Animation
+Text should be fading in, but we think the animation is happening before the user is shown the screen, once the animation has already finished. Tailwind is being particular about it.
 
-<h2 id="submitting-for-review"> :mailbox: Submitting for Review</h2>
 
-### (1) Commit Latest Changes
-
-- Ensure your latest changes are committed to your branch.
-- Resolve any errors or conflicts before proceeding.
-
-### (2) Create a Pull Request
-
-- Open GitHub in your browser and navigate to the repository.
-- You should see, in a yellow banner, the prompt `Compare & pull request`. Click this.
-- Add a title and brief description.
-- On the right-hand side, click the gear icon to assign reviewers. Assign `rhysmah`.
-- Click the green `Create pull request` button.
-- Wait for feedback. Make any necessary changes and push them to your branch.
-- Click the green `Merge pull request` button to merge your changes into the main branch.
-- Click the `Delete branch` button to remove your feature branch.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
