@@ -22,6 +22,7 @@ Dive into the galactic world of **Project Quazar**! In this action-packed multip
     <li><a href="#backend"> ➤ Backend Team</a></li>
     <li><a href="#frontend"> ➤ Frontend Team</a></li>
     <li><a href="#setting-up-your-environments"> ➤ Setting Up Your Environment</a></li>
+    <li><a href= "#future"> ➤ Future Development </a></li>
     <li><a href="#bugs"> ➤ Known Bugs</a></li>
     <li><a href="#credits"> ➤ Credits</a></li>
   </ol>
@@ -250,6 +251,20 @@ The Frontend team was responsible for creating the following:
 
 - In the integrated terminal, start your server with: `mix phx.server`
 - Visit `localhost:4000` in your browser to see the application.
+
+- ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+<h2 id="future"> 🎆 Future Development </h2>
+BCIT is very busy, and even with 19 students working together, there's only much we can get done. So that begs the question, what would have we been able to complete with more time to focus on Project Quazar?
+
+### User Login, Accounts, Authenication
+Use Phoenix's built in ecto system to have users log into profiles where they can have a username unique to them, track their score history, and save their favorite ship builds
+
+### Bigger Scrren, Camera Following, and Obstacles
+We've only got 19 people, so we were content with an 800x800 screen to prototype on and a top down view of the whole map, but given the time we would have the camera focused in on the player, keeping them in the center of the screen and moving everything else around it. Having the camera work this way would mean we can have a larger overall board, allowing for more players, and allowing for the possibility of obstacles such as asteroids and black holes.
+
+### More Customization
+The 3 ship types and 3 weapon types allows for 9 different combinations for players to find their optimal play style, but in the future there could be more stats and more options to tune the way you want to play. Extra weapon types such as homing missles and mines would be some of the first on the list
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
