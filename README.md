@@ -280,7 +280,7 @@ BCIT is very busy, and even with 19 students working together, there's only much
 ### User Login, Accounts, Authenication
 Use Phoenix's built in ecto system to have users log into profiles where they can have a username unique to them, track their score history, and save their favorite ship builds
 
-### Bigger Scrren, Camera Following, and Obstacles
+### Bigger Screen, Camera Following, and Obstacles
 We've only got 19 people, so we were content with an 800x800 screen to prototype on and a top down view of the whole map, but given the time we would have the camera focused in on the player, keeping them in the center of the screen and moving everything else around it. Having the camera work this way would mean we can have a larger overall board, allowing for more players, and allowing for the possibility of obstacles such as asteroids and black holes.
 
 ### More Customization
