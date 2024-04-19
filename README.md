@@ -203,6 +203,6 @@ The Frontend team is responsible for creating the following:
 
 <h2 id="credits"> :pray: Credits</h2>
 
-We would like to thank everyone in our class that contributed to this project. It was a great learning experience and we appreciate all the hard work that went into making this game a reality.
+We would like to thank everyone in our class for contributing to this awesome project. It was a blast working with all of you. All the all-nighters, the debugging, the laughter, and the frustration were worth it in the end. We hope you enjoy playing Project Quazar as much as we enjoyed making it! :rocket:
 
-To Albert, our instructor, thank you for making us work on a 19-person project. It was a challenge, but we learned a lot and had fun along the way.
+To Albert, our instructor, thank you for making us work on a 19-person project. It was a challenge with all the merge conflicts, but we learned a lot and had fun along the way.
