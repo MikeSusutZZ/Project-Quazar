@@ -30,7 +30,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
     {:ok, updated_socket}
   end
 
-  # Key Down event from Browser
+  @doc "Handles key press events from browser and triggers appropriate game server functions based on the key pressed."
   @impl true
   def handle_event("key_down", %{"key" => key}, socket) do
     IO.puts("Key Down: #{key}")
@@ -48,7 +48,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
     {:noreply, socket}
   end
 
-  # Key Up event from Browser
+  @doc "Handles key release events and triggers game server functions based on the key released."
   @impl true
   def handle_event("key_up", %{"key" => key}, socket) do
     player_name = socket.assigns.name
@@ -79,7 +79,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
     {:noreply, socket}
   end
 
-  # PubSub game state broadcast handler
+  @doc "Processes incoming PubSub messages about game state updates and updates the socket accordingly."
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
     # IO.puts("Broadcast")
