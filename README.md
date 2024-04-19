@@ -1,5 +1,25 @@
 # Project-Quazar
 
+Programming Paradigms
+
+# Table of Contents
+
+- [About the Project](#about-the-project)
+- [Overview](#overview)
+- [Menus Team](#menus-team)
+- [Backend Team](#backend-team)
+- [Front Team](#front-team)
+
+## About the Project
+
+Project Quazar is a multiplayer space shooter game developed by students at BCIT in the Programming Paradigms Option. The game is built using the Phoenix Framework, Elixir, and JavaScript. The game features a variety of ships and bullets, as well as high scores and multiplayer capabilities.
+
+## Overview
+
+<br>
+
+The goal of the game is to engage in multiplayer battles, where players try to destroy enemy ships in and earn points. Players can choose from a variety of ships and bullet types. The game features a high score system that displays the top scores of all players in the current game, as well as the all-time top scores.
+
 ## Menus Team
 
 The Menus team is responsible for creating the following:
@@ -9,8 +29,6 @@ The Menus team is responsible for creating the following:
 - **In-Game High Scores** screen: displays the scores of all players in the current game, from highest to lowest
 - **All-Time High Scores** screen: displays the scores of all players who have ever played the game, from highest to lowest
 
-<br>
-
 ![Menus Team Screenshot](image.png "Menus Team Screenshot")
 
 ## Team Members
@@ -19,6 +37,8 @@ The Menus team is responsible for creating the following:
 - Carson Olafson
 - Ediljohn Joson
 - Rhys Mahannah
+
+<br>
 
 ## Backend Team
 
@@ -36,8 +56,6 @@ The Backend team is responsible for creating the following:
 - **Application**: the entry point, sets up supervision trees
 - **Mailer**: Handles email-sending capabilities within the application
 
-<br>
-
 ![Backend Team Screenshot](backend.png "Backend Team Diagram")
 
 ## Team Members
@@ -49,6 +67,8 @@ The Backend team is responsible for creating the following:
 - Shawn Birring
 - Mikko Sio
 - Michelle Kwok
+
+<br>
 
 ## Front Team
 
@@ -76,8 +96,7 @@ The Frontend team is responsible for creating the following:
 
 ### Multiplayer Features
 
-- **Multiplayer**
-  - Implement rendering processes for multiplayer interactions.
+- **Multiplayer**: Implement rendering processes for multiplayer interactions.
 
 ### Core Components
 
