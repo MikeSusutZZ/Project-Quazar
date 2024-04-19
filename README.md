@@ -12,6 +12,7 @@ Dive into the galactic world of **Project Quazar**! In this action-packed multip
     <li><a href="#about-the-project"> ➤ About The Project</a></li>
     <li><a href="#instructions"> ➤ Instructions</a></li>
     <li><a href="#overview"> ➤ Overview</a></li>
+    <li><a href="#management"> ➤ Management Team</a></li>
     <li><a href="#menu"> ➤ Menus Team</a></li>
     <li><a href="#backend"> ➤ Backend Team</a></li>
     <li><a href="#frontend"> ➤ Frontend Team</a></li>
@@ -69,8 +70,8 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
 ### Game Board
 
 - Engage in stellar dogfights on the game board.
-- Your ship's health is precious! Avoid lingering in the red border, which depletes your HP by 1 every second.
-- Remember, if you fly off the screen, it's game over.
+- Your ship's health is precious! Avoid lingering in the red border, which rapidly depletes your HP.
+- If you fly off the screen, it's game over!
 
 <p align="center"> 
   <img src="game_board.png" alt="" height="200px" width="200">
@@ -84,7 +85,9 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
   <img src="score_board.png" alt="" height="50px" width="100">
 </p>
 
-- Show off your sharpshooting skills! Each successful hit on an enemy ship boosts your score by 25 points.
+- Show off your sharpshooting skills! Each successful hit on an enemy ship boosts your score by the damage you deal.
+- Landing the killing blow on an enemy gives you 250 points!
+- Ramming into another player can be dangerous but may confirm a kill. The player with the lower health will die, but the other player takes damage equivalent to the others remaining HP. No points for the damage dealt while crashing since you pay a price as well.
 - Aim true, and you may find your name etched into the high scores for all of Project Quazar to see!
 
 Ready your thrusters and prepare for your first match in **Project Quazar**!
@@ -93,16 +96,27 @@ Ready your thrusters and prepare for your first match in **Project Quazar**!
 
 <h2 id="overview"> :cloud: Overview</h2>
 
-For the development of Project Quazar, we organized our efforts into three specialized teams, each focusing on a distinct aspect of the game to ensure an engaging player experience.
+For the development of Project Quazar, we organized our efforts into three specialized teams, each focusing on a distinct aspect of the game to ensure an engaging player experience and keeping a large group project managable and organized.
 
-Menus Team: Tasked with crafting the first impressions, this team designed the intuitive start screen and user interfaces that players interact with throughout the game. Their work is crucial in making navigation and settings both easy and enjoyable.
+Menus Team: Tasked with crafting the first impressions, this team designed the intuitive start screen and user interfaces that players interact with throughout the game. They were also tasked with tracking the users score and displaying it in the score boards.
 
-Backend Team: The backbone of our game operations, this team handled all the game logic. From scoring systems to multiplayer interactions, they ensured that the game runs smoothly, with every action and reaction precisely programmed for fairness and fun.
+Backend Team: The backbone of our game operations, this team handled the physics, collisions, tracking ships, their projectiles, responding to inputs, and all other functions of game logic. All that data is then shipped off to the front end to render.
 
-Frontend Team: Bringing the visual magic, this team was responsible for rendering all the game elements on the screen. Their expertise in graphics and animation brought the space battles to life!
+Frontend Team: Bringing the visual magic, this team was responsible for taking the raw data from the back end and rendering all the game elements on the screen accordingly.
 
 Each team's dedicated efforts were seamlessly integrated into the final product, creating a cohesive and captivating gaming experience that we are proud to present to the world.
 
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+<h2 id="management"> 🛠️ Management Team </h2>
+
+The people responsible for keeping the project moving forward and organized with such a large class working on the same code base. Collaborated with their respective teams to delegate tasks and determine the overall vision of the project, guiding it towards the final product.
+
+- Mike Susut: Project Manager and Game Design / Balance
+- Olga Zimina: Backend Manager
+- Sean Sollestre: Frontend Manager
+- Rhys Mahannah: Menus Manager
+
+  
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <h2 id="menu"> :page_with_curl: Menus Team</h2>
