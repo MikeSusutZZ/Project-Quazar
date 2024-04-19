@@ -2,7 +2,7 @@
 
 Dive into the galactic world of **Project Quazar**! In this action-packed multiplayer space shooter, players face off in intense skirmishes, aiming to obliterate enemy ships and rack up points. Choose your arsenal from a variety of unique space ships and devastating bullet types that fit your combat style. Thrive in the chaos of current games and etch your name onto the leaderboards. Are you ready to claim your place among the stars in Project Quazar? Join the fray and dominate the galaxy!
 
-<p align="center"> 
+<p align="center">
   <img src="Quazar.gif" alt="" height="200px" width="200">
 </p>
 
@@ -43,7 +43,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
 
 1. Click **Start Game** on the main menu to begin your space adventure.
 
-<p align="center"> 
+<p align="center">
   <img src="main_menu.png" alt="" height="200px" width="350">
 </p>
 
@@ -59,7 +59,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
      - _Medium_ - Moderate damage and speed.
      - _Light_ - Low damage, high speed.
 
-<p align="center"> 
+<p align="center">
   <img src="user_creation.png" alt="" height="300px" width="225">
 </p>
 
@@ -77,7 +77,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
 - Your ship's health is precious! Avoid lingering in the red border, which rapidly depletes your HP.
 - If you fly off the screen, it's game over!
 
-<p align="center"> 
+<p align="center">
   <img src="game_board.png" alt="" height="200px" width="200">
 </p>
 
@@ -85,7 +85,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
 
 - Keep an eye on the scoreboard to the right to track your score and see how you stack up against the competition.
 
-<p align="center"> 
+<p align="center">
   <img src="score_board.png" alt="" height="50px" width="100">
 </p>
 
@@ -102,15 +102,16 @@ Ready your thrusters and prepare for your first match in **Project Quazar**!
 
 For the development of Project Quazar, we organized our efforts into three specialized teams, each focusing on a distinct aspect of the game to ensure an engaging player experience and keeping a large group project managable and organized.
 
-Menus Team: Tasked with crafting the first impressions, this team designed the intuitive start screen and user interfaces that players interact with throughout the game. They were also tasked with tracking the users score and displaying it in the score boards.
+**Menus Team**: Tasked with crafting the first impressions, this team designed the intuitive start screen and user interfaces that players interact with throughout the game. They were also tasked with tracking the users score and displaying it in the score boards.
 
-Backend Team: The backbone of our game operations, this team handled the physics, collisions, tracking ships, their projectiles, responding to inputs, and all other functions of game logic. All that data is then shipped off to the front end to render.
+**Backend Team**: The backbone of our game operations, this team handled the physics, collisions, tracking ships, their projectiles, responding to inputs, and all other functions of game logic. All that data is then shipped off to the front end to render.
 
-Frontend Team: Bringing the visual magic, this team was responsible for taking the raw data from the back end and rendering all the game elements on the screen accordingly.
+**Frontend Team**: Bringing the visual magic, this team was responsible for taking the raw data from the back end and rendering all the game elements on the screen accordingly.
 
 Each team's dedicated efforts were seamlessly integrated into the final product, creating a cohesive and captivating gaming experience that we are proud to present to the world.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
 <h2 id="management"> 🛠️ Management Team </h2>
 
 The people responsible for keeping the project moving forward and organized with such a large class working on the same code base. Collaborated with their respective teams to delegate tasks and determine the overall vision of the project, guiding it towards the final product.
@@ -120,7 +121,6 @@ The people responsible for keeping the project moving forward and organized with
 - Sean Sollestre: Frontend Manager
 - Rhys Mahannah: Menus Manager
 
-  
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <h2 id="menu"> :page_with_curl: Menus Team</h2>
