@@ -86,7 +86,7 @@ defmodule ProjectQuazarWeb.Help do
               <div class="mt-8">
                 <h3 class="help-heading">Game Mechanics</h3>
                 <p class="text-white text-lg mb-4">
-                  Shoot other players and survive! You'll gain more points depending on how much damage you deal to others.
+                  Shoot other players and survive! You'll gain more points depending on how much damage you deal to others, and an extra bonus for landing the final blow.
                 </p>
                 <p class="text-white text-lg mb-4">
                   Your ship will be destroyed if it reaches 0 health, and you'll be brought back to start. Ships regenerate health over time.
