@@ -1,6 +1,6 @@
 <h1 align="center"> :rocket: Project-Quazar :rocket: </h1>
 
-Project Quazar is a multiplayer space shooter game developed by students at BCIT in the Programming Paradigms Option. The game is built using the Phoenix Framework, Elixir, and JavaScript. The game features a variety of ships and bullets, as well as high scores and multiplayer capabilities.
+Dive into the galactic world of Project Quazar! In this action-packed multiplayer space shooter, players face off in intense skirmishes, aiming to obliterate enemy ships and rack up points. Choose your arsenal from an array of unique ships and devastating bullet types that fit your combat style. Thrive in the chaos of current games and etch your name among the legends with both session-based and all-time highscore boards. Are you ready to claim your place among the stars in Project Quazar? Join the fray and dominate the galaxy!
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -26,7 +26,7 @@ Project Quazar is a multiplayer space shooter game developed by students at BCIT
 
 <h2 id="about-the-project"> :pencil: About The Project</h2>
 
-Project Quazar's goal of the game is to engage in multiplayer battles, where players try to destroy enemy ships in and earn points. Players can choose from a variety of ships and bullet types. The game features a high score system that displays the top scores of all players in the current game, as well as the all-time top scores.
+Project Quazar is a multiplayer space shooter game designed by the talented students at BCIT's Programming Paradigms Option. Built on the innovative Phoenix Framework and powered by Elixir and JavaScript, this game lets you pilot a variety of unique ships, unleash powerful bullets, and battle it out for the top spot on the leaderboard. Dive into the action and connect with players around the globe in this high-energy, galactic showdown!
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -38,15 +38,15 @@ Welcome to the interstellar arena of **Project Quazar**! Here's how to get start
 
 1. Click **Start Game** on the main menu to begin your space adventure.
 2. You'll be taken to a setup screen where you can personalize your gameplay:
-    - **Enter your username**: Choose a unique identifier for your space hero.
-    - **Choose your Ship**: Select a ship type. Each has different health and speed stats:
-        - *Tank* - High health, slow speed.
-        - *Destroyer* - Balanced health and speed.
-        - *Scout* - Low health, high speed.
-    - **Choose your Bullet**: Decide on your ammunition:
-        - *Heavy* - High damage, slow speed.
-        - *Medium* - Moderate damage and speed.
-        - *Light* - Low damage, high speed.
+   - **Enter your username**: Choose a unique identifier for your space hero.
+   - **Choose your Ship**: Select a ship type. Each has different health and speed stats:
+     - _Tank_ - High health, slow speed.
+     - _Destroyer_ - Balanced health and speed.
+     - _Scout_ - Low health, high speed.
+   - **Choose your Bullet**: Decide on your ammunition:
+     - _Heavy_ - High damage, slow speed.
+     - _Medium_ - Moderate damage and speed.
+     - _Light_ - Low damage, high speed.
 3. Hit **Submit** to lock in your choices.
 
 ### In-Game Controls
@@ -67,7 +67,6 @@ Welcome to the interstellar arena of **Project Quazar**! Here's how to get start
 - Aim true, and you may find your name etched into the high scores for all of Project Quazar to see!
 
 Ready your thrusters and prepare for an epic space showdown in **Project Quazar**!
-
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
