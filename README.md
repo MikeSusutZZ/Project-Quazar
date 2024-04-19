@@ -7,6 +7,7 @@ Project Quazar is a multiplayer space shooter game developed by students at BCIT
 ## :book: Table of Contents
 
 - [About the Project](#about-the-project)
+- [Instructions](#instructions)
 - [Overview](#overview)
 - [Menus Team](#menus-team)
 - [Backend Team](#backend-team)
@@ -19,15 +20,17 @@ Project Quazar is a multiplayer space shooter game developed by students at BCIT
 
 ## :pencil: About the Project
 
-<br>
+Project Quazar's goal of the game is to engage in multiplayer battles, where players try to destroy enemy ships in and earn points. Players can choose from a variety of ships and bullet types. The game features a high score system that displays the top scores of all players in the current game, as well as the all-time top scores.
 
-Project Quazar is a multiplayer space shooter game developed by students at BCIT in the Programming Paradigms Option. The game is built using the Phoenix Framework, Elixir, and JavaScript. The game features a variety of ships and bullets, as well as high scores and multiplayer capabilities.
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+## :notebook: Instructions
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ## :cloud: Overview
 
-The goal of the game is to engage in multiplayer battles, where players try to destroy enemy ships in and earn points. Players can choose from a variety of ships and bullet types. The game features a high score system that displays the top scores of all players in the current game, as well as the all-time top scores.
+The game is divided into three main teams: Menus, Backend, and Frontend. Each team is responsible for different aspects of the game, such as creating the start screen, handling game logic, and rendering game elements on the screen.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
