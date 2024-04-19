@@ -40,19 +40,24 @@
 <% else %>
   <%= if @start do %>
     <%# Start Screen %>
-    <.live_component
-      module={ProjectQuazarWeb.Start}
-      id="start"
-    />
+    <div class={if @show_help, do: "flex", else: ""}> <!-- makes display flex when help component active -->
+      <div class={if @show_help, do: "w-1/2", else: ""}> <!-- set the width if help active -->
+        <.live_component
+          module={ProjectQuazarWeb.Start}
+          id="start"
+        />
+      </div>
 
-    <%= if @show_help do %>
-      <%# Help Screen %>
-      <.live_component
-        module={ProjectQuazarWeb.Help}
-        id="help"
-        current_page={@current_page} 
-      />
-    <% end %>
+      <%= if @show_help do %>
+        <div class="w-1/2">
+          <.live_component
+            module={ProjectQuazarWeb.Help}
+            id="help"
+            current_page={@current_page} 
+          />
+        </div>
+      <% end %>
+    </div>
   <% else %>
 
 
