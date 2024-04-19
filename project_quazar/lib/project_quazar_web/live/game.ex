@@ -211,7 +211,7 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, socket}
   end
 
-  @doc "Handles key release events and triggers game server functions based on the key released."
+  # Handles key release events and triggers game server functions based on the key released.
   @impl true
   def handle_event("key_up", %{"key" => key}, socket) do
     player_name = socket.assigns.current_user
