@@ -128,9 +128,9 @@ function drawGameBoard(
   // Get the player name from the route parameters
   const playerName = canvas.getAttribute("data-name");
 
-  console.log("Data", data);
+  //console.log("Data", data);
 
-  console.log("Player", playerName);
+  //console.log("Player", playerName);
 
   // Find the player with the matching name and remove from the list
   let me = null;
@@ -158,7 +158,7 @@ function drawGameBoard(
       me.ship.type
     );
   } catch {
-    console.log("frame skip");
+    //console.log("frame skip");
   }
 
   const enemies = data.players;
@@ -178,13 +178,13 @@ function drawGameBoard(
         enemy.ship.type
       );
     } catch {
-      console.log("frame skip");
+      //console.log("frame skip");
     }
   });
 
   const bullets = data.projectiles;
 
-  console.log(bullets);
+  //console.log(bullets);
 
   bullets.forEach((bullet) => {
     drawBullet(
@@ -221,7 +221,7 @@ function drawShip(
     scout: "/images/ship_asset/blue_ship_trimmed.png",
   };
 
-  console.log("ship", ship);
+  //console.log("ship", ship);
 
   if (health <= 0) {
     ship.src = "/images/ship_asset/boom1.png";
@@ -238,11 +238,11 @@ function drawShip(
   ctx.font = "20px";
   ctx.textAlign = "center";
 
-  console.log("rounded", Math.round(health));
+  //console.log("rounded", Math.round(health));
 
   ctx.fillStyle = "white";
-
-  if (name === playerName) {
+  if (name == playerName.replace(/^"|"$/g, '')) {
+    console.log("player name det")
     ctx.font = "20px Arial";
     ctx.fillText(
       name,
@@ -271,7 +271,7 @@ function drawShip(
 
 function drawBullet(ctx, bulletimg, px, py, radius) {
   const spriteSize = radius * 2;
-  console.log("bullet", bulletimg);
+  //console.log("bullet", bulletimg);
   ctx.save();
   ctx.translate(px + spriteSize / 2, py + spriteSize / 2);
   ctx.drawImage(
