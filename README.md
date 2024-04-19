@@ -2,6 +2,10 @@
 
 Dive into the galactic world of **Project Quazar**! In this action-packed multiplayer space shooter, players face off in intense skirmishes, aiming to obliterate enemy ships and rack up points. Choose your arsenal from a variety of unique space ships and devastating bullet types that fit your combat style. Thrive in the chaos of current games and etch your name onto the leaderboards. Are you ready to claim your place among the stars in Project Quazar? Join the fray and dominate the galaxy!
 
+<p align="center"> 
+  <img src="Quazar.gif" alt="" height="200px" width="200">
+</p>
+
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ## :book: Table of Contents
