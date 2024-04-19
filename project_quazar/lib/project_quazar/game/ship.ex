@@ -23,9 +23,9 @@ defmodule Ship do
   # Bullet type specifications
   # TODO: adjust size
   @ship_types %{
-    tank: %{health: 250, acceleration: 0.25, radius: 60 / 4},
-    destroyer: %{health: 150, acceleration: 0.5, radius: 40 / 4},
-    scout: %{health: 100, acceleration: 1, radius: 20 / 4}
+    tank: %{health: 250, acceleration: 0.15, radius: 60 / 4},
+    destroyer: %{health: 150, acceleration: 0.25, radius: 40 / 4},
+    scout: %{health: 100, acceleration: 0.5, radius: 20 / 4}
   }
 
   @doc "Creates a new Ship at x,y. Health sets maximum and current health, and bullet_type sets type of bullet"
