@@ -12,24 +12,31 @@
   @show_help: boolean - determines if the help screen should be rendered
     - true: renders the help screen
     - false: does not render the help screen
+
+  @game_over: boolean - determine if the player is dead
 %>
 
 
 
 <%= if @joined do %>
-  <%# Main Game Screen %>
-  <%# TODO: Add the game board here %>
 
-    <%# Live Game Board %>
-    <.live_component module={ProjectQuazarWeb.GameBoard} id="game-board" circle_pos={@circle_pos} />
+  <%= if @game_over do %>
+    <div><.live_component module={ProjectQuazarWeb.GameOver} id="game-over" players={@players} current_user={@current_user} player_score={@dead_player_score}/></div>
+  <% else %>
+    <%# Main Game Screen %>
+    <%# TODO: Add the game board here %>
 
-  <%# Live scoreboard menu %>
-  <.live_component
-    module={ProjectQuazarWeb.Scoreboard}
-    id="scoreboard"
-    current_user={@current_user}
-    players={@players}
-  />
+      <%# Live Game Board %>
+      <.live_component module={ProjectQuazarWeb.GameBoard} id="game-board" circle_pos={@circle_pos} />
+
+    <%# Live scoreboard menu %>
+    <.live_component
+      module={ProjectQuazarWeb.Scoreboard}
+      id="scoreboard"
+      current_user={@current_user}
+      players={@players}
+    />
+  <% end %>
 <% else %>
   <%= if @start do %>
     <%# Start Screen %>

@@ -34,13 +34,15 @@ defmodule ProjectQuazarWeb.Game do
       |> assign(:start, true)
       |> assign(:show_help, false)
       |> assign(:current_page, 1) # handles pagination for how to play
+      |> assign(:game_over, false)
+      |> assign(:dead_player_score, 0)
     }
   end
 
-  @doc """
-  Join event called by submit button. Check if username already exists or blank, if not, start tracking them
-  with Presence and subscribe their socket to the Presence PubSub topic.
-  """
+
+  # Join event called by submit button. Check if username already exists or blank, if not, start tracking them
+  # with Presence and subscribe their socket to the Presence PubSub topic.
+  @impl true
   def handle_event("join", %{"username" => username, "ship" => ship, "bullet" => bullet}, socket) do
     IO.puts("------------------")
     IO.inspect(username)
@@ -68,12 +70,13 @@ defmodule ProjectQuazarWeb.Game do
           # GameServer.spawn_player(username, :destroyer)
           {:noreply, socket
             |> assign(:joined, true)
-            |> assign(:current_user, username)}
+            |> assign(:current_user, username)
+            |> assign(:error_message, "")}
       end
     end
   end
 
-  @doc "Handle the event for next page in how to play component"
+  # "Handle the event for next page in how to play component"
   def handle_event("next_page", _value, socket) do
     current_page = Map.get(socket.assigns, :current_page, 1)
     next_page = current_page + 1
@@ -81,7 +84,7 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, assign(socket, current_page: next_page)}
   end
 
-  @doc "Handle the event for previous page in how to play component"
+  # "Handle the event for previous page in how to play component"
   def handle_event("previous_page", _value, socket) do
     current_page = Map.get(socket.assigns, :current_page, 1)
     previous_page = max(current_page - 1, 1)
@@ -89,22 +92,22 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, assign(socket, current_page: previous_page)}
   end
 
-  @doc "Handle the state for start component"
+  # "Handle the state for start component"
   def handle_event("show_start_game", _value, socket) do
     {:noreply, assign(socket, :start, false)}
   end
 
-  @doc "Handle the state for displaying help component"
+  # "Handle the state for displaying help component"
   def handle_event("show_help", _value, socket) do
     {:noreply, assign(socket, :show_help, true)}
   end
 
-  @doc "Handle the state for hiding help component"
+  # "Handle the state for hiding help component"
   def handle_event("hide_help", _value, socket) do
     {:noreply, assign(socket, :show_help, false)}
   end
 
-  @doc "Handle Presence event whenever there is change to Presence."
+  # "Handle Presence event whenever there is change to Presence."
   @impl true
   def handle_info(%Phoenix.Socket.Broadcast{event: "presence_diff", payload: diff}, socket) do
     {:noreply,
@@ -118,22 +121,47 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, assign(socket, :top_scores, top_scores)}
   end
 
-  @doc """
-  Handle the state_updated sent by GameServer in each tick.
-  """
+
+  # Handle the state_updated sent by GameServer in each tick.
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
-    {:noreply,
-    socket
-    |> assign(:players, new_state.players)
-    |> sort_players_by_score()
-    |> assign(:projectiles, new_state.projectiles)}
+
+    # game_over =
+      Enum.find(socket.assigns.players, fn player ->
+        socket.assigns.current_user == player.name && player.ship.health <= 0
+      end)
+      |> case do
+        nil ->
+          {:noreply,
+          socket
+          |> assign(:players, new_state.players)
+          |> sort_players_by_score()
+          |> assign(:projectiles, new_state.projectiles)
+          }
+        dead_player ->
+          Presence.untrack(self(), @presence, dead_player.name)
+          GameServer.remove_leftover_players(Presence.list(@presence))
+          {:noreply,
+          socket
+          |> assign(:players, new_state.players)
+          |> sort_players_by_score()
+          |> assign(:projectiles, new_state.projectiles)
+          |> assign(:dead_player_score, dead_player.score)
+          |> assign(:game_over, true)}
+      end
+
+    # {:noreply,
+    # socket
+    # |> assign(:players, new_state.players)
+    # |> sort_players_by_score()
+    # |> assign(:projectiles, new_state.projectiles)
+    # |> assign(:game_over, game_over)}
+
   end
 
-  @doc """
-  Handle the 'leaves' object retrieved from the 'presence_diff' event.
-  Update the socket's players map using the 'leaves' object.
-  """
+
+  # Handle the 'leaves' object retrieved from the 'presence_diff' event.
+  # Update the socket's players map using the 'leaves' object.
   defp handle_leaves(socket, leaves) do
     Enum.reduce(leaves, socket, fn {player, _}, socket ->
       GameServer.remove_player(player)
@@ -242,8 +270,11 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, socket}
   end
 
-  def handle_event("game_over", %{"score" => score}, socket) do
-    {:noreply, push_redirect(socket, to: "/game-over?score=#{score}")}
+  def handle_event("game_over_to_lobby", _value, socket) do
+    new_socket = assign(socket, :start, false)
+    |> assign(:joined, false)
+    |> assign(:game_over, false)
+    {:noreply, new_socket}
   end
 
 end
