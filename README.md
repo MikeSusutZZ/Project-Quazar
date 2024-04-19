@@ -306,9 +306,9 @@ Use Chrome for best results, Safari has been particularly inconsistent.
 
 While labelled as "All Time High Scores" it only saves since the last time the server is closed as it uses an ets table
 
-### Long asset load time and heavy data load
+### Random Spawn Location
 
-This project sends a LOT of information very quickly. Do not use a metered connection. Players may join the game before having all assets load, allowing them to be killed before they finish loading.
+Players can spawn on top of other players
 
 ### Username Goes Funky When You Explode
 Because of the sudden scale up, your username has some weird visuals when you explode. Not a big deal, only on screen for a second
