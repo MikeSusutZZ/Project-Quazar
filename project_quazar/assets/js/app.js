@@ -40,14 +40,26 @@ Hooks.GameBoardHook = {
     myShip.src = "/images/ship_asset/blue_ship_trimmed.png";
     enemyShip = new Image();
     enemyShip.src = "/images/ship_asset/red_ship_trimmed.png";
+    let tankShip = new Image();
+    let destroyerShip = new Image();
+    let scoutShip = new Image();
+    tankShip.src = "/images/ship_asset/red_ship_trimmed.png";
+    destroyerShip.src = "/images/ship_asset/purple_ship_trimmed.png";
+    scoutShip.src = "/images/ship_asset/blue_ship_trimmed.png";
+    let shipTypes = {
+      tank: tankShip,
+      destroyer: destroyerShip,
+      scout: scoutShip,
+    };
 
     //bullet types
     let lightBullet = new Image();
     let mediumBullet = new Image();
     let heavyBullet = new Image();
+    lightBullet.src = "/images/purple_bullet_asset/Purple_Bullet.png";
+    mediumBullet.src = "/images/green_bullet_asset/Green_Bullet.png";
     heavyBullet.src = "/images/red_bullet_asset/Red_Bullet.png";
-    lightBullet.src = "/images/green_bullet_asset/Green_Bullet.png";
-    mediumBullet.src = "/images/purple_bullet_asset/Purple_Bullet.png";
+
     let bulletTypes = {
       light: lightBullet,
       medium: mediumBullet,
@@ -56,7 +68,14 @@ Hooks.GameBoardHook = {
 
     // event handlers
     this.handleEvent("update", (_) => {
-      drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes);
+      drawGameBoard(
+        canvas,
+        gameBoard,
+        myShip,
+        enemyShip,
+        bulletTypes,
+        shipTypes
+      );
     });
 
     // push events
@@ -89,7 +108,14 @@ Hooks.GameBoardHook = {
   },
 };
 
-function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
+function drawGameBoard(
+  canvas,
+  gameBoard,
+  myShip,
+  enemyShip,
+  bulletTypes,
+  shipTypes
+) {
   // drawing the background
   canvas.width = 800;
   canvas.height = 800;
@@ -100,7 +126,11 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
 
   // Get the player name from the route parameters
-  const playerName = window.location.pathname.split("/").pop();
+  const playerName = canvas.getAttribute("data-name");
+
+  console.log("Data", data);
+
+  console.log("Player", playerName);
 
   // Find the player with the matching name and remove from the list
   let me = null;
@@ -116,7 +146,7 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
   try {
     drawShip(
       ctx,
-      myShip,
+      shipTypes[me.ship.type],
       me.ship.kinematics.px,
       me.ship.kinematics.py,
       me.ship.kinematics.angle,
@@ -124,7 +154,8 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
       me.ship.health,
       me.ship.max_health,
       me.ship.radius,
-      playerName
+      playerName,
+      me.ship.type
     );
   } catch {
     console.log("frame skip");
@@ -135,7 +166,7 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
     try {
       drawShip(
         ctx,
-        enemyShip,
+        shipTypes[enemy.ship.type],
         enemy.ship.kinematics.px,
         enemy.ship.kinematics.py,
         enemy.ship.kinematics.angle,
@@ -143,7 +174,8 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
         enemy.ship.health,
         enemy.ship.max_health,
         enemy.ship.radius,
-        playerName
+        playerName,
+        enemy.ship.type
       );
     } catch {
       console.log("frame skip");
@@ -175,21 +207,26 @@ function drawShip(
   health,
   maxHealth,
   radius,
-  playerName
+  playerName,
+  srcType
 ) {
   const spriteSize = radius * 2;
   const xOffset = 10;
   const yOffset = 60;
   const textSize = 10;
 
+  let shipSrc = {
+    tank: "/images/ship_asset/red_ship_trimmed.png",
+    destroyer: "/images/ship_asset/purple_ship_trimmed.png",
+    scout: "/images/ship_asset/blue_ship_trimmed.png",
+  };
+
+  console.log("ship", ship);
+
   if (health <= 0) {
     ship.src = "/images/ship_asset/boom1.png";
   } else {
-    if (name === playerName) {
-      ship.src = "/images/ship_asset/blue_ship_trimmed.png";
-    } else {
-      ship.src = "/images/ship_asset/red_ship_trimmed.png";
-    }
+    ship.src = shipSrc[srcType];
   }
 
   ctx.save();
@@ -234,6 +271,7 @@ function drawShip(
 
 function drawBullet(ctx, bulletimg, px, py, radius) {
   const spriteSize = radius * 2;
+  console.log("bullet", bulletimg);
   ctx.save();
   ctx.translate(px + spriteSize / 2, py + spriteSize / 2);
   ctx.drawImage(
