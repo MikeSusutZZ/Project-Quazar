@@ -30,7 +30,52 @@ Project Quazar's goal of the game is to engage in multiplayer battles, where pla
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :notebook: Instructions</h2>
+<h2 id="instructions"> :video_game: User Instructions</h2>
+
+It looks like you're sharing some screens from a game called Project Quazar. The game seems to involve selecting a spaceship with certain attributes like health and speed, and bullet types that vary in damage and speed. Once in the game, players can move their ship, shoot, and regenerate health. There's also an element of danger with a border that causes damage, and a game-over scenario if a player goes off the screen. To win points, players shoot at each other, with each hit increasing their score.
+
+Your request is to fill in the user instructions portion of a readme, so here’s a draft for you:
+
+---
+
+## :video_game: User Instructions
+
+Welcome to the interstellar arena of **Project Quazar**! Here's how to get started:
+
+### Starting the Game
+
+1. Click **Start Game** on the main menu to begin your space adventure.
+2. You'll be taken to a setup screen where you can personalize your gameplay:
+    - **Enter your username**: Choose a unique identifier for your space hero.
+    - **Choose your Ship**: Select a ship type. Each has different health and speed stats:
+        - *Tank* - High health, slow speed.
+        - *Destroyer* - Balanced health and speed.
+        - *Scout* - Low health, high speed.
+    - **Choose your Bullet**: Decide on your ammunition:
+        - *Heavy* - High damage, slow speed.
+        - *Medium* - Moderate damage and speed.
+        - *Light* - Low damage, high speed.
+3. Hit **Submit** to lock in your choices.
+
+### In-Game Controls
+
+- Use **WASD** keys to rotate and move your ship across the cosmos.
+- Press the **Spacebar** to fire your selected ammunition at enemy ships.
+- Your ship will regenerate 1 HP (health point) every second—use this to your advantage!
+
+### Game Board and Scoreboard
+
+- Engage in stellar dogfights on the game board. Keep an eye on the scoreboard to the right to track your score and see how you stack up against the competition.
+- Your ship's health is precious! Avoid lingering in the red border, which depletes your HP by 1 every second.
+- Remember, if you fly off the screen, it's game over.
+
+### Scoring Points
+
+- Show off your sharpshooting skills! Each successful hit on an enemy ship boosts your score by 25 points.
+- Aim true, and you may find your name etched into the high scores for all of Project Quazar to see!
+
+Ready your thrusters and prepare for an epic space showdown in **Project Quazar**!
+
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
