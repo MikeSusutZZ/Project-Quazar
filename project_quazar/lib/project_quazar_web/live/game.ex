@@ -57,7 +57,7 @@ defmodule ProjectQuazarWeb.Game do
     if username == "" do
       {:reply, %{error: "Username can't be blank"}, assign(socket, :error_message, "Username can't be blank")}
     else
-      case Map.has_key?(socket, username) do
+      case Map.has_key?(Presence.list(@presence), username) do
         true ->
           {:reply, %{error: "Username already taken"}, assign(socket, :error_message, "Username already taken")}
         false ->
