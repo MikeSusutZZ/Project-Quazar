@@ -37,6 +37,11 @@ Welcome to the interstellar arena of **Project Quazar**! Here's how to get start
 ### Starting the Game
 
 1. Click **Start Game** on the main menu to begin your space adventure.
+
+<p align="center"> 
+  <img src="main_menu.png" alt="" height="200px" width="350">
+</p>
+
 2. You'll be taken to a setup screen where you can personalize your gameplay:
    - **Enter your username**: Choose a unique identifier for your space hero.
    - **Choose your Ship**: Select a ship type. Each has different health and speed stats:
@@ -55,13 +60,23 @@ Welcome to the interstellar arena of **Project Quazar**! Here's how to get start
 - Press the **Spacebar** to fire your selected ammunition at enemy ships.
 - Your ship will regenerate 1 HP (health point) every second—use this to your advantage!
 
-### Game Board and Scoreboard
+### Game Board
 
-- Engage in stellar dogfights on the game board. Keep an eye on the scoreboard to the right to track your score and see how you stack up against the competition.
+- Engage in stellar dogfights on the game board.
 - Your ship's health is precious! Avoid lingering in the red border, which depletes your HP by 1 every second.
 - Remember, if you fly off the screen, it's game over.
 
-### Scoring Points
+<p align="center"> 
+  <img src="game_board.png" alt="" height="200px" width="200">
+</p>
+
+### Scoreboard and Points
+
+- Keep an eye on the scoreboard to the right to track your score and see how you stack up against the competition.
+
+<p align="center"> 
+  <img src="score_board.png" alt="" height="50px" width="100">
+</p>
 
 - Show off your sharpshooting skills! Each successful hit on an enemy ship boosts your score by 25 points.
 - Aim true, and you may find your name etched into the high scores for all of Project Quazar to see!
