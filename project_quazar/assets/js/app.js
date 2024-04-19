@@ -242,7 +242,6 @@ function drawShip(
 
   ctx.fillStyle = "white";
   if (name == playerName.replace(/^"|"$/g, '')) {
-    console.log("player name det")
     ctx.font = "20px Arial";
     ctx.fillText(
       name,
