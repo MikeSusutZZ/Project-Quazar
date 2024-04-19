@@ -53,7 +53,7 @@ defmodule ProjectQuazarWeb.UserForm do
               <label class='option_label sub_heading'>Heavy</label>
 
               <img src={~p"/images/red_bullet_asset/Red_Bullet.png"} alt="Example Image" style="width: 30px; height:  30px;">
-              <h1 class="damage_text" >Damage: 50</h1>
+              <h1 class="damage_text" >Damage: 40</h1>
               <h1 class="speed_text" >Speed: Slow</h1>
               <div>
                 <input type='radio' name='bullet' value='heavy'>
