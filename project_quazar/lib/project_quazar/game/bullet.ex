@@ -20,9 +20,9 @@ defmodule Bullet do
 
   # Bullet type specifications
   @bullet_types %{
-    heavy: %{damage: 35, frequency_ms: 200, speed: 1, radius: 20},
-    medium: %{damage: 20, frequency_ms: 150, speed: 2, radius: 10},
-    light: %{damage: 10, frequency_ms: 100, speed: 3, radius: 10}
+    heavy: %{damage: 35, frequency_ms: 1300, speed: 1, radius: 20},
+    medium: %{damage: 20, frequency_ms: 1000, speed: 2, radius: 10},
+    light: %{damage: 10, frequency_ms: 750, speed: 3, radius: 10}
   }
 
   @doc "Creates a new bullet with specified attributes."

@@ -215,7 +215,7 @@ defmodule GameServer do
 
           Boundary.inside_damage_zone?(player, @bounds) ->
             # Damage the player if inside the damage zone
-            Player.take_damage(player, 2)
+            Player.take_damage(player, @damage_zone_damage_per_tick)
 
           true ->
             player
