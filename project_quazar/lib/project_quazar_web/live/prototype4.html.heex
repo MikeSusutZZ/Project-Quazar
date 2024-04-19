@@ -1,6 +1,0 @@
-<div>
-    <%= Phoenix.HTML.raw(Jason.encode!(@player["ship"]["kinematics"])) %>
-</div>
-<canvas id="circleCanvas" phx-hook="Game4" width="800" height="800"
-    data-pos={Jason.encode!(@player["ship"]["kinematics"])}
-    data-board={Jason.encode!(@game_board)}></canvas>

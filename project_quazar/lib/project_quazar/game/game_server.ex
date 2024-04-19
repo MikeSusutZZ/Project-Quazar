@@ -151,6 +151,7 @@ defmodule GameServer do
           |> Movable.Drag.apply_drag(@drag_rate)
           # This increments the health of the player over time
           |> Player.inc_health(@health_increment)
+
         else
           # Check player health after a certain time, to decide if they should be removed
           Process.send_after(
