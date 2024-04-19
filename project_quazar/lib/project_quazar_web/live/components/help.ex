@@ -18,29 +18,68 @@ defmodule ProjectQuazarWeb.Help do
                 </p>
               </div>
               """
-        2 -> ~S"""
+              2 -> ~S"""
               <div class="mt-8">
                 <h3 class="text-white text-lg font-bold text-center mb-4">Ship Information / Controls</h3>
                 <p class="text-white text-lg">
                   Before you begin, you'll need to name your ship and choose a ship and weapon type!
                 </p>
-                <h3 class="text-white text-lg font-bold mt-4">Ship Types:</h3>
-                <ul class="text-white text-lg">
-                  <li>Scout: A fast but weak ship [100 hp]</li>
-                  <li>Destroyer: An all-around ship with decent speed and health [150 hp]</li>
-                  <li>Tank: A slow and sturdy ship [250 hp]</li>
-                </ul>
-                <h3 class="text-white text-lg font-bold mt-4">Weapon Types:</h3>
-                <ul class="text-white text-lg">
-                  <li>Light: 10 Damage, 0.75s Reload, High Velocity</li>
-                  <li>Medium: 20 Damage, 1.1s Reload, Medium Velocity</li>
-                  <li>Heavy: 35 Damage, 1.5s Reload, Slow Velocity</li>
-                </ul>
-                <h3 class="text-white text-lg font-bold mt-4">Controls:</h3>
-                <p class="text-white text-lg">W - Accelerate</p>
-                <p class="text-white text-lg">A/D - Turn Left/Right</p>
-                <p class="text-white text-lg">S - Decelerate</p>
-                <p class="text-white text-lg">Space - Shoot</p>
+                <div class="mt-4">
+                  <h4 class="text-white text-lg font-bold mb-2 text-center">Ship Types:</h4>
+                  <div class="flex justify-between">
+                    <div>
+                      <h5 class="type-heading">Scout</h5>
+                      <p class="text-white italic text-center">100 HP</p>
+                      <p class="text-white text-lg">A fast but weak ship</p>
+                    </div>
+                    <div>
+                      <h5 class="type-heading">Destroyer</h5>
+                      <p class="text-white italic text-center">150 HP</p>
+                      <p class="text-white text-lg">An all around ship</p>
+                    </div>
+                    <div>
+                      <h5 class="type-heading">Destroyer</h5>
+                      <p class="text-white italic text-center">250 HP</p>
+                      <p class="text-white text-lg">A slow and sturdy ship</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <h4 class="text-white text-lg font-bold mb-2 text-center">Weapon Types:</h4>
+                  <div class="flex justify-between">
+                    <div>
+                      <h5 class="type-heading">Light</h5>
+                      <ul>
+                        <li class="text-white text-md">Damage: 10</li>
+                        <li class="text-white text-md">Reload: 0.75s</li>
+                        <li class="text-white text-md">Velocity: High</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 class="type-heading">Medium</h5>
+                      <ul>
+                        <li class="text-white text-md">Damage: 20</li>
+                        <li class="text-white text-md">Reload: 1.1s</li>
+                        <li class="text-white text-md">Velocity: Medium</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 class="type-heading">Heavy</h5>
+                      <ul>
+                        <li class="text-white text-md">Damage: 35</li>
+                        <li class="text-white text-md">Reload: 1.5s</li>
+                        <li class="text-white text-md">Velocity: Slow</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <h4 class="text-white text-lg font-bold text-center">Controls:</h4>
+                  <p class="control-item">W - Accelerate</p>
+                  <p class="control-item">A/D - Turn Left/Right</p>
+                  <p class="control-item">S - Decelerate</p>
+                  <p class="control-item">Space - Shoot</p>
+                </div>
               </div>
               """
         3 -> ~S"""
@@ -61,7 +100,7 @@ defmodule ProjectQuazarWeb.Help do
       end
 
     ~H"""
-    <div id="help" class="container mt-8">
+    <div id="help" class="help-container mt-8">
       <div class="flex justify-end">
         <button phx-click="hide_help" class="button-tertiary">X</button>
       </div>
