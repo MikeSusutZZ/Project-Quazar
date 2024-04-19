@@ -24,23 +24,23 @@ Project Quazar is a multiplayer space shooter game developed by students at BCIT
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="about-the-project"> :pencil: About The Project</h2>
+<h2 id="about-the-project" align="center"> :pencil: About The Project</h2>
 
 Project Quazar's goal of the game is to engage in multiplayer battles, where players try to destroy enemy ships in and earn points. Players can choose from a variety of ships and bullet types. The game features a high score system that displays the top scores of all players in the current game, as well as the all-time top scores.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :notebook: Instructions</h2>
+<h2 id="instructions" align="center"> :notebook: Instructions</h2>
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="overview"> :cloud: Overview</h2>
+<h2 id="overview" align="center"> :cloud: Overview</h2>
 
 The game is divided into three main teams: Menus, Backend, and Frontend. Each team is responsible for different aspects of the game, such as creating the start screen, handling game logic, and rendering game elements on the screen.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="menu"> :page_with_curl: Menus Team</h2>
+<h2 id="menu" align="center"> :page_with_curl: Menus Team</h2>
 
 The Menus team is responsible for creating the following:
 
@@ -60,7 +60,7 @@ The Menus team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="backend"> :fax: Backend Team</h2>
+<h2 id="backend" align="center"> :fax: Backend Team</h2>
 
 The Backend team is responsible for creating the following:
 
@@ -90,7 +90,7 @@ The Backend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="frontend"> :tv: Frontend Team</h2>
+<h2 id="frontend" align="center"> :tv: Frontend Team</h2>
 
 The Frontend team is responsible for creating the following:
 
@@ -142,7 +142,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="setting-up-your-environments"> :wrench: Setting Up Your Environment</h2>
+<h2 id="setting-up-your-environments" align="center"> :wrench: Setting Up Your Environment</h2>
 
 ### (1) Clone the Repository
 
@@ -164,7 +164,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="making-changes"> :clipboard: Making Changes</h2>
+<h2 id="making-changes" align="center"> :clipboard: Making Changes</h2>
 
 ### (1) Create a New Branch
 
@@ -181,7 +181,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="submitting-for-review"> :mailbox: Submitting for Review</h2>
+<h2 id="submitting-for-review" align="center"> :mailbox: Submitting for Review</h2>
 
 ### (1) Commit Latest Changes
 
@@ -201,7 +201,7 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="credits"> :pray: Credits</h2>
+<h2 id="credits" align="center"> :pray: Credits</h2>
 
 We would like to thank everyone in our class that contributed to this project. It was a great learning experience and we appreciate all the hard work that went into making this game a reality.
 
