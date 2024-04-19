@@ -5,8 +5,7 @@ defmodule ProjectQuazarWeb.GameBoard do
   def render(assigns) do
     ~H"""
     <div class="fixed top-11 left-4">
-    <%= Phoenix.HTML.raw(Jason.encode!(@circle_pos)) %>
-    <canvas id="circleCanvas" phx-hook="Game3" width="800" height="800" data-pos={"#{Jason.encode!(@circle_pos)}"}} ></canvas>
+    <canvas id="main" data-game-state={"#{Jason.encode!(@game_state)}"} data-name={"#{Jason.encode!(@current_user)}"} phx-hook="GameBoardHook">Pubsub Prototype</canvas>
     </div>
     """
   end

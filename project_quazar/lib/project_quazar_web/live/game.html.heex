@@ -27,7 +27,7 @@
     <%# TODO: Add the game board here %>
 
       <%# Live Game Board %>
-      <.live_component module={ProjectQuazarWeb.GameBoard} id="game-board" circle_pos={@circle_pos} />
+      <.live_component module={ProjectQuazarWeb.GameBoard} id="game-board" current_user={@current_user} game_state={@game_state}} />
 
     <%# Live scoreboard menu %>
     <.live_component

@@ -26,7 +26,7 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
     GameServer.remove_player(name)
     GameServer.spawn_player(name, :destroyer, :light)
     Phoenix.PubSub.subscribe(PubSub, "game_state:updates")
-    updated_socket = assign(socket, name: name, game_state: "", count: "")
+    updated_socket = assign(socket, name: name, game_state: "")
     {:ok, updated_socket}
   end
 
