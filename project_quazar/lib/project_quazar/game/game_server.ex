@@ -198,6 +198,7 @@ defmodule GameServer do
 
     # Remove dead ships
     Enum.each(updated_projectiles, fn updated_projectile ->
+      nil
       #IO.inspect(updated_projectile)
     end)
 
@@ -231,17 +232,6 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  # Spawns a new player within the screen boundaries of a specific type and bullet style.
-  @impl true
-  def handle_cast(
-        {:spawn_player, name, type, bullet_type},
-        %__MODULE__{players: players} = gamestate
-      ) do
-    player_ship = Ship.random_ship(type, bullet_type, @bounds)
-    new_players = [Player.new_player(name, player_ship, @bounds) | players]
-    {:noreply, %{gamestate | players: new_players}}
-  end
-
   @doc """
   Checks the health of the player with the given name. If the player's health is below 0, the player is removed from the game state.
   """
@@ -262,6 +252,17 @@ defmodule GameServer do
           {:noreply, new_gamestate}
         end
     end
+  end
+
+  # Spawns a new player within the screen boundaries of a specific type and bullet style.
+  @impl true
+  def handle_cast(
+        {:spawn_player, name, type, bullet_type},
+        %__MODULE__{players: players} = gamestate
+      ) do
+    player_ship = Ship.random_ship(type, bullet_type, @bounds)
+    new_players = [Player.new_player(name, player_ship, @bounds) | players]
+    {:noreply, %{gamestate | players: new_players}}
   end
 
   # Debugging ping function.
@@ -322,4 +323,5 @@ defmodule GameServer do
     new_state = %{state | players: new_players}
     {:noreply, new_state}
   end
+
 end
