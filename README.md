@@ -100,7 +100,7 @@ Ready your thrusters and prepare for your first match in **Project Quazar**!
 
 <h2 id="overview"> :cloud: Overview</h2>
 
-For the development of Project Quazar, we organized our efforts into three specialized teams, each focusing on a distinct aspect of the game to ensure an engaging player experience and keeping a large group project managable and organized.
+For the development of Project Quazar, we organized our efforts into three specialized teams, each focusing on a distinct aspect of the game to ensure an engaging player experience and keeping a large group project manageable and organized.
 
 - **Menus Team**: Tasked with crafting the first impressions, this team designed the intuitive start screen and user interfaces that players interact with throughout the game. They were also tasked with tracking the users score and displaying it in the score boards.
 
