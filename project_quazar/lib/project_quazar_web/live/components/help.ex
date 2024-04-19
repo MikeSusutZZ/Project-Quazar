@@ -51,23 +51,23 @@ defmodule ProjectQuazarWeb.Help do
                       <h5 class="type-heading">Light</h5>
                       <ul>
                         <li class="text-white">Damage: 10</li>
-                        <li class="text-white">Reload: 0.75s</li>
+                        <li class="text-white">Reload: 0.3s</li>
                         <li class="text-white">Velocity: High</li>
                       </ul>
                     </div>
                     <div>
                       <h5 class="type-heading">Medium</h5>
                       <ul>
-                        <li class="text-white">Damage: 20</li>
-                        <li class="text-white">Reload: 1.1s</li>
+                        <li class="text-white">Damage: 25</li>
+                        <li class="text-white">Reload: 0.6s</li>
                         <li class="text-white">Velocity: Medium</li>
                       </ul>
                     </div>
                     <div>
                       <h5 class="type-heading">Heavy</h5>
                       <ul>
-                        <li class="text-white">Damage: 35</li>
-                        <li class="text-white">Reload: 1.5s</li>
+                        <li class="text-white">Damage: 50</li>
+                        <li class="text-white">Reload: 1s</li>
                         <li class="text-white">Velocity: Slow</li>
                       </ul>
                     </div>
@@ -86,7 +86,7 @@ defmodule ProjectQuazarWeb.Help do
               <div class="mt-8">
                 <h3 class="help-heading">Game Mechanics</h3>
                 <p class="text-white text-lg mb-4">
-                  Shoot other players to survive the longest! You'll gain more points depending on how long you survive.
+                  Shoot other players and survive! You'll gain more points depending on how much damage you deal to others.
                 </p>
                 <p class="text-white text-lg mb-4">
                   Your ship will be destroyed if it reaches 0 health, and you'll be brought back to start. Ships regenerate health over time.
