@@ -158,7 +158,6 @@ defmodule ProjectQuazarWeb.Game do
   end
 
   def handle_info({:death, dead_player}, socket) do
-    IO.puts("Handle death")
     Presence.untrack(self(), @presence, dead_player.name)
     GameServer.remove_leftover_players(Presence.list(@presence))
 
