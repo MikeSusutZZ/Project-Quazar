@@ -44,6 +44,13 @@ defmodule Player do
     Ship.alive?(ship)
   end
 
+  @doc "Kills the player's ship by setting health to 0."
+  def kill_ship(player) do
+    ship = player.ship
+    updated_ship = Map.put(ship, :health, 0)
+    Map.put(player, :ship, updated_ship)
+  end
+
   @doc "Applies an amount of damage to the ships health."
   def take_damage(%__MODULE__{ship: ship} = player_data, amount) do
     damaged_ship = Ship.take_damage(ship, amount)
@@ -69,6 +76,18 @@ defmodule Player do
     %Player{player | inputs: new_inputs}
   end
 
+  defp handle_fire_action(%__MODULE__{ship: ship, name: player_name} = player) do
+    case Ship.fire(ship, player_name) do
+      {:ok, {updated_ship, bullet}} ->
+        GameServer.add_projectile(bullet)
+        {:ok, %Player{player | ship: updated_ship}}
+
+      {:error, error_msg} ->
+        IO.puts("Error firing: #{inspect(error_msg)}")
+        :error
+    end
+  end
+
   @doc "Handles how each player/ship should update every game tick."
   def handle_inputs(%__MODULE__{ship: ship, inputs: inputs} = initial_state, rotation_speed) do
     enabled_inputs = MapSet.to_list(inputs)
@@ -85,14 +104,11 @@ defmodule Player do
           Movable.Rotation.rotate(player, rotation_speed, :cw)
 
         :fire ->
-          # Does not return player value, should add projectile to server
-          case Ship.fire(ship, player.name) do
-            # This seems extremely janky but should add before next tick.
-            {:ok, bullet} -> GameServer.add_projectile(bullet)
+          case handle_fire_action(player) do
+            {:ok, updated_player} -> updated_player
+            # Keep original player if firing failed
+            :error -> player
           end
-
-          # Return non-changed player state to preserve acc value
-          player
 
         :brake ->
           # Use 80% of acceleration speed for brake speed

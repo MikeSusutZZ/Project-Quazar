@@ -108,7 +108,23 @@ defmodule GameServer do
   end
 
   @doc "Handles any and all idle movement/velocity. Should be called every tick for any movable entity."
-  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
+  def move_all(movables) do
+    # Filter movables based on in_bounds
+    in_bounds_movables =
+      Enum.filter(movables, fn movable ->
+        %{px: px, py: py} = movable.kinematics
+        Boundary.outside?(%{x: px, y: py}, %{x: @bounds.x, y: @bounds.y}) == false
+      end)
+
+    # Move the filtered movables
+    new_moved_movables =
+      Enum.map(in_bounds_movables, fn movable ->
+        Movable.Motion.move(movable)
+      end)
+
+    # Return the new list of movables after filtering and moving
+    new_moved_movables
+  end
 
   @doc "Given a player and player list, replaces players with the same name in the list and returns the new list."
   def update_players(players, updated_player) do
@@ -123,8 +139,7 @@ defmodule GameServer do
     else
       # Modify players as necessary by piping through state modification functions
       Enum.map(players, fn player ->
-        IO.inspect(player)
-
+        # IO.inspect(player)
         if Player.alive?(player) do
           player
           # This handles all player-based inputs
@@ -187,28 +202,44 @@ defmodule GameServer do
         projectiles: move_all(projectiles)
     }
 
-    {updated_projectiles, updated_players} =
+    {collision_updated_projectiles, collision_updated_players} =
       CollisionHandler.handle_collisions(new_gamestate.projectiles, new_gamestate.players)
+
+    # Check each player for boundary conditions
+    live_players =
+      Enum.map(collision_updated_players, fn player ->
+        cond do
+          Boundary.outside?(player, @bounds) ->
+            # Kill the player's ship if outside the boundary
+            Player.kill_ship(player)
+
+          Boundary.inside_damage_zone?(player, @bounds) ->
+            # Damage the player if inside the damage zone
+            Player.take_damage(player, 2)
+
+          true ->
+            player
+        end
+      end)
 
     # Update the game state with the new lists of players and projectiles
     updated_gamestate = %{
       new_gamestate
-      | players: updated_players,
-        projectiles: updated_projectiles
+      | players: live_players,
+        projectiles: collision_updated_projectiles
     }
 
     # Remove dead ships
-    Enum.each(updated_projectiles, fn updated_projectile ->
-      IO.inspect(updated_projectile)
-    end)
-
-    Enum.each(updated_players, fn updated_player ->
-      nil
-      # IO.inspect(updated_player)
-      # Game can call boundary checks like so and damage players accordingly
-      # IO.inspect(Boundary.outside?(player, @bounds))
-      # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
-    end)
+    # Enum.each(updated_projectiles, fn updated_projectile ->
+    #   IO.inspect(updated_projectile)
+    # end)
+    # Enum.each(updated_players, fn updated_player ->
+    #   nil
+    #   # IO.inspect(updated_player)
+    #   # Game can call boundary checks like so and damage players accordingly
+    #   # IO.inspect(Boundary.outside?(player, @bounds))
+    #   # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
+    # end)
 
     # TODO: Game can call boundary checks like so and damage players accordingly
     # IO.inspect(Boundary.outside?(player, @bounds))
@@ -232,17 +263,6 @@ defmodule GameServer do
     {:reply, gamestate}
   end
 
-  # Spawns a new player within the screen boundaries of a specific type and bullet style.
-  @impl true
-  def handle_cast(
-        {:spawn_player, name, type, bullet_type},
-        %__MODULE__{players: players} = gamestate
-      ) do
-    player_ship = Ship.random_ship(type, bullet_type, @bounds)
-    new_players = [Player.new_player(name, player_ship, @bounds) | players]
-    {:noreply, %{gamestate | players: new_players}}
-  end
-
   @doc """
   Checks the health of the player with the given name. If the player's health is below 0, the player is removed from the game state.
   """
@@ -263,6 +283,17 @@ defmodule GameServer do
           {:noreply, new_gamestate}
         end
     end
+  end
+
+  # Spawns a new player within the screen boundaries of a specific type and bullet style.
+  @impl true
+  def handle_cast(
+        {:spawn_player, name, type, bullet_type},
+        %__MODULE__{players: players} = gamestate
+      ) do
+    player_ship = Ship.random_ship(type, bullet_type, @bounds)
+    new_players = [Player.new_player(name, player_ship, @bounds) | players]
+    {:noreply, %{gamestate | players: new_players}}
   end
 
   # Debugging ping function.

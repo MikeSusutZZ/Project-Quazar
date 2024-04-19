@@ -108,10 +108,10 @@ defmodule ProjectQuazarWeb.PubSubPrototypeLive do
   end
 
   @doc "Cleans up after the socket connection is terminated, either by removing the user or logging their departure."
-  def terminate(_reason, socket) do
-    name = socket.assigns.name
-    IO.puts("#{name} left the game.")
-    GameServer.remove_player(name)
-    :ok
-  end
+  # def terminate(_reason, socket) do
+  #   name = socket.assigns.name
+  #   IO.puts("#{name} left the game.")
+  #   GameServer.remove_player(name)
+  #   :ok
+  # end
 end
