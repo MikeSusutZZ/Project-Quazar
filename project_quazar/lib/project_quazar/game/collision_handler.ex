@@ -14,8 +14,8 @@ defmodule CollisionHandler do
         %{x: bullet_x, y: bullet_y} = Movable.Motion.get_pos(bullet.kinematics)
         %{x: ship_x, y: ship_y} = Movable.Motion.get_pos(player.ship.kinematics)
         # Assuming bullet radius as 1
-        collides?({bullet_x, bullet_y}, bullet.radius, {ship_x, ship_y}, player.ship.radius)
-      end)
+        collides?({bullet_x, bullet_y}, bullet.radius, {ship_x, ship_y}, player.ship.radius) && (bullet.sender !== player.name)
+    end)
       |> Enum.map(fn player ->
         # Log the collision
         IO.puts(

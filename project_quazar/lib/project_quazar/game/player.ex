@@ -44,6 +44,13 @@ defmodule Player do
     Ship.alive?(ship)
   end
 
+  @doc "Kills the player's ship by setting health to 0."
+  def kill_ship(player) do
+    ship = player.ship
+    updated_ship = Map.put(ship, :health, 0)
+    Map.put(player, :ship, updated_ship)
+  end
+
   @doc "Applies an amount of damage to the ships health."
   def take_damage(%__MODULE__{ship: ship} = player_data, amount) do
     damaged_ship = Ship.take_damage(ship, amount)
