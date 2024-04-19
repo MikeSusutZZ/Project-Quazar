@@ -93,7 +93,6 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
 
   // getting the data
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
-  console.log("Data", data);
 
   // Get the player name from the route parameters
   const playerName = window.location.pathname.split("/").pop();
@@ -118,7 +117,8 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
       me.ship.kinematics.angle,
       me.name,
       me.ship.health,
-      me.ship.max_health
+      me.ship.max_health,
+      me.ship.radius
     );
   } catch {
     console.log("frame skip");
@@ -135,7 +135,8 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
         enemy.ship.kinematics.angle,
         enemy.name,
         enemy.ship.health,
-        enemy.ship.max_health
+        enemy.ship.max_health,
+        enemy.ship.radius
       );
     } catch {
       console.log("frame skip");
@@ -144,43 +145,54 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
 
   const bullets = data.projectiles;
 
+  console.log(bullets);
+
   bullets.forEach((bullet) => {
     drawBullet(
       ctx,
       bulletTypes[bullet.type],
       bullet.kinematics.px,
-      bullet.kinematics.py
+      bullet.kinematics.py,
+      bullet.radius
     );
   });
 }
 
-function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
+function drawShip(ctx, ship, px, py, angle, name, health, maxHealth, radius) {
+  const spriteSize = radius * 2;
+  const xOffset = 10;
+  const yOffset = 60;
+  const textSize = 10;
   ctx.save();
-  ctx.translate(px + 20, py + 30); // Adjust these values according to the sprite size
+  ctx.translate(px + spriteSize / 2 - xOffset, py + spriteSize / 2 - xOffset); // Adjust these values according to the sprite size
   ctx.rotate((angle - Math.PI / 2) * -1);
-  ctx.drawImage(ship, -20, -30, 40, 60); // Adjust the sprite size here
+  ctx.drawImage(ship, -spriteSize, -spriteSize, spriteSize * 2, spriteSize * 2); // Adjust the sprite size here
   ctx.restore();
 
   ctx.font = "20px";
   ctx.textAlign = "center";
 
   ctx.fillStyle = "white";
-  ctx.fillText(name, px + 125, py + 125 - 20);
+  ctx.fillText(name, px + spriteSize - xOffset * 2, py + spriteSize - yOffset);
 
   healthRatio = parseFloat(health) / maxHealth;
   ctx.fillStyle =
     healthRatio > 0.8 ? "green" : healthRatio > 0.4 ? "yellow" : "red";
-  ctx.fillText(health, px + 125, py + 125 - 5);
+  ctx.fillText(
+    health,
+    px + spriteSize - xOffset * 2,
+    py + spriteSize - yOffset + textSize
+  );
 }
 
-function drawBullet(ctx, bulletimg, px, py) {
-  const spriteSize = 50;
+function drawBullet(ctx, bulletimg, px, py, radius) {
+  const spriteSize = radius * 2;
   ctx.save();
   ctx.translate(px + spriteSize / 2, py + spriteSize / 2);
   ctx.drawImage(
     bulletimg,
-    (spriteSize / 2) * -1,
-    (spriteSize / 2) * -1,
+    -(radius * 2),
+    -(radius * 2),
     spriteSize,
     spriteSize
   );
