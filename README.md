@@ -9,6 +9,9 @@ Programming Paradigms
 - [Menus Team](#menus-team)
 - [Backend Team](#backend-team)
 - [Front Team](#front-team)
+- [Setting Up Your Environment](#setting-up-your-environment)
+- [Making Changes](#making-changes)
+- [Submitting for Review](#submitting-for-review)
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -126,9 +129,9 @@ The Frontend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-### Setting Up Your Environment
+## Setting Up Your Environment
 
-#### (1) Clone the Repository
+### (1) Clone the Repository
 
 - Open **VS Code**
 - Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS) to open the Command Palette.
@@ -136,19 +139,21 @@ The Frontend team is responsible for creating the following:
 - Paste the project URL: `https://github.com/MikeSusutZZ/Project-Quazar.git` and hit `Enter`.
 - When prompted, select `Open` to open the cloned repository.
 
-#### (2) Install Dependencies
+### (2) Install Dependencies
 
 - Right-click on `project_quazar` in the Explorer sidebar and select `Open in Integrated Terminal`
 - Run the following command in the terminal: `mix deps.get`
 
-#### (3) Start the Phoenix Server
+### (3) Start the Phoenix Server
 
 - In the integrated terminal, start your server with: `mix phx.server`
 - Visit `localhost:4000` in your browser to see the application.
 
-### Making Changes
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-#### (1) Create a New Branch
+## Making Changes
+
+### (1) Create a New Branch
 
 - In VS Code, open the Source Control sidebar by clicking the branch icon on the left or pressing `Ctrl+Shift+G`.
 - Click on the branch name in the bottom left corner to bring up the branch menu.
@@ -156,19 +161,21 @@ The Frontend team is responsible for creating the following:
 - Click `Publish Branch` in the left sidebar, to push your branch to GitHub.
 - Check the bottom-left corner to ensure you're on your new branch.
 
-#### (2) Writing Code
+### (2) Writing Code
 
 - Write code associated with the feature.
 - Save files and regularly commit changes to your branch.
 
-### Submitting for Review
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-#### (1) Commit Latest Changes
+## Submitting for Review
+
+### (1) Commit Latest Changes
 
 - Ensure your latest changes are committed to your branch.
 - Resolve any errors or conflicts before proceeding.
 
-#### (2) Create a Pull Request
+### (2) Create a Pull Request
 
 - Open GitHub in your browser and navigate to the repository.
 - You should see, in a yellow banner, the prompt `Compare & pull request`. Click this.
