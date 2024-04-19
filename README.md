@@ -157,14 +157,34 @@ The Menus team was responsible for creating the following:
 The Backend team was responsible for creating the following:
 
 - **Bullet**: Handles all bullet-related operations
+  - Manages bullet creation, trajectory.
+  - Implements motion protocol for bullet behavior.
 - **CollisionHandler**: Handles collision detection between game entities (bullet/player/ship)
+  - Detects and manages collisions between entities.
+  - Adjusts game state, including health and scores, upon collision.
 - **GameBoundary**: Handles boundary collision logic
+  - Ensures entities stay within game boundaries.
+  - Handles logic for boundary collisions and hitting dead zone events.
 - **GameServer**: Contains the main game logic
+  - Manages real-time game state across players.
+  - Periodic game state updates with a defined tick rate.
+  - Processes player inputs for movements and actions.
 - **Movable**: Handles an object's position/velocity/direction
+  - Protocol for entity motion.
+  - Implemented by game entities to move, accelerate, rotate and drag.
 - **Player**: Stores all player-related functionality
-- **Ship**: Contains all ship-related functionality
+  - Identifies players and their ships.
+  - Tracks and updates player scores.
+  - Implements motion protocols for realistic player actions.
+- **Ship**: Contains all ship-related functionality   
+  - Details ship properties like health and movement capabilities.
+  - Handles shooting mechanics.
+  - Utilizes Bullet module for projectile management.
+  - Implements motion protocol for bullet behavior.
 - **ETSWrapper**: Uses ETS operations for high scores
 - **HighScores**: Manages high scores
+  - Manages high score table with ETS.
+  - Provides an API to add and fetch high score entries.
 - **Application**: the entry point, sets up supervision trees
 - **Mailer**: Handles email-sending capabilities within the application
 
