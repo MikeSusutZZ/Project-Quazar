@@ -30,13 +30,7 @@ Project Quazar's goal of the game is to engage in multiplayer battles, where pla
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :video_game: User Instructions</h2>
-
-It looks like you're sharing some screens from a game called Project Quazar. The game seems to involve selecting a spaceship with certain attributes like health and speed, and bullet types that vary in damage and speed. Once in the game, players can move their ship, shoot, and regenerate health. There's also an element of danger with a border that causes damage, and a game-over scenario if a player goes off the screen. To win points, players shoot at each other, with each hit increasing their score.
-
-Your request is to fill in the user instructions portion of a readme, so here’s a draft for you:
-
----
+<h2 id="instructions"> :notebook: Instructions</h2>
 
 ## :video_game: User Instructions
 
