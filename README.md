@@ -3,6 +3,7 @@
 ## Menus Team
 
 ### IMPORTANT
+
 Menus Team, the 'menus' folder is now deprecated. Please work on, and create branches for, the `project_quazar` folder.
 
 The Menus team is responsible for creating the following:
@@ -44,6 +45,7 @@ The Backend team is responsible for creating the following:
 ![Backend Team Screenshot](backend.png "Backend Team Diagram")
 
 ## Team Members
+
 - Olga Zimina
 - Dakaro Mueller
 - Abhishek Chouhan
@@ -51,6 +53,23 @@ The Backend team is responsible for creating the following:
 - Shawn Birring
 - Mikko Sio
 - Michelle Kwok
+
+## Front Team
+
+The Frontend team is responsible for creating the following:
+
+- **Assets**: Handles all bullet-related operations
+- **Components**: Handles collision detection between game entities (bullet/player/ship)
+
+<br>
+
+![Frontend Team Screenshot](backend.png "Frontend Team Diagram")
+
+## Team Members
+
+- Sean Sollestre
+- Aditya Agrawai
+- Josh Chuaua
 
 ### Setting Up Your Environment
 
