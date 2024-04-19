@@ -145,24 +145,24 @@ defmodule ProjectQuazarWeb.Game do
          |> assign(:game_state, new_state)}
 
       dead_player ->
-        Presence.untrack(self(), @presence, dead_player.name)
-        GameServer.remove_leftover_players(Presence.list(@presence))
+        # :timer.sleep(2000)
+        Process.send_after(self(), {:death, dead_player}, 1000)
 
         {:noreply,
          socket
          |> assign(:players, new_state.players)
          |> sort_players_by_score()
          |> assign(:projectiles, new_state.projectiles)
-         |> assign(:dead_player_score, dead_player.score)
-         |> assign(:game_over, true)}
+         |> assign(:dead_player_score, dead_player.score)}
     end
+  end
 
-    # {:noreply,
-    # socket
-    # |> assign(:players, new_state.players)
-    # |> sort_players_by_score()
-    # |> assign(:projectiles, new_state.projectiles)
-    # |> assign(:game_over, game_over)}
+  def handle_info({:death, dead_player}, socket) do
+    IO.puts("Handle death")
+    Presence.untrack(self(), @presence, dead_player.name)
+    GameServer.remove_leftover_players(Presence.list(@presence))
+
+    {:noreply, socket |> assign(:game_over, true)}
   end
 
   # Handle the 'leaves' object retrieved from the 'presence_diff' event.
