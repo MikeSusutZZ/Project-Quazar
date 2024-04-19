@@ -278,9 +278,9 @@ If you allow google to autofill your username, you will get kicked back to the h
 
 Use Chrome for best results, Safari has been particularly inconsistent.
 
-### All-Time High Score not updating
+### Since Last Reload High Scores
 
-Hopefully done before handin.
+While labelled as "All Time High Scores" it only saves since the last time the server is closed as it uses an ets table
 
 ### Long asset load time and heavy data load
 

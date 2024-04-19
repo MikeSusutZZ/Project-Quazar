@@ -153,6 +153,8 @@ defmodule GameServer do
           |> Player.inc_health(@health_increment)
 
         else
+          # Send the player's score to the all time high score board
+          ProjectQuazar.HighScores.add_entry(player.name, player.score)
           # Check player health after a certain time, to decide if they should be removed
           Process.send_after(
             self(),
