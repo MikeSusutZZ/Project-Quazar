@@ -69,7 +69,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
 
 - Use **WASD** keys to rotate and move your ship across the galaxy.
 - Press the **Spacebar** to fire your selected ammunition at enemy ships.
-- Your ship will regenerate 1 HP (health point) every second—use this to your advantage!
+- Your ship will slowly regenerate HP over time—use this to your advantage, live to fly another day!
 
 ### Game Board
 
