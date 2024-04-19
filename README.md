@@ -6,19 +6,28 @@ Project Quazar is a multiplayer space shooter game developed by students at BCIT
 
 ## :book: Table of Contents
 
-- [About the Project](#about-the-project)
-- [Instructions](#instructions)
-- [Overview](#overview)
-- [Menus Team](#menus-team)
-- [Backend Team](#backend-team)
-- [Front Team](#front-team)
-- [Setting Up Your Environment](#setting-up-your-environment)
-- [Making Changes](#making-changes)
-- [Submitting for Review](#submitting-for-review)
+<details open="open">
+  <ol>
+    <li><a href="#about-the-project"> ➤ About The Project</a></li>
+    <li><a href="#overview"> ➤ Overview</a></li>
+    <li><a href="#project-files-description"> ➤ Project Files Description</a></li>
+    <li><a href="#getting-started"> ➤ Getting Started</a></li>
+    <li><a href="#scenario1"> ➤ Scenario 1: Depth First Search </a></li>
+    <li><a href="#scenario2"> ➤ Scenario 2: Breadth First Search </a></li>
+    <li><a href="#scenario3"> ➤ Scenario 3: Uniform Cost Search </a></li>
+    <li><a href="#scenario4"> ➤ Scenario 4: A* search algorithm </a></li>
+    <li><a href="#scenario5"> ➤ Scenario 5: Finding All Corners </a></li>
+    <li><a href="#scenario6"> ➤ Scenario 6: Admissible and Consistent Heuristic </a></li>
+    <li><a href="#scenario7"> ➤ Scenario 7: Eating All Dots </a></li>
+    <li><a href="#scenario8"> ➤ Scenario 8: Suboptimal Search </a></li>
+    <li><a href="#references"> ➤ References</a></li>
+    <li><a href="#credits"> ➤ Credits</a></li>
+  </ol>
+</details>
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## :pencil: About the Project
+<h2 id="about-the-project"> :pencil: About The Project</h2>
 
 Project Quazar's goal of the game is to engage in multiplayer battles, where players try to destroy enemy ships in and earn points. Players can choose from a variety of ships and bullet types. The game features a high score system that displays the top scores of all players in the current game, as well as the all-time top scores.
 
