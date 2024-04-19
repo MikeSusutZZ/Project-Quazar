@@ -1,6 +1,17 @@
 defmodule GameServer do
   use GenServer
 
+  @moduledoc """
+  Manages the core game server logic.
+
+  Features:
+  - Real-time game state management and synchronization across players.
+  - Handling of player inputs for actions such as moving, turning, accelerating, braking, and firing.
+  - Collision detection and management, including player and projectile interactions.
+  - Dynamic updating of game entities such as players and projectiles based on game logic.
+  - Comprehensive use of game mechanics like health management, drag effects, and periodic updates through game ticks.
+  """
+
   @derive Jason.Encoder
   defstruct [:players, :projectiles]
 
@@ -191,29 +202,44 @@ defmodule GameServer do
         projectiles: move_all(projectiles)
     }
 
-    {updated_projectiles, updated_players} =
+    {collision_updated_projectiles, collision_updated_players} =
       CollisionHandler.handle_collisions(new_gamestate.projectiles, new_gamestate.players)
+
+    # Check each player for boundary conditions
+    live_players =
+      Enum.map(collision_updated_players, fn player ->
+        cond do
+          Boundary.outside?(player, @bounds) ->
+            # Kill the player's ship if outside the boundary
+            Player.kill_ship(player)
+
+          Boundary.inside_damage_zone?(player, @bounds) ->
+            # Damage the player if inside the damage zone
+            Player.take_damage(player, 2)
+
+          true ->
+            player
+        end
+      end)
 
     # Update the game state with the new lists of players and projectiles
     updated_gamestate = %{
       new_gamestate
-      | players: updated_players,
-        projectiles: updated_projectiles
+      | players: live_players,
+        projectiles: collision_updated_projectiles
     }
 
     # Remove dead ships
-    Enum.each(updated_projectiles, fn updated_projectile ->
-      nil
-      # IO.inspect(updated_projectile)
-    end)
-
-    Enum.each(updated_players, fn updated_player ->
-      nil
-      # IO.inspect(updated_player)
-      # Game can call boundary checks like so and damage players accordingly
-      # IO.inspect(Boundary.outside?(player, @bounds))
-      # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
-    end)
+    # Enum.each(updated_projectiles, fn updated_projectile ->
+    #   IO.inspect(updated_projectile)
+    # end)
+    # Enum.each(updated_players, fn updated_player ->
+    #   nil
+    #   # IO.inspect(updated_player)
+    #   # Game can call boundary checks like so and damage players accordingly
+    #   # IO.inspect(Boundary.outside?(player, @bounds))
+    #   # IO.inspect(Boundary.inside_damage_zone?(player, @bounds))
+    # end)
 
     # TODO: Game can call boundary checks like so and damage players accordingly
     # IO.inspect(Boundary.outside?(player, @bounds))
