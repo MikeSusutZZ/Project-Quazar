@@ -85,6 +85,22 @@
   @apply text-white text-lg font-bold text-center;
 }
 
+.info-heading{
+  @apply text-white text-lg font-bold mb-2 text-center;
+}
+
+.help-heading {
+  @apply text-white text-lg font-bold text-center mb-4;
+}
+
+.help-text {
+  @apply text-white text-lg;
+}
+
+.help-health-text {
+  @apply text-white italic text-center
+}
+
 .control-item{
   @apply text-white text-lg text-center
 }
