@@ -1,8 +1,10 @@
 # :rocket: Project-Quazar :rocket:
 
-Programming Paradigms
+Project Quazar is a multiplayer space shooter game developed by students at BCIT in the Programming Paradigms Option. The game is built using the Phoenix Framework, Elixir, and JavaScript. The game features a variety of ships and bullets, as well as high scores and multiplayer capabilities.
 
-# Table of Contents
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+## :book: Table of Contents
 
 - [About the Project](#about-the-project)
 - [Overview](#overview)
