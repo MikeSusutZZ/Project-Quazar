@@ -50,7 +50,7 @@ defmodule Movable do
     # Increases the velocity of the ship in the direction it is facing
     def accelerate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, acl) do
       vxf = vx + cos(angle) * acl
-      vyf = vy + sin(angle) * acl
+      vyf = vy - sin(angle) * acl
       %Movable{px: px, py: py, vx: vxf, vy: vyf, angle: angle}
     end
 
@@ -97,13 +97,13 @@ defmodule Movable do
 
   defimpl Movable.Rotation, for: __MODULE__ do
     # Clockwise rotation
-    def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :ccw) do
+    def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :cw) do
       new_angle = (angle - rad) |> Movable.normalize_angle()
       %Movable{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
     end
 
     # Counter-clockwise rotation
-    def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :cw) do
+    def rotate(%Movable{px: px, py: py, vx: vx, vy: vy, angle: angle}, rad, :ccw) do
       new_angle = (angle + rad) |> Movable.normalize_angle()
       %Movable{px: px, py: py, vx: vx, vy: vy, angle: new_angle}
     end

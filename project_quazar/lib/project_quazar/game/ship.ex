@@ -16,7 +16,8 @@ defmodule Ship do
     :type,
     :radius,
     :acceleration,
-    :bullet_type
+    :bullet_type,
+    :next_fire_at
   ]
 
   # Bullet type specifications
@@ -39,18 +40,24 @@ defmodule Ship do
             type: type,
             radius: attributes.radius,
             acceleration: attributes.acceleration,
-            bullet_type: bullet_type
+            bullet_type: bullet_type,
+            next_fire_at: 0
           }
-          :error ->
-            {:error, "Invalid ship type: #{type}"}
-        end
-      else
-        {:error, "Invalid bullet type: #{bullet_type}"}
+
+        :error ->
+          {:error, "Invalid ship type: #{type}"}
       end
+    else
+      {:error, "Invalid bullet type: #{bullet_type}"}
+    end
   end
 
   @doc "Creates a ship with randomized position within bounds (height and width), 0 intial velocity and 100hp, 10bulletDamage"
-  def random_ship(type, bullet_type, %{x: bounding_width, y: bounding_height, damage_zone: damage_zone}) do
+  def random_ship(type, bullet_type, %{
+        x: bounding_width,
+        y: bounding_height,
+        damage_zone: damage_zone
+      }) do
     random_x = random_between(0 + damage_zone, bounding_width - damage_zone)
     random_y = random_between(0 + damage_zone, bounding_height - damage_zone)
     angle = random_angle()
@@ -146,22 +153,39 @@ defmodule Ship do
   end
 
   @doc """
-  Fires a bullet from the ship, creating a new `Bullet` instance.
+  Fires a bullet from a ship if the firing conditions are met, based on the cooldown managed by `next_fire_at`.
   The bullet is accelerated by its predefined speed.
-  Returns `{:ok, bullet}` where `bullet` is the newly created `Bullet` struct, or `{:error, reason}` if the bullet type is invalid.
+  Returns `{:ok, {updated_ship, bullet}}` if the bullet is successfully fired, or `{:error, reason}` otherwise.
   """
-  def fire(%__MODULE__{kinematics: kinematics, radius: radius, bullet_type: bullet_type}, player_name) do
-    %{px: px, py: py, vx: vx, vy: vy, angle: angle} = kinematics
-    # Bullet will start at the edge of the ship, in the direction the ship is facing.
-    ship_front_x = px + radius
-    ship_front_y = py + radius
+  def fire(
+        %__MODULE__{
+          kinematics: kinematics,
+          radius: radius,
+          bullet_type: bullet_type,
+          next_fire_at: next_fire_at
+        } = ship,
+        player_name
+      ) do
+    current_time = :erlang.system_time(:millisecond)
+    # Check if the ship is allowed to fire based on `next_fire_at`
+    if current_time >= next_fire_at do
+      # Calculate new positions for bullet
+      %{px: px, py: py, vx: vx, vy: vy, angle: angle} = kinematics
 
-    # Create the bullet with the ship's current position and velocity
-    case Bullet.new_bullet(player_name, ship_front_x, ship_front_y, vx, vy, angle, bullet_type) do
-      {:ok, bullet} ->
-        {:ok, Movable.Motion.accelerate(bullet, bullet.speed)}
-      :error ->
-        {:error, "Invalid bullet type: #{bullet_type}"}
+      case Bullet.new_bullet(player_name, px, py, vx, vy, radius, angle, bullet_type) do
+        {:ok, bullet} ->
+          # Calculate when the next fire can occur based on `frequency_ms` of the bullet
+          new_next_fire_at = current_time + bullet.frequency_ms
+
+          # Update the ship's `next_fire_at` and return both the updated ship and the new bullet
+          updated_ship = %__MODULE__{ship | next_fire_at: new_next_fire_at}
+          {:ok, {updated_ship, Movable.Motion.accelerate(bullet, bullet.speed)}}
+
+        :error ->
+          {:error, "Invalid bullet type: #{bullet_type}"}
+      end
+    else
+      {:error, "Ship cannot fire yet. Next fire attempt at #{next_fire_at}, current time is #{current_time}"}
     end
   end
 end
