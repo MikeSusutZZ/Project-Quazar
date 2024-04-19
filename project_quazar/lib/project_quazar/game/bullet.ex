@@ -10,32 +10,41 @@ defmodule Bullet do
 
   # Defines the complete struct for a bullet
   @derive Jason.Encoder
-  defstruct sender: nil, kinematics: %Movable{}, type: nil, damage: 0, frequency_ms: 0, speed: 0, radius: 0
+  defstruct sender: nil,
+            kinematics: %Movable{},
+            type: nil,
+            damage: 0,
+            frequency_ms: 0,
+            speed: 0,
+            radius: 0
 
   # Bullet type specifications
   @bullet_types %{
-    heavy: %{damage: 35, frequency_ms: 200, speed: 1, radius: 2},
-    medium: %{damage: 20, frequency_ms: 150, speed: 2, radius: 1},
-    light: %{damage: 10, frequency_ms: 100, speed: 3, radius: 1}
+    heavy: %{damage: 35, frequency_ms: 200, speed: 1, radius: 20},
+    medium: %{damage: 20, frequency_ms: 150, speed: 2, radius: 10},
+    light: %{damage: 10, frequency_ms: 100, speed: 3, radius: 10}
   }
 
   @doc "Creates a new bullet with specified attributes."
   def new_bullet(sender, px, py, vx, vy, radius, angle, type) do
     case Map.fetch(@bullet_types, type) do
-    {:ok, attributes} ->
+      {:ok, attributes} ->
         # Bullet will start at the edge of the ship, in the direction the ship is facing.
         bullet_px = px + (attributes.radius + radius) * :math.cos(angle)
         bullet_py = py - (attributes.radius + radius) * :math.sin(angle)
         kinematics = Movable.new_movable(bullet_px, bullet_py, vx, vy, angle)
-        {:ok, %__MODULE__{
-          sender: sender,
-          type: type,
-          kinematics: kinematics,
-          damage: attributes.damage,
-          frequency_ms: attributes.frequency_ms,
-          speed: attributes.speed,
-          radius: attributes.radius
-        }}
+
+        {:ok,
+         %__MODULE__{
+           sender: sender,
+           type: type,
+           kinematics: kinematics,
+           damage: attributes.damage,
+           frequency_ms: attributes.frequency_ms,
+           speed: attributes.speed,
+           radius: attributes.radius
+         }}
+
       :error ->
         {:error, "Invalid bullet type: #{type}"}
     end
