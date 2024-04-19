@@ -97,8 +97,19 @@ defmodule GameServer do
   end
 
   @doc "Handles any and all idle movement/velocity. Should be called every tick for any movable entity."
-  def move_all(movables), do: Enum.map(movables, fn movable -> Movable.Motion.move(movable) end)
+  def move_all(movables) do
+    # Filter movables based on in_bounds
+    in_bounds_movables = Enum.filter(movables, fn movable ->
+      %{px: px, py: py} = movable.kinematics
+      Boundary.outside?(%{x: px, y: py}, %{x: @bounds.x, y: @bounds.y}) == false
+    end)
+    # Move the filtered movables
+    new_moved_movables = Enum.map(in_bounds_movables, fn movable ->
+      Movable.Motion.move(movable)
+    end)
 
+    new_moved_movables  # Return the new list of movables after filtering and moving
+  end
   @doc "Given a player and player list, replaces players with the same name in the list and returns the new list."
   def update_players(players, updated_player) do
     Enum.map(players, fn p -> if p.name == updated_player.name, do: updated_player, else: p end)
