@@ -157,14 +157,34 @@ The Menus team was responsible for creating the following:
 The Backend team was responsible for creating the following:
 
 - **Bullet**: Handles all bullet-related operations
+  - Manages bullet creation, trajectory.
+  - Implements motion protocol for bullet behavior.
 - **CollisionHandler**: Handles collision detection between game entities (bullet/player/ship)
+  - Detects and manages collisions between entities.
+  - Adjusts game state, including health and scores, upon collision.
 - **GameBoundary**: Handles boundary collision logic
+  - Ensures entities stay within game boundaries.
+  - Handles logic for boundary collisions and hitting dead zone events.
 - **GameServer**: Contains the main game logic
+  - Manages real-time game state across players.
+  - Periodic game state updates with a defined tick rate.
+  - Processes player inputs for movements and actions.
 - **Movable**: Handles an object's position/velocity/direction
+  - Protocol for entity motion.
+  - Implemented by game entities to move, accelerate, rotate and drag.
 - **Player**: Stores all player-related functionality
-- **Ship**: Contains all ship-related functionality
+  - Identifies players and their ships.
+  - Tracks and updates player scores.
+  - Implements motion protocols for realistic player actions.
+- **Ship**: Contains all ship-related functionality   
+  - Details ship properties like health and movement capabilities.
+  - Handles shooting mechanics.
+  - Utilizes Bullet module for projectile management.
+  - Implements motion protocol for bullet behavior.
 - **ETSWrapper**: Uses ETS operations for high scores
 - **HighScores**: Manages high scores
+  - Manages high score table with ETS.
+  - Provides an API to add and fetch high score entries.
 - **Application**: the entry point, sets up supervision trees
 - **Mailer**: Handles email-sending capabilities within the application
 
@@ -270,9 +290,9 @@ The 3 ship types and 3 weapon types allows for 9 different combinations for play
 
 <h2 id="bugs"> 🐛 Known Bugs</h2>
 
-### Don't AutoFill
+### Don't AutoFill or Enter Blank Name
 
-If you allow google to autofill your username, you will get kicked back to the home screen and be repeatedly kicked back whenever you try to type. Do not use autofill. If you have, solve the bug with a hard cache reload (ctrl + F5).
+If you allow google to autofill your username or enter a blank name, you will get kicked back to the home screen and be repeatedly kicked back whenever you try to type. Do not use autofill. If you have, solve the bug with a hard cache reload (F5). Your ship will still join the game and be controllable from the menu screen, you just wont see it.
 
 ### Ungraceful Exits Hogging Usernames
 
@@ -289,6 +309,9 @@ While labelled as "All Time High Scores" it only saves since the last time the s
 ### Long asset load time and heavy data load
 
 This project sends a LOT of information very quickly. Do not use a metered connection. Players may join the game before having all assets load, allowing them to be killed before they finish loading.
+
+### Username Goes Funky When You Explode
+Because of the sudden scale up, your username has some weird visuals when you explode. Not a big deal, only on screen for a second
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
