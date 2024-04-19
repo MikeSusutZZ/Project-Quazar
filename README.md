@@ -1,6 +1,6 @@
 <h1 align="center"> :rocket: Project-Quazar :rocket: </h1>
 
-Dive into the galactic world of Project Quazar! In this action-packed multiplayer space shooter, players face off in intense skirmishes, aiming to obliterate enemy ships and rack up points. Choose your arsenal from an array of unique ships and devastating bullet types that fit your combat style. Thrive in the chaos of current games and etch your name among the legends with both session-based and all-time highscore boards. Are you ready to claim your place among the stars in Project Quazar? Join the fray and dominate the galaxy!
+Dive into the galactic world of Project Quazar! In this action-packed multiplayer space shooter, players face off in intense skirmishes, aiming to obliterate enemy ships and rack up points. Choose your arsenal from a variety of unique space ships and devastating bullet types that fit your combat style. Thrive in the chaos of current games and etch your name onto the leaderboards. Are you ready to claim your place among the stars in Project Quazar? Join the fray and dominate the galaxy!
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -26,13 +26,13 @@ Dive into the galactic world of Project Quazar! In this action-packed multiplaye
 
 <h2 id="about-the-project"> :pencil: About The Project</h2>
 
-Project Quazar is a multiplayer space shooter game designed by the talented students at BCIT's Programming Paradigms Option. Built on the innovative Phoenix Framework and powered by Elixir and JavaScript, this game lets you pilot a variety of unique ships, unleash powerful bullets, and battle it out for the top spot on the leaderboard. Dive into the action and connect with players around the globe in this high-energy, galactic showdown!
+Project Quazar is a multiplayer space shooter game designed by students in BCIT's CST Programming Paradigms Option. Built on the innovative Phoenix Framework and powered by Elixir and JavaScript, this game lets you pilot a variety of unique ships, unleash powerful bullets, and battle it out for the top spot on the leaderboard. Dive into the action and connect with other players around the globe in this galactic showdown!
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <h2 id="instructions"> :video_game: User Instructions</h2>
 
-Welcome to the interstellar arena of **Project Quazar**! Here's how to get started:
+Welcome Cadet, here's how to get started:
 
 ### Starting the Game
 
