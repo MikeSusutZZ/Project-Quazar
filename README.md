@@ -23,6 +23,31 @@ The Menus team is responsible for creating the following:
 - Ediljohn Joson
 - Rhys Mahannah
 
+## Backend Team
+
+The Backend team is responsible for creating the following:
+
+- **Bullet**: Handles all bullet-related operations
+- **CollisionHandler**: Handles collision detection between game entities (bullet/player/ship)
+- **GameBoundary**: Handles boundary collision logic
+- **GameServer**: Contains the main game logic
+- **Movable**: Handles an object's position/velocity/direction
+- **Player**: Stores all player-related functionality
+- **Ship**: Contains all ship-related functionality
+- **ETSWrapper**: Uses ETS operations for high scores
+- **HighScores**: Manages high scores
+- **Application**: the entry point, sets up supervision trees
+- **Mailer**: Handles email-sending capabilities within the application
+
+## Team Members
+- Olga Zimina
+- Dakaro Mueller
+- Abhishek Chouhan
+- Alex Sichitiu
+- Shawn Birring
+- Mikko Sio
+- Michelle Kwok
+
 ### Setting Up Your Environment
 
 #### (1) Clone the Repository
