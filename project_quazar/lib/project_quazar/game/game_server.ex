@@ -22,7 +22,7 @@ defmodule GameServer do
   @dead_removal_interval_sec 2000
   @drag_rate 0.1
   @turn_rate :math.pi() / 3 * 0.1
-  @health_increment 1
+  @health_increment 0.1
 
   # bounds for the screen (assumption at present, can be done programmatically later)
   @bounds %{

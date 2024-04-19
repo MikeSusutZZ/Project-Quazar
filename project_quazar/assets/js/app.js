@@ -22,10 +22,6 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
-// Game Channel imports
-import "./game_socket.js";
-import socket from "./game_socket.js";
-
 // Hooks initializer
 let Hooks = {};
 
@@ -65,9 +61,18 @@ Hooks.GameBoardHook = {
 
     // push events
     // Keydown event listener
+    canvas.addEventListener("mousedown", (e) => {
+      console.log(e);
+      this.pushEvent("key_down", { key: " " });
+    });
+
+    canvas.addEventListener("mouseup", (e) => {
+      console.log(e);
+      this.pushEvent("key_up", { key: " " });
+    });
+
     window.addEventListener("keydown", (e) => {
       if (!pressedKeys.has(e.key)) {
-        e.preventDefault();
         console.log(e.key);
         pressedKeys.add(e.key); // Add pressed key to the set
         this.pushEvent("key_down", { key: e.key });
@@ -172,6 +177,8 @@ function drawShip(ctx, ship, px, py, angle, name, health, maxHealth, radius) {
   ctx.font = "20px";
   ctx.textAlign = "center";
 
+  console.log("rounded", Math.round(health));
+
   ctx.fillStyle = "white";
   ctx.fillText(name, px + spriteSize - xOffset * 2, py + spriteSize - yOffset);
 
@@ -179,7 +186,7 @@ function drawShip(ctx, ship, px, py, angle, name, health, maxHealth, radius) {
   ctx.fillStyle =
     healthRatio > 0.8 ? "green" : healthRatio > 0.4 ? "yellow" : "red";
   ctx.fillText(
-    health,
+    Math.round(health),
     px + spriteSize - xOffset * 2,
     py + spriteSize - yOffset + textSize
   );
