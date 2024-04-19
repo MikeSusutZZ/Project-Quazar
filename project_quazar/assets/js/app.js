@@ -22,10 +22,6 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 
-// Game Channel imports
-import "./game_socket.js";
-import socket from "./game_socket.js";
-
 // Hooks initializer
 let Hooks = {};
 
@@ -41,17 +37,59 @@ Hooks.GameBoardHook = {
       drawGameBoard(canvas, gameBoard, myShip, enemyShip);
     };
     myShip = new Image();
-    myShip.src = "/images/ship_asset/blue_ship.png";
+    myShip.src = "/images/ship_asset/blue_ship_trimmed.png";
     enemyShip = new Image();
-    enemyShip.src = "/images/ship_asset/red_ship.png";
+    enemyShip.src = "/images/ship_asset/red_ship_trimmed.png";
+    let tankShip = new Image();
+    let destroyerShip = new Image();
+    let scoutShip = new Image();
+    tankShip.src = "/images/ship_asset/red_ship_trimmed.png";
+    destroyerShip.src = "/images/ship_asset/purple_ship_trimmed.png";
+    scoutShip.src = "/images/ship_asset/blue_ship_trimmed.png";
+    let shipTypes = {
+      tank: tankShip,
+      destroyer: destroyerShip,
+      scout: scoutShip,
+    };
+
+    //bullet types
+    let lightBullet = new Image();
+    let mediumBullet = new Image();
+    let heavyBullet = new Image();
+    lightBullet.src = "/images/purple_bullet_asset/Purple_Bullet.png";
+    mediumBullet.src = "/images/green_bullet_asset/Green_Bullet.png";
+    heavyBullet.src = "/images/red_bullet_asset/Red_Bullet.png";
+
+    let bulletTypes = {
+      light: lightBullet,
+      medium: mediumBullet,
+      heavy: heavyBullet,
+    };
 
     // event handlers
     this.handleEvent("update", (_) => {
-      drawGameBoard(canvas, gameBoard, myShip, enemyShip);
+      drawGameBoard(
+        canvas,
+        gameBoard,
+        myShip,
+        enemyShip,
+        bulletTypes,
+        shipTypes
+      );
     });
 
     // push events
     // Keydown event listener
+    canvas.addEventListener("mousedown", (e) => {
+      console.log(e);
+      this.pushEvent("key_down", { key: " " });
+    });
+
+    canvas.addEventListener("mouseup", (e) => {
+      console.log(e);
+      this.pushEvent("key_up", { key: " " });
+    });
+
     window.addEventListener("keydown", (e) => {
       if (!pressedKeys.has(e.key)) {
         console.log(e.key);
@@ -70,7 +108,14 @@ Hooks.GameBoardHook = {
   },
 };
 
-function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
+function drawGameBoard(
+  canvas,
+  gameBoard,
+  myShip,
+  enemyShip,
+  bulletTypes,
+  shipTypes
+) {
   // drawing the background
   canvas.width = 800;
   canvas.height = 800;
@@ -79,497 +124,165 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip) {
 
   // getting the data
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
-  // console.log("Data", data);
 
-  // drawing the ships
-  const me = data.players[0];
-  drawShip(
-    ctx,
-    myShip,
-    me.ship.kinematics.px,
-    me.ship.kinematics.py,
-    me.ship.kinematics.angle,
-    me.name,
-    me.ship.health,
-    me.ship.max_health
-  );
+  // Get the player name from the route parameters
+  const playerName = canvas.getAttribute("data-name");
 
-  const enemies = data.players.slice(1);
-  enemies.forEach((enemy) => {
+  console.log("Data", data);
+
+  console.log("Player", playerName);
+
+  // Find the player with the matching name and remove from the list
+  let me = null;
+  for (let i = 0; i < data.players.length; i++) {
+    const player = data.players[i];
+    if (player.name === playerName) {
+      me = player;
+      // Remove the player from the players list
+      data.players.splice(i, 1);
+      break; // Stop searching once we find a match
+    }
+  }
+  try {
     drawShip(
       ctx,
-      enemyShip,
-      enemy.ship.kinematics.px,
-      enemy.ship.kinematics.py,
-      enemy.ship.kinematics.angle,
-      enemy.name,
-      enemy.ship.health,
-      enemy.ship.max_health
+      shipTypes[me.ship.type],
+      me.ship.kinematics.px,
+      me.ship.kinematics.py,
+      me.ship.kinematics.angle,
+      me.name,
+      me.ship.health,
+      me.ship.max_health,
+      me.ship.radius,
+      playerName,
+      me.ship.type
+    );
+  } catch {
+    console.log("frame skip");
+  }
+
+  const enemies = data.players;
+  enemies.forEach((enemy) => {
+    try {
+      drawShip(
+        ctx,
+        shipTypes[enemy.ship.type],
+        enemy.ship.kinematics.px,
+        enemy.ship.kinematics.py,
+        enemy.ship.kinematics.angle,
+        enemy.name,
+        enemy.ship.health,
+        enemy.ship.max_health,
+        enemy.ship.radius,
+        playerName,
+        enemy.ship.type
+      );
+    } catch {
+      console.log("frame skip");
+    }
+  });
+
+  const bullets = data.projectiles;
+
+  console.log(bullets);
+
+  bullets.forEach((bullet) => {
+    drawBullet(
+      ctx,
+      bulletTypes[bullet.type],
+      bullet.kinematics.px,
+      bullet.kinematics.py,
+      bullet.radius
     );
   });
 }
 
-function drawShip(ctx, ship, px, py, angle, name, health, maxHealth) {
+function drawShip(
+  ctx,
+  ship,
+  px,
+  py,
+  angle,
+  name,
+  health,
+  maxHealth,
+  radius,
+  playerName,
+  srcType
+) {
+  const spriteSize = radius * 2;
+  const xOffset = 10;
+  const yOffset = 60;
+  const textSize = 10;
+
+  let shipSrc = {
+    tank: "/images/ship_asset/red_ship_trimmed.png",
+    destroyer: "/images/ship_asset/purple_ship_trimmed.png",
+    scout: "/images/ship_asset/blue_ship_trimmed.png",
+  };
+
+  console.log("ship", ship);
+
+  if (health <= 0) {
+    ship.src = "/images/ship_asset/boom1.png";
+  } else {
+    ship.src = shipSrc[srcType];
+  }
+
   ctx.save();
-  ctx.translate(px + 125, py + 125); // Adjust these values according to the sprite size
-  ctx.rotate(angle + Math.PI / 2);
-  ctx.drawImage(ship, -125, -125, 250, 250); // Adjust the sprite size here
+  ctx.translate(px + spriteSize / 2 - xOffset, py + spriteSize / 2 - xOffset); // Adjust these values according to the sprite size
+  ctx.rotate((angle - Math.PI / 2) * -1);
+  ctx.drawImage(ship, -spriteSize, -spriteSize, spriteSize * 2, spriteSize * 2); // Adjust the sprite size here
   ctx.restore();
 
   ctx.font = "20px";
   ctx.textAlign = "center";
 
+  console.log("rounded", Math.round(health));
+
   ctx.fillStyle = "white";
-  ctx.fillText(name, px + 125, py + 125 - 20);
+
+  if (name === playerName) {
+    ctx.font = "20px Arial";
+    ctx.fillText(
+      name,
+      px + spriteSize - xOffset * 2,
+      py + spriteSize - yOffset * 1.1
+    );
+  } else {
+    ctx.font = "10px Arial";
+    ctx.fillText(
+      name,
+      px + spriteSize - xOffset * 2,
+      py + spriteSize - yOffset
+    );
+  }
+  ctx.font = "10px Arial";
 
   healthRatio = parseFloat(health) / maxHealth;
   ctx.fillStyle =
     healthRatio > 0.8 ? "green" : healthRatio > 0.4 ? "yellow" : "red";
-  ctx.fillText(health, px + 125, py + 125 - 5);
+  ctx.fillText(
+    Math.round(health),
+    px + spriteSize - xOffset * 2,
+    py + spriteSize - yOffset + textSize
+  );
 }
 
-// Frontend Prototype 1
-Hooks.MoveCircle = {
-  mounted() {
-    console.log("circle mounted");
-    window.addEventListener("keydown", (e) => {
-      console.log(e);
-      if (e.key === "w") {
-        console.log("up");
-        this.pushEvent("move_up", {});
-      } else if (e.key === "a") {
-        console.log("left");
-        this.pushEvent("move_left", {});
-      } else if (e.key === "s") {
-        console.log("down");
-        this.pushEvent("move_down", {});
-      } else if (e.key === "d") {
-        console.log("right");
-        this.pushEvent("move_right", {});
-      }
-    });
-  },
-};
-
-Hooks.FadeIn = {
-  mounted() {
-    console.log("FadeIn mounted, applying styles...");
-    this.el.style.opacity = 0;
-    setTimeout(() => {
-      this.el.style.transition = "opacity 5s ease-in-out";
-      this.el.style.opacity = 1;
-      console.log("Styles applied, opacity should be 1 now.");
-    }, 100);
-  },
-};
-
-// Frontend Prototype 2
-const drawGame = () => {
-  let canvas = document.getElementById("circleCanvas");
-  let myData = JSON.parse(canvas.getAttribute("data-pos"));
-  console.log("My data", myData);
-  // Start
-  let ctx = canvas.getContext("2d");
-
-  // Use Phoenix.HTML.raw to safely inject the game_board into JavaScript
-  let game_board = JSON.parse(canvas.getAttribute("data-board"));
-
-  let cellSize = 50; // Adjust this value as needed
-  let rows = game_board.length;
-  let cols = game_board[0].length;
-
-  // Draw the game board
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      let x = col * cellSize;
-      let y = row * cellSize;
-
-      ctx.fillStyle = "#FFFFFF"; // Set the background color
-      ctx.fillRect(x, y, cellSize, cellSize); // Draw the cell background
-
-      ctx.strokeStyle = "#000000"; // Set the border color
-      ctx.strokeRect(x, y, cellSize, cellSize); // Draw the cell border
-
-      let cellValue = game_board[row][col];
-      ctx.fillStyle = "#000000"; // Set the text color
-      // Adjust text alignment and baseline for better centering
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(cellValue, x + cellSize / 2, y + cellSize / 2); // Draw the cell value
-    }
-  }
-
-  // Draw the grid lines
-  ctx.strokeStyle = "#000000"; // Set the color of the grid lines
-  for (let row = 0; row <= rows; row++) {
-    ctx.beginPath();
-    ctx.moveTo(0, row * cellSize);
-    ctx.lineTo(cols * cellSize, row * cellSize);
-    ctx.stroke();
-  }
-  for (let col = 0; col <= cols; col++) {
-    ctx.beginPath();
-    ctx.moveTo(col * cellSize, 0);
-    ctx.lineTo(col * cellSize, rows * cellSize);
-    ctx.stroke();
-  }
-
-  // Create a new image object
-  let image = new Image();
-  image.src = "/images/side-eye.jpg"; // Adjust the path to your image
-
-  // Draw the image onto the canvas when it's loaded
-  image.onload = function () {
-    ctx.drawImage(image, myData.x, myData.y, 130, 100);
-  };
-};
-
-Hooks.MoveHook = {
-  mounted() {
-    console.log("Movement mounted");
-    let pressedKeys = new Set(); // Set to track pressed keys
-
-    // Initial Render
-    drawGame();
-
-    window.addEventListener("keydown", (e) => {
-      if (!pressedKeys.has(e.key)) {
-        pressedKeys.add(e.key); // Add pressed key to the set
-        this.pushEvent("start_move", { key: e.key }, (reply) => {
-          console.log("reply", reply);
-          // Render on key-event, will be changed to on broadcast received
-          drawGame();
-        });
-      }
-    });
-
-    window.addEventListener("keyup", (e) => {
-      if (pressedKeys.has(e.key)) {
-        pressedKeys.delete(e.key); // Remove released key from the set
-        this.pushEvent("stop_move", { key: e.key });
-      }
-    });
-
-    // Add event listener for the "click" event
-    window.addEventListener("click", () => {
-      this.pushEvent("shoot", {});
-    });
-  },
-};
-
-let bullet1_xy = [0, 400];
-let bullet2_xy = [0, 500];
-let bullet3_xy = [0, 600];
-
-// Frontend Prototype 3
-const drawGame3 = () => {
-  let canvas = document.getElementById("circleCanvas");
-  let myData = JSON.parse(canvas.getAttribute("data-pos"));
-  console.log("My data", myData);
-
-  // Start
-  let ctx = canvas.getContext("2d");
-
-  // Initialize canvas images
-  let gameBoard = new Image();
-  let player1 = new Image();
-  let player2 = new Image();
-  let player3 = new Image();
-  let bullet1 = new Image();
-  let bullet2 = new Image();
-  let bullet3 = new Image();
-
-  // Link images to assets
-  gameBoard.src = "/images/game_board_asset/Game_Background.png";
-
-  // Render images when loaded
-  gameBoard.onload = function () {
-    console.log("Board rendered");
-    ctx.drawImage(gameBoard, 0, 0, 800, 800);
-
-    // Once board is loaded, link to rest of assets to trigger onload
-    player1.src = "/images/ship_asset/blue_ship.png";
-    player2.src = "/images/ship_asset/purple_ship.png";
-    player3.src = "/images/ship_asset/red_ship.png";
-    bullet1.src = "/images/red_bullet_asset/Red_Bullet.png";
-    bullet2.src = "/images/green_bullet_asset/Green_Bullet.png";
-    bullet3.src = "/images/purple_bullet_asset/Purple_Bullet.png";
-  };
-
-  bullet1.onload = function () {
-    console.log("Bullet1 rendered");
-    ctx.drawImage(bullet1, bullet1_xy[0], bullet1_xy[1], 40, 40);
-    bullet1_xy[0] += 20;
-  };
-
-  bullet2.onload = function () {
-    console.log("Bullet2 rendered");
-    ctx.drawImage(bullet2, bullet2_xy[0], bullet2_xy[1], 40, 40);
-    bullet2_xy[0] += 20;
-  };
-
-  bullet3.onload = function () {
-    console.log("Bullet3 rendered");
-    ctx.drawImage(bullet3, bullet3_xy[0], bullet3_xy[1], 40, 40);
-    bullet3_xy[0] += 20;
-  };
-
-  player1.onload = function () {
-    console.log("Player rendered");
-    ctx.drawImage(player1, myData.x, myData.y, 300, 300);
-  };
-
-  player2.onload = function () {
-    console.log("Player rendered");
-    ctx.drawImage(player2, myData.x + 100, myData.y, 300, 300);
-  };
-
-  player3.onload = function () {
-    console.log("Player rendered");
-    ctx.drawImage(player3, myData.x + 200, myData.y, 300, 300);
-  };
-};
-
-Hooks.Game3 = {
-  mounted() {
-    console.log("Game mounted");
-    let pressedKeys = new Set(); // Set to track pressed keys
-
-    // Initial Render
-    drawGame3();
-
-    window.addEventListener("keydown", (e) => {
-      if (!pressedKeys.has(e.key)) {
-        pressedKeys.add(e.key); // Add pressed key to the set
-        this.pushEvent("start_move", { key: e.key }, (reply) => {
-          console.log("reply", reply);
-          // Render on key-event, will be changed to on broadcast received
-          drawGame3();
-        });
-      }
-    });
-
-    window.addEventListener("keyup", (e) => {
-      if (pressedKeys.has(e.key)) {
-        pressedKeys.delete(e.key); // Remove released key from the set
-        this.pushEvent("stop_move", { key: e.key });
-      }
-    });
-
-    // Add event listener for the "click" event
-    window.addEventListener("click", () => {
-      this.pushEvent("shoot", {});
-    });
-  },
-};
-
-// Frontend Prototype 4
-const DummyPlayerList = {
-  players: [
-    {
-      name: "Player1",
-      score: 1200,
-      ship: {
-        kinematics: { px: 100, py: 150 },
-        max_health: 100,
-        current_health: 80,
-        bullet_type: "laser",
-      },
-    },
-  ],
-};
-
-const drawGame4 = () => {
-  let canvas = document.getElementById("circleCanvas");
-  let ctx = canvas.getContext("2d");
-
-  // Initialize canvas images
-  let gameBoard = new Image();
-  let player = new Image();
-  let bullet1 = new Image();
-  let bullet2 = new Image();
-  let bullet3 = new Image();
-
-  // Link images to assets
-  gameBoard.src = "/images/game_board_asset/Game_Background.png";
-  player.src = "/images/side-eye.jpg";
-  bullet1.src = "/images/red_bullet_asset/Red_Bullet.png";
-  bullet2.src = "/images/green_bullet_asset/Green_Bullet.png";
-  bullet3.src = "/images/purple_bullet_asset/Purple_Bullet.png";
-
-  // Render images when loaded
-  gameBoard.onload = function () {
-    ctx.drawImage(gameBoard, 0, 0, 800, 800);
-  };
-
-  bullet1.onload = function () {
-    ctx.drawImage(bullet1, bullet1_xy[0], bullet1_xy[1], 40, 40);
-    bullet1_xy[0] += 20; // Example movement
-  };
-
-  bullet2.onload = function () {
-    ctx.drawImage(bullet2, bullet2_xy[0], bullet2_xy[1], 40, 40);
-    bullet2_xy[0] += 20; // Example movement
-  };
-
-  bullet3.onload = function () {
-    ctx.drawImage(bullet3, bullet3_xy[0], bullet3_xy[1], 40, 40);
-    bullet3_xy[0] += 20; // Example movement
-  };
-
-  // Draw the player
-  const playerData = DummyPlayerList.players[0]; // Assuming single player for simplicity
+function drawBullet(ctx, bulletimg, px, py, radius) {
+  const spriteSize = radius * 2;
+  console.log("bullet", bulletimg);
+  ctx.save();
+  ctx.translate(px + spriteSize / 2, py + spriteSize / 2);
   ctx.drawImage(
-    gameImages.player,
-    playerData.ship.kinematics.px,
-    playerData.ship.kinematics.py,
-    130,
-    100
+    bulletimg,
+    -(radius * 2),
+    -(radius * 2),
+    spriteSize,
+    spriteSize
   );
-
-  // Draw bullets with simulated movement
-  let bullets = [bullet1_xy, bullet2_xy, bullet3_xy]; // Example bullet positions
-  let bulletImages = [
-    gameImages.bullet1,
-    gameImages.bullet2,
-    gameImages.bullet3,
-  ];
-  bullets.forEach((pos, index) => {
-    ctx.drawImage(bulletImages[index], pos[0], pos[1], 40, 40);
-    pos[0] += 20; // Move bullets
-  });
-};
-
-Hooks.Game4 = {
-  mounted() {
-    console.log("Game mounted");
-    let pressedKeys = new Set();
-
-    // Initial Render
-    drawGame4();
-
-    window.addEventListener("keydown", (e) => {
-      if (!pressedKeys.has(e.key)) {
-        pressedKeys.add(e.key);
-        this.pushEvent("start_move", { key: e.key }, (reply) => {
-          console.log("reply", reply);
-          drawGame4();
-        });
-      }
-    });
-
-    window.addEventListener("keyup", (e) => {
-      if (pressedKeys.has(e.key)) {
-        pressedKeys.delete(e.key);
-        this.pushEvent("stop_move", { key: e.key });
-      }
-    });
-
-    window.addEventListener("click", () => {
-      this.pushEvent("shoot", {});
-    });
-  },
-};
-
-Hooks.ChannelHook = {
-  mounted() {
-    console.log("Channel mounted");
-    const currentUrl = window.location.href;
-    const url = new URL(currentUrl);
-    const pathname = url.pathname;
-    const parts = pathname.split("/");
-    const name = parts[parts.length - 1];
-    let pressedKeys = new Set(); // Set to track pressed keys
-
-    this.pushEvent("greet", { channelSocket: socket });
-    let channel = socket.channel("room:lobby", { name: name });
-
-    // Join the channel (Like + Subscribe + Notifications)
-    channel
-      .join()
-      .receive("ok", (resp) => {
-        console.log("Joined successfully", resp);
-      })
-      .receive("error", (resp) => {
-        console.log("Unable to join", resp);
-      });
-
-    // On mount message
-    channel.push("mounted", {}).receive("ok", (resp) => {
-      console.log("Reply from server:", resp);
-    });
-
-    // Display "Game State"
-    let messagesContainer = document.querySelector("#messages");
-
-    // Keydown event listener
-    window.addEventListener("keydown", (e) => {
-      if (!pressedKeys.has(e.key)) {
-        pressedKeys.add(e.key); // Add pressed key to the set
-        channel.push("keydown", { key: e.key });
-      }
-    });
-
-    // Attempts to promote this client to be the broadcast owner
-    function sendPromoteMessage() {
-      console.log("Promoting...");
-      channel.push("promote", {}).receive("ok", (resp) => {
-        console.log("Reply from server:", resp);
-      });
-    }
-
-    // Attempt to promote every second
-    setInterval(sendPromoteMessage, 1000);
-
-    // Key Up event listener
-    window.addEventListener("keyup", (e) => {
-      if (pressedKeys.has(e.key)) {
-        pressedKeys.delete(e.key); // Remove released key from the set
-        // channel.push("keyup", { key: e.key });
-      }
-    });
-
-    // Listens to channel for user state
-    channel.on("user_state", (payload) => {
-      messagesContainer.innerHTML = "";
-      let messageItem = document.createElement("p");
-      console.log(payload);
-      messageItem.innerText = `Frame: ${payload.count}, Data: ${JSON.stringify(
-        payload.users
-      )}`;
-      messagesContainer.appendChild(messageItem);
-    });
-
-    // Listens to channel for broadcast logging
-    channel.on("broadcast", () => {
-      console.log("Interval broadcast detected");
-    });
-  },
-};
-
-const updateElements = () => {
-  let dataElement = document.getElementById("main");
-  console.log(dataElement);
-  let gameState = JSON.parse(dataElement.getAttribute("data-game-state"));
-  let frames = JSON.parse(dataElement.getAttribute("data-frames"));
-  console.log("My data", gameState);
-  console.log("My data", frames);
-
-  dataElement.innerHTML = `Frame: ${frames}, Data: ${JSON.stringify(
-    gameState
-  )}`;
-};
-
-Hooks.PubsubPrototype = {
-  mounted() {
-    console.log("Mounted");
-
-    this.handleEvent("update", (data) => {
-      console.log(data);
-      updateElements();
-    });
-  },
-};
+  ctx.restore();
+}
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -593,3 +306,4 @@ liveSocket.connect();
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
+liveSocket.disableDebug();
