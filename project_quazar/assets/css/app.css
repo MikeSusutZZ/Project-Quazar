@@ -59,7 +59,7 @@
 
 /* Container for help */
 .help-container {
-  @apply bg-gray-900 p-6 rounded-lg shadow-lg max-w-lg mx-auto;
+  @apply bg-gray-900 p-6 rounded-lg shadow-lg max-w-xl mx-auto;
 }
 
 /* Title styling */

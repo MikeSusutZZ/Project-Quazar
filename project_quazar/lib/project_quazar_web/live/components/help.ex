@@ -100,7 +100,7 @@ defmodule ProjectQuazarWeb.Help do
       end
 
     ~H"""
-    <div id="help" class="help-container mt-8">
+    <div id="help" class="help-container">
       <div class="flex justify-end">
         <button phx-click="hide_help" class="button-tertiary">X</button>
       </div>
