@@ -30,9 +30,7 @@ Project Quazar's goal of the game is to engage in multiplayer battles, where pla
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<h2 id="instructions"> :notebook: Instructions</h2>
-
-## :video_game: User Instructions
+<h2 id="instructions"> :video_game: User Instructions</h2>
 
 Welcome to the interstellar arena of **Project Quazar**! Here's how to get started:
 
