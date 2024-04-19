@@ -12,7 +12,7 @@ Programming Paradigms
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## About the Project
+## :pencil: About the Project
 
 Project Quazar is a multiplayer space shooter game developed by students at BCIT in the Programming Paradigms Option. The game is built using the Phoenix Framework, Elixir, and JavaScript. The game features a variety of ships and bullets, as well as high scores and multiplayer capabilities.
 
@@ -24,7 +24,7 @@ The goal of the game is to engage in multiplayer battles, where players try to d
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## Menus Team
+## :page_with_curl: Menus Team
 
 The Menus team is responsible for creating the following:
 
@@ -44,7 +44,7 @@ The Menus team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## Backend Team
+## :fax: Backend Team
 
 The Backend team is responsible for creating the following:
 
@@ -74,7 +74,7 @@ The Backend team is responsible for creating the following:
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## Front Team
+## :tv: Front Team
 
 The Frontend team is responsible for creating the following:
 
