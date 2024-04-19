@@ -44,7 +44,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
 1. Click **Start Game** on the main menu to begin your space adventure.
 
 <p align="center">
-  <img src="main_menu.png" alt="" height="200px" width="350">
+  <img src="./readme_assets/main_menu.png" alt="" height="200px" width="350">
 </p>
 
 2. You'll be taken to a setup screen where you can personalize your gameplay:
@@ -60,7 +60,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
      - _Light_ - Low damage, high speed.
 
 <p align="center">
-  <img src="user_creation.png" alt="" height="300px" width="225">
+  <img src="./project_quazar/user_creation.png" alt="" height="300px" width="225">
 </p>
 
 3. Hit **Submit** to lock in your choices.
@@ -78,7 +78,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
 - If you fly off the screen, it's game over!
 
 <p align="center">
-  <img src="game_board.png" alt="" height="200px" width="200">
+  <img src="./readme_assets/game_board.png" alt="" height="200px" width="200">
 </p>
 
 ### Scoreboard and Points
@@ -86,7 +86,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
 - Keep an eye on the scoreboard to the right to track your score and see how you stack up against the competition.
 
 <p align="center">
-  <img src="score_board.png" alt="" height="50px" width="100">
+  <img src="./readme_assets/score_board.png" alt="" height="50px" width="100">
 </p>
 
 - Show off your sharpshooting skills! Each successful hit on an enemy ship boosts your score by the damage you deal.
@@ -132,7 +132,7 @@ The Menus team was responsible for creating the following:
 - **In-Game High Scores Screen** : Displays the scores of all players in the current game, from highest to lowest
 - **All-Time High Scores Screen** : Displays the scores of all players who have ever played the game, from highest to lowest
 
-![Menus Team Screenshot](image.png "Menus Team Screenshot")
+![Menus Team Screenshot](./project_quazar/image.png "Menus Team Screenshot")
 
 ## Team Members
 
@@ -159,7 +159,7 @@ The Backend team was responsible for creating the following:
 - **Application**: the entry point, sets up supervision trees
 - **Mailer**: Handles email-sending capabilities within the application
 
-![Backend Team Screenshot](backend.png "Backend Team Diagram")
+![Backend Team Screenshot](./readme_assets/backend.png "Backend Team Diagram")
 
 ## Team Members
 
@@ -209,7 +209,7 @@ The Frontend team was responsible for creating the following:
 
 - **PubSub System**: Implement a Publish-Subscribe system to handle event-driven interactions within the game.
 
-![Frontend Team Screenshot](frontend_and_menu.png "Frontend Team Diagram")
+![Frontend Team Screenshot](./readme_assets/frontend_and_menu.png "Frontend Team Diagram")
 
 ## Team Members
 
