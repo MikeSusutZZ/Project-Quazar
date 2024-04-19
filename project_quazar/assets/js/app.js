@@ -93,7 +93,7 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
 
   // getting the data
   const data = JSON.parse(canvas.getAttribute("data-game-state"));
-  console.log("Data", data);
+  //console.log("Data", data);
 
   // Get the player name from the route parameters
   const playerName = window.location.pathname.split("/").pop();
