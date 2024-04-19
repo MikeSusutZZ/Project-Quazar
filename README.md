@@ -18,7 +18,7 @@ Project Quazar is a multiplayer space shooter game developed by students at BCIT
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## Overview
+## :cloud: Overview
 
 The goal of the game is to engage in multiplayer battles, where players try to destroy enemy ships in and earn points. Players can choose from a variety of ships and bullet types. The game features a high score system that displays the top scores of all players in the current game, as well as the all-time top scores.
 
