@@ -73,7 +73,8 @@ defmodule ProjectQuazarWeb.Game do
     end
   end
 
-  @doc "Handle the event for next page in how to play component"
+  ## start/help screen events
+  # "Handle the event for next page in how to play component"
   def handle_event("next_page", _value, socket) do
     current_page = Map.get(socket.assigns, :current_page, 1)
     next_page = current_page + 1
@@ -81,7 +82,7 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, assign(socket, current_page: next_page)}
   end
 
-  @doc "Handle the event for previous page in how to play component"
+  # "Handle the event for previous page in how to play component"
   def handle_event("previous_page", _value, socket) do
     current_page = Map.get(socket.assigns, :current_page, 1)
     previous_page = max(current_page - 1, 1)
@@ -89,17 +90,17 @@ defmodule ProjectQuazarWeb.Game do
     {:noreply, assign(socket, current_page: previous_page)}
   end
 
-  @doc "Handle the state for start component"
+  # "Handle the state for start component"
   def handle_event("show_start_game", _value, socket) do
     {:noreply, assign(socket, :start, false)}
   end
 
-  @doc "Handle the state for displaying help component"
+  # "Handle the state for displaying help component"
   def handle_event("show_help", _value, socket) do
     {:noreply, assign(socket, :show_help, true)}
   end
 
-  @doc "Handle the state for hiding help component"
+  # "Handle the state for hiding help component"
   def handle_event("hide_help", _value, socket) do
     {:noreply, assign(socket, :show_help, false)}
   end
