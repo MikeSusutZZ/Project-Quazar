@@ -39,6 +39,10 @@ The Backend team is responsible for creating the following:
 - **Application**: the entry point, sets up supervision trees
 - **Mailer**: Handles email-sending capabilities within the application
 
+<br>
+
+![Backend Team Screenshot](backend.png "Backend Team Diagram")
+
 ## Team Members
 - Olga Zimina
 - Dakaro Mueller
