@@ -39,7 +39,7 @@ defmodule ProjectQuazarWeb.Help do
                     </div>
                     <div>
                       <h5 class="type-heading">Destroyer</h5>
-                      <p class="help-health-text">250 HP</p>
+                      <p class="help-health-text">200 HP</p>
                       <p class="help-text">A slow and sturdy ship</p>
                     </div>
                   </div>
@@ -66,7 +66,7 @@ defmodule ProjectQuazarWeb.Help do
                     <div>
                       <h5 class="type-heading">Heavy</h5>
                       <ul>
-                        <li class="text-white">Damage: 50</li>
+                        <li class="text-white">Damage: 40</li>
                         <li class="text-white">Reload: 1s</li>
                         <li class="text-white">Velocity: Slow</li>
                       </ul>

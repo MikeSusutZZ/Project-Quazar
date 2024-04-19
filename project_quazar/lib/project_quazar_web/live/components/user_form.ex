@@ -18,7 +18,7 @@ defmodule ProjectQuazarWeb.UserForm do
             <div class='radio-button-option-col'>
               <label class='option_label sub_heading'>Tank</label>
               <img src={~p"/images/ship_asset/red_ship_trimmed.png"} alt="Example Image" style="width: 40px; height: 40px;">
-              <h1 class="health_text">Health: 250</h1>
+              <h1 class="health_text">Health: 200</h1>
               <h1 class="speed_text">Speed: Slow</h1>
               <div>
                 <input type='radio' name='ship' value='tank'>
