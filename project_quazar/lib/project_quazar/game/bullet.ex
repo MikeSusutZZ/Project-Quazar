@@ -20,7 +20,7 @@ defmodule Bullet do
 
   # Bullet type specifications
   @bullet_types %{
-    heavy: %{damage: 50, frequency_ms: 1000, speed: 6, radius: 20},
+    heavy: %{damage: 40, frequency_ms: 1000, speed: 6, radius: 20},
     medium: %{damage: 25, frequency_ms: 600, speed: 10, radius: 10},
     light: %{damage: 10, frequency_ms: 300, speed: 15, radius: 10}
   }
