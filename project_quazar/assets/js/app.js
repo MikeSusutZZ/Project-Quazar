@@ -210,7 +210,7 @@ function drawShip(
   playerName,
   srcType
 ) {
-  const spriteSize = radius * 2;
+  let spriteSize = radius * 2;
   const xOffset = 10;
   const yOffset = 60;
   const textSize = 10;
@@ -225,6 +225,7 @@ function drawShip(
 
   if (health <= 0) {
     ship.src = "/images/ship_asset/boom1.png";
+    spriteSize = spriteSize * 3
   } else {
     ship.src = shipSrc[srcType];
   }
