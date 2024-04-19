@@ -8,7 +8,6 @@
 import Config
 
 config :project_quazar,
-  ecto_repos: [ProjectQuazar.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
