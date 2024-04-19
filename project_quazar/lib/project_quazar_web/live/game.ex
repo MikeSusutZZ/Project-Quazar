@@ -35,6 +35,7 @@ defmodule ProjectQuazarWeb.Game do
       |> assign(:show_help, false)
       |> assign(:current_page, 1) # handles pagination for how to play
       |> assign(:game_over, false)
+      |> assign(:dead_player_score, 0)
     }
   end
 
@@ -56,7 +57,7 @@ defmodule ProjectQuazarWeb.Game do
     if username == "" do
       {:reply, %{error: "Username can't be blank"}, assign(socket, :error_message, "Username can't be blank")}
     else
-      case Map.has_key?(Presence.list(@presence), username) do
+      case Map.has_key?(socket, username) do
         true ->
           {:reply, %{error: "Username already taken"}, assign(socket, :error_message, "Username already taken")}
         false ->
@@ -69,7 +70,8 @@ defmodule ProjectQuazarWeb.Game do
           # GameServer.spawn_player(username, :destroyer)
           {:noreply, socket
             |> assign(:joined, true)
-            |> assign(:current_user, username)}
+            |> assign(:current_user, username)
+            |> assign(:error_message, "")}
       end
     end
   end
@@ -124,21 +126,37 @@ defmodule ProjectQuazarWeb.Game do
   """
   @impl true
   def handle_info({:state_updated, new_state}, socket) do
-    game_over =
+
+    # game_over =
       Enum.find(socket.assigns.players, fn player ->
-        socket.assigns.current_user == player.name && player.ship.health == 0
+        socket.assigns.current_user == player.name && player.ship.health <= 0
       end)
       |> case do
-        nil -> false
-        _ -> true
+        nil ->
+          {:noreply,
+          socket
+          |> assign(:players, new_state.players)
+          |> sort_players_by_score()
+          |> assign(:projectiles, new_state.projectiles)
+          }
+        dead_player ->
+          Presence.untrack(self(), @presence, dead_player.name)
+          GameServer.remove_leftover_players(Presence.list(@presence))
+          {:noreply,
+          socket
+          |> assign(:players, new_state.players)
+          |> sort_players_by_score()
+          |> assign(:projectiles, new_state.projectiles)
+          |> assign(:dead_player_score, dead_player.score)
+          |> assign(:game_over, true)}
       end
 
-    {:noreply,
-    socket
-    |> assign(:players, new_state.players)
-    |> sort_players_by_score()
-    |> assign(:projectiles, new_state.projectiles)
-    |> assign(:game_over, game_over)}
+    # {:noreply,
+    # socket
+    # |> assign(:players, new_state.players)
+    # |> sort_players_by_score()
+    # |> assign(:projectiles, new_state.projectiles)
+    # |> assign(:game_over, game_over)}
 
   end
 
@@ -257,6 +275,7 @@ defmodule ProjectQuazarWeb.Game do
   def handle_event("game_over_to_lobby", _value, socket) do
     new_socket = assign(socket, :start, false)
     |> assign(:joined, false)
+    |> assign(:game_over, false)
     {:noreply, new_socket}
   end
 

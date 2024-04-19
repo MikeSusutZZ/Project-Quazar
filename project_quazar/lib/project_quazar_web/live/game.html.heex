@@ -21,7 +21,7 @@
 <%= if @joined do %>
 
   <%= if @game_over do %>
-    <div><.live_component module={ProjectQuazarWeb.GameOver} id="game-over" players={@players} current_user={@current_user} /></div>
+    <div><.live_component module={ProjectQuazarWeb.GameOver} id="game-over" players={@players} current_user={@current_user} player_score={@dead_player_score}/></div>
   <% else %>
     <%# Main Game Screen %>
     <%# TODO: Add the game board here %>

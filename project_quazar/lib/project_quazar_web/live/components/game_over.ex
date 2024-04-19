@@ -11,11 +11,7 @@ defmodule ProjectQuazarWeb.GameOver do
       </div>
       <div id="gameOverMessage" class="fade-in-text text-red-500 text-center text-5xl mt-4 transition-opacity duration-2000 delay-5000 ease-in-out" phx-hook="FadeIn">
         Your score:
-        <%= for player <- @players do %>
-          <%= if player.name == @current_user do %>
-            <%= player.score %>
-          <% end %>
-        <% end %>
+        <%= @player_score %>
       </div>
       <!-- Button without fade-in effect -->
       <button class="mt-5 bg-gray-700 text-white py-2 px-4 rounded" phx-click="game_over_to_lobby">
