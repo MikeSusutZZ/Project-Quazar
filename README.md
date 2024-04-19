@@ -43,6 +43,11 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
 </p>
 
 2. You'll be taken to a setup screen where you can personalize your gameplay:
+
+<p align="center"> 
+  <img src="user_creation.png" alt="" height="300px" width="225">
+</p>
+
    - **Enter your username**: Choose a unique identifier for your space hero.
    - **Choose your Ship**: Select a ship type. Each has different health and speed stats:
      - _Tank_ - High health, slow speed.
@@ -52,6 +57,7 @@ First time piloting a space ship in **Project Quazar**? We're here to help:
      - _Heavy_ - High damage, slow speed.
      - _Medium_ - Moderate damage and speed.
      - _Light_ - Low damage, high speed.
+
 3. Hit **Submit** to lock in your choices.
 
 ### In-Game Controls
