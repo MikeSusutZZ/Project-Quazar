@@ -123,7 +123,8 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
       me.name,
       me.ship.health,
       me.ship.max_health,
-      me.ship.radius
+      me.ship.radius,
+      playerName
     );
   } catch {
     console.log("frame skip");
@@ -141,7 +142,8 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
         enemy.name,
         enemy.ship.health,
         enemy.ship.max_health,
-        enemy.ship.radius
+        enemy.ship.radius,
+        playerName
       );
     } catch {
       console.log("frame skip");
@@ -163,11 +165,33 @@ function drawGameBoard(canvas, gameBoard, myShip, enemyShip, bulletTypes) {
   });
 }
 
-function drawShip(ctx, ship, px, py, angle, name, health, maxHealth, radius) {
+function drawShip(
+  ctx,
+  ship,
+  px,
+  py,
+  angle,
+  name,
+  health,
+  maxHealth,
+  radius,
+  playerName
+) {
   const spriteSize = radius * 2;
   const xOffset = 10;
   const yOffset = 60;
   const textSize = 10;
+
+  if (health <= 0) {
+    ship.src = "/images/ship_asset/boom1.png";
+  } else {
+    if (name === playerName) {
+      ship.src = "/images/ship_asset/blue_ship_trimmed.png";
+    } else {
+      ship.src = "/images/ship_asset/red_ship_trimmed.png";
+    }
+  }
+
   ctx.save();
   ctx.translate(px + spriteSize / 2 - xOffset, py + spriteSize / 2 - xOffset); // Adjust these values according to the sprite size
   ctx.rotate((angle - Math.PI / 2) * -1);
@@ -180,7 +204,23 @@ function drawShip(ctx, ship, px, py, angle, name, health, maxHealth, radius) {
   console.log("rounded", Math.round(health));
 
   ctx.fillStyle = "white";
-  ctx.fillText(name, px + spriteSize - xOffset * 2, py + spriteSize - yOffset);
+
+  if (name === playerName) {
+    ctx.font = "20px Arial";
+    ctx.fillText(
+      name,
+      px + spriteSize - xOffset * 2,
+      py + spriteSize - yOffset * 1.1
+    );
+  } else {
+    ctx.font = "10px Arial";
+    ctx.fillText(
+      name,
+      px + spriteSize - xOffset * 2,
+      py + spriteSize - yOffset
+    );
+  }
+  ctx.font = "10px Arial";
 
   healthRatio = parseFloat(health) / maxHealth;
   ctx.fillStyle =
