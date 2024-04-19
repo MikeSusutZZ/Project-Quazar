@@ -1,6 +1,6 @@
 <h1 align="center"> :rocket: Project-Quazar :rocket: </h1>
 
-Dive into the galactic world of Project Quazar! In this action-packed multiplayer space shooter, players face off in intense skirmishes, aiming to obliterate enemy ships and rack up points. Choose your arsenal from an array of unique ships and devastating bullet types that fit your combat style. Thrive in the chaos of current games and etch your name among the legends with both session-based and all-time highscore boards. Are you ready to claim your place among the stars in Project Quazar? Join the fray and dominate the galaxy!
+Dive into the galactic world of **Project Quazar**! In this action-packed multiplayer space shooter, players face off in intense skirmishes, aiming to obliterate enemy ships and rack up points. Choose your arsenal from a variety of unique space ships and devastating bullet types that fit your combat style. Thrive in the chaos of current games and etch your name onto the leaderboards. Are you ready to claim your place among the stars in Project Quazar? Join the fray and dominate the galaxy!
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
@@ -26,13 +26,13 @@ Dive into the galactic world of Project Quazar! In this action-packed multiplaye
 
 <h2 id="about-the-project"> :pencil: About The Project</h2>
 
-Project Quazar is a multiplayer space shooter game designed by the talented students at BCIT's Programming Paradigms Option. Built on the innovative Phoenix Framework and powered by Elixir and JavaScript, this game lets you pilot a variety of unique ships, unleash powerful bullets, and battle it out for the top spot on the leaderboard. Dive into the action and connect with players around the globe in this high-energy, galactic showdown!
+**Project Quazar** is a multiplayer space shooter game designed by students in BCIT's CST Programming Paradigms Option. Built on the innovative Phoenix Framework and powered by Elixir and JavaScript, this game lets you pilot a variety of unique ships, unleash powerful bullets, and battle it out for the top spot on the leaderboard. Dive into the action and connect with other players around the globe in this galactic showdown!
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <h2 id="instructions"> :video_game: User Instructions</h2>
 
-Welcome to the interstellar arena of **Project Quazar**! Here's how to get started:
+First time piloting a space ship in **Project Quazar**? We're here to help:
 
 ### Starting the Game
 
@@ -56,7 +56,7 @@ Welcome to the interstellar arena of **Project Quazar**! Here's how to get start
 
 ### In-Game Controls
 
-- Use **WASD** keys to rotate and move your ship across the cosmos.
+- Use **WASD** keys to rotate and move your ship across the galaxy.
 - Press the **Spacebar** to fire your selected ammunition at enemy ships.
 - Your ship will regenerate 1 HP (health point) every second—use this to your advantage!
 
@@ -81,24 +81,32 @@ Welcome to the interstellar arena of **Project Quazar**! Here's how to get start
 - Show off your sharpshooting skills! Each successful hit on an enemy ship boosts your score by 25 points.
 - Aim true, and you may find your name etched into the high scores for all of Project Quazar to see!
 
-Ready your thrusters and prepare for an epic space showdown in **Project Quazar**!
+Ready your thrusters and prepare for your first match in **Project Quazar**!
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <h2 id="overview"> :cloud: Overview</h2>
 
-The game is divided into three main teams: Menus, Backend, and Frontend. Each team is responsible for different aspects of the game, such as creating the start screen, handling game logic, and rendering game elements on the screen.
+For the development of Project Quazar, we organized our efforts into three specialized teams, each focusing on a distinct aspect of the game to ensure an engaging player experience.
+
+Menus Team: Tasked with crafting the first impressions, this team designed the intuitive start screen and user interfaces that players interact with throughout the game. Their work is crucial in making navigation and settings both easy and enjoyable.
+
+Backend Team: The backbone of our game operations, this team handled all the game logic. From scoring systems to multiplayer interactions, they ensured that the game runs smoothly, with every action and reaction precisely programmed for fairness and fun.
+
+Frontend Team: Bringing the visual magic, this team was responsible for rendering all the game elements on the screen. Their expertise in graphics and animation brought the space battles to life!
+
+Each team's dedicated efforts were seamlessly integrated into the final product, creating a cohesive and captivating gaming experience that we are proud to present to the world.
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <h2 id="menu"> :page_with_curl: Menus Team</h2>
 
-The Menus team is responsible for creating the following:
+The Menus team was responsible for creating the following:
 
-- **Start Screen**: includes the Play and High Scores buttons
-- **Create Ship Screen**: where players name their ship, select a ship type, and select a weapon type
-- **In-Game High Scores Screen** : displays the scores of all players in the current game, from highest to lowest
-- **All-Time High Scores Screen** : displays the scores of all players who have ever played the game, from highest to lowest
+- **Start Screen**: Includes the Play and High Scores buttons
+- **Create Ship Screen**: Where players name their ship, select a ship type, and select a weapon type
+- **In-Game High Scores Screen** : Displays the scores of all players in the current game, from highest to lowest
+- **All-Time High Scores Screen** : Displays the scores of all players who have ever played the game, from highest to lowest
 
 ![Menus Team Screenshot](image.png "Menus Team Screenshot")
 
@@ -113,7 +121,7 @@ The Menus team is responsible for creating the following:
 
 <h2 id="backend"> :fax: Backend Team</h2>
 
-The Backend team is responsible for creating the following:
+The Backend team was responsible for creating the following:
 
 - **Bullet**: Handles all bullet-related operations
 - **CollisionHandler**: Handles collision detection between game entities (bullet/player/ship)
@@ -143,7 +151,7 @@ The Backend team is responsible for creating the following:
 
 <h2 id="frontend"> :tv: Frontend Team</h2>
 
-The Frontend team is responsible for creating the following:
+The Frontend team was responsible for creating the following:
 
 ### Design Elements
 
@@ -176,8 +184,6 @@ The Frontend team is responsible for creating the following:
 - **Render Canvas**: Set up and manage the canvas where the game elements are rendered.
 
 - **PubSub System**: Implement a Publish-Subscribe system to handle event-driven interactions within the game.
-
-<br>
 
 ![Frontend Team Screenshot](frontend_and_menu.png "Frontend Team Diagram")
 
