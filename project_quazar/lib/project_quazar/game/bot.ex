@@ -30,8 +30,12 @@ defmodule Bot do
     if target do
       turn_direction(player, target)
       GameServer.fire_pressed(player.name)
+      GameServer.accelerate_pressed(player.name)
+      GameServer.brake_released(player.name)
     else
       GameServer.fire_released(player.name)
+      GameServer.accelerate_released(player.name)
+      GameServer.brake_pressed(player.name)
     end
 
     player
@@ -40,19 +44,19 @@ defmodule Bot do
   def turn_direction(player, target) do
     dx = target.ship.kinematics.px - player.ship.kinematics.px
     dy = target.ship.kinematics.py - player.ship.kinematics.py
-    target_angle = :math.atan2(dy, dx)
+    target_angle = :math.atan2(dy, (-1 *dx))
     opp_dir = player.ship.kinematics.angle - target_angle  # Inverted calculation here
 
     opp_dir =
       case opp_dir do
-        dir when dir < -6.28 -> dir + 6.28318
-        dir when dir > 6.28 -> dir - 6.28318
+        dir when dir < -3.14159 -> dir + 6.28318
+        dir when dir > 3.14159 -> dir - 6.28318
         dir -> dir
       end
 
     player_name = player.name
     if player_name == "bot" do
-      IO.inspect(opp_dir)
+      # IO.inspect(opp_dir)
     end
 
     case opp_dir do

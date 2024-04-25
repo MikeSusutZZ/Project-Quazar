@@ -146,7 +146,10 @@ defmodule GameServer do
           # This handles all player-based inputs
           |> Player.handle_inputs(@turn_rate)
           # Handle bot movement
-          |> Bot.decide(players)
+          |> (case do
+            player when player.name == "bot" -> Bot.decide(player, players)
+            player -> player
+          end)
           # This applies current velocity to players
           |> Movable.Motion.move()
           # This causes the ship to slow down over time
