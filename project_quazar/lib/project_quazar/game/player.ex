@@ -83,7 +83,7 @@ defmodule Player do
         {:ok, %Player{player | ship: updated_ship}}
 
       {:error, error_msg} ->
-        IO.puts("Error firing: #{inspect(error_msg)}")
+        #IO.puts("Error firing: #{inspect(error_msg)}")
         :error
     end
   end
